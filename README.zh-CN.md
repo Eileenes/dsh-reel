@@ -1,7 +1,8 @@
-# dsh-reel
+# dsh-reel-studio
 
 **把一个 DeepSeek Harness (DSH) 插件仓库，在本地变成一条 16:9 宣传片 + 一张 3:4 宣传图。**
 
+npm 包名：`dsh-reel-studio` · 仓库：`Eileenes/dsh-reel`  
 [English](README.md) · 简体中文
 
 > 状态：可运行原型。Remotion 管线与两种输出已端到端验证；DSH host 插件包（`dsh.bundle`）已搭好骨架，但**还没有在真实 DSH profile 里加载验证**。
@@ -108,7 +109,13 @@ node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode image
 - `reel_plan`：把 brief 转成确定性 storyboard；
 - `reel_render`：本地渲染 `mode=video|image|both`。
 
-安装到 scratch profile（尚未在真实 DSH 构建上验证）：
+安装到 scratch profile（尚未在真实 DSH 构建上验证）。npm 发布后：
+
+```sh
+dsh plugin --profile scratch add dsh-reel-studio
+```
+
+在那之前可以直接从 GitHub 装：
 
 ```sh
 dsh plugin --profile scratch add github:Eileenes/dsh-reel

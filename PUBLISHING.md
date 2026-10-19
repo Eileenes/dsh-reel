@@ -12,7 +12,7 @@ This repo is currently **GitHub-install friendly**, not npm-market ready. Read t
 Do **not** publish this exact package to npm yet. Either:
 
 - keep it GitHub-only for now, or
-- split it into a small host package (`dsh-reel`) + optional renderer/templates package.
+- split it into a small host package (`dsh-reel-studio`) + optional renderer/templates package.
 
 ## 2. Make it npm-publishable
 
@@ -23,7 +23,7 @@ Checklist:
    ```yaml
    - insert:
        - id: dsh-reel
-         name: dsh-reel
+         name: dsh-reel-studio
          config: {}
    ```
 3. Trim `files` to what runtime actually needs. If `reel_render` must work after install, ship `lib`, `scripts`, `studio` (or a slim renderer) and declare the Chrome/Remotion requirement in the README.
@@ -38,7 +38,7 @@ Checklist:
    Check that no secrets, personal data, private screenshots, `node_modules`, or generated `out/` files are included.
 6. Test install from a tarball into a scratch profile:
    ```sh
-   dsh plugin --profile scratch add ./dsh-reel-0.1.0.tgz
+   dsh plugin --profile scratch add ./dsh-reel-studio-0.1.0.tgz
    dsh --profile scratch --dump-config
    ```
 7. Publish:

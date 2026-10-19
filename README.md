@@ -1,7 +1,8 @@
-# dsh-reel
+# dsh-reel-studio
 
 **Turn a DeepSeek Harness (DSH) plugin repo into a 16:9 promo video and a 3:4 promo image — locally, with Remotion.**
 
+Package: `dsh-reel-studio` · Repo: `Eileenes/dsh-reel`  
 English · [简体中文](README.zh-CN.md)
 
 > Status: working prototype. The Remotion pipeline and both outputs are tested end-to-end. The DSH host package (`dsh.bundle`) is scaffolded, but has **not yet been loaded into a real DSH profile**.
@@ -108,7 +109,13 @@ The repo includes a host-side plugin package:
 - `reel_plan` — turn a brief into a deterministic storyboard.
 - `reel_render` — render `mode=video|image|both` locally.
 
-Install into a scratch profile (not yet validated against a real DSH build):
+Install into a scratch profile (not yet validated against a real DSH build). Once published to npm:
+
+```sh
+dsh plugin --profile scratch add dsh-reel-studio
+```
+
+Until then, install straight from GitHub:
 
 ```sh
 dsh plugin --profile scratch add github:Eileenes/dsh-reel

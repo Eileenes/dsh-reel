@@ -1,9 +1,9 @@
 {
-  "name": "dsh-reel",
+  "name": "dsh-reel-studio",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Turn a DSH plugin repo into a deterministic promo video and promo image (host tools + Remotion studio).",
+  "description": "dsh-reel-studio: turn a DSH plugin repo into a deterministic promo video and promo image (host tools + Remotion studio).",
   "license": "MIT",
   "repository": {
     "type": "git",
