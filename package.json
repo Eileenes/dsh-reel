@@ -1,0 +1,55 @@
+{
+  "name": "dsh-reel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Turn a DSH plugin repo into a deterministic promo video and promo image (host tools + Remotion studio).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eileenes/dsh-reel.git"
+  },
+  "homepage": "https://github.com/Eileenes/dsh-reel#readme",
+  "bugs": {
+    "url": "https://github.com/Eileenes/dsh-reel/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "remotion",
+    "video",
+    "promo"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "scripts",
+    "studio",
+    "cases",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh-CN.md",
+    "PUBLISHING.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-tools": "*"
+  },
+  "scripts": {
+    "reel": "node scripts/reel.mjs"
+  }
+}

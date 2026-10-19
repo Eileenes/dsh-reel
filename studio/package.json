@@ -1,0 +1,21 @@
+{
+  "name": "dsh-reel-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remotion studio for DSH plugin promo videos and promo images",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "render": "remotion render src/index.ts PluginDemo out/demo.mp4 --codec h264 --crf 18",
+    "still": "remotion still src/index.ts PluginDemo out/still.png",
+    "promo": "remotion still src/index.ts PromoCard out/promo.png --frame=0 --scale=2",
+    "dev": "remotion studio src/index.ts"
+  },
+  "dependencies": {
+    "remotion": "4.0.409",
+    "@remotion/cli": "4.0.409",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

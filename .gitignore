@@ -1,0 +1,11 @@
+node_modules/
+studio/node_modules/
+studio/out/
+out/
+*.log
+.DS_Store
+.env
+.env.*
+*.aiff
+*.tmp
+studio/node_modules
