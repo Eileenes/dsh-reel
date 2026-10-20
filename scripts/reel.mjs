@@ -46,9 +46,19 @@ if (dryRun) {
 }
 
 const remotionName = process.platform === 'win32' ? 'remotion.cmd' : 'remotion';
-const remotion = join(studio, 'node_modules', '.bin', remotionName);
-if (!existsSync(remotion)) {
-  console.error('[reel] Remotion is not installed. Run: cd studio && pnpm install');
+const remotionCandidates = [
+  join(studio, 'node_modules', '.bin', remotionName),
+  join(root, 'node_modules', '.bin', remotionName),
+];
+const remotion = remotionCandidates.find((candidate) => {
+  try {
+    return existsSync(candidate);
+  } catch {
+    return false;
+  }
+});
+if (!remotion) {
+  console.error('[reel] Remotion is not installed. Run: pnpm install (repo root) or cd studio && pnpm install');
   process.exit(1);
 }
 
