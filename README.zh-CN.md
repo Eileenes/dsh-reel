@@ -1,9 +1,11 @@
-# dsh-reel-studio
+# dsh-reel-studio · 历史中文说明
+
+> 本页保留原型阶段的说明记录。当前功能、安装步骤和限制请以[主 README](README.md)与源码为准：扫描工具仅检测 README 是否存在，分镜规划尚未接入自动渲染，模板中仍有 Better Sidebar 固定内容；DSH 宿主接入尚未完成真实环境验证。以下历史状态不代表当前版本已经通过全部验证。
 
 **把一个 DeepSeek Harness (DSH) 插件仓库，在本地变成一条 16:9 宣传片 + 一张 3:4 宣传图。**
 
 npm 包名：`dsh-reel-studio` · 仓库：`Eileenes/dsh-reel`  
-[English](README.md) · 简体中文
+[当前主 README](README.md) · 历史中文说明
 
 > 状态：可运行原型。Remotion 管线与两种输出已端到端验证；DSH host 插件包（`dsh.bundle`）已搭好骨架，但**还没有在真实 DSH profile 里加载验证**。
 
