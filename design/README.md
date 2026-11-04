@@ -9,6 +9,7 @@ downscaled. No external assets, fonts are the system stack.
 | `poster.tpl.html` | `docs/promo.png` | 2160×2880 (3:4) |
 | `cover.tpl.html` | `docs/poster.png` | 1920×1080 (16:9) |
 | `square.tpl.html` | `docs/promo-1x1.png` | 1080×1080 (1:1) |
+| `install-poster.html` | `docs/install-poster.png` | 2160×2880 (3:4) · 安装/使用/Star 海报 |
 | `parts/whale-voxel.svg` | generated voxel whale (mint) | — |
 | `parts/gen-whale.mjs` | regenerates `whale-voxel.svg` | — |
 | `parts/assets/poster-thumb.png` | 3:4 thumbnail used inside the cover/square | — |

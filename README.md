@@ -52,6 +52,12 @@ v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://g
 - [案例拆解](docs/case-better-sidebar-v0.1.md)：功能表、28s 时间线、素材来源、已知限制
 - [Onetake comp 参考](promo/comp-better-sidebar.html)：实际分镜/动画代码（依赖 Onetake 运行时，不随仓库分发）
 
+### 安装 / 使用海报
+
+[![dsh-reel-studio 安装使用海报](https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/install-poster.png)](docs/install-poster.png)
+
+3:4 · 2160×2880：插件市场搜索、命令行安装、三步使用、Star 入口和微信群二维码。源文件在 [`design/install-poster.html`](design/install-poster.html)。
+
 ![Better Sidebar 片尾](docs/better-sidebar-endcard.png)
 
 > 这条管线目前是**手动分镜 + 外部 Onetake 渲染**：素材、tab 坐标、音频事件需要按目标插件逐个调整；不是“给仓库地址就自动出片”。

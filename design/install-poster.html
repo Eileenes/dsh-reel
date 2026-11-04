@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-reel-studio · 安装使用海报</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#eff6ff; --muted:#a7b2c4; --dim:#7f8ba0; --accent:#5ef2c2; --blue:#4D6BFE;
+    --line:rgba(120,150,255,.18); --card:rgba(13,19,34,.82); --card2:rgba(18,26,46,.92);
+    --mono:"SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+  }
+  html,body{background:#04060b}
+  .poster{position:relative;width:1080px;height:1440px;overflow:hidden;color:var(--ink);
+    font-family:var(--sans);padding:52px 64px 44px;display:flex;flex-direction:column;
+    background:
+      radial-gradient(70% 38% at 80% 8%, rgba(77,107,254,.34), transparent 64%),
+      radial-gradient(60% 30% at 8% 92%, rgba(94,242,194,.10), transparent 62%),
+      linear-gradient(180deg,#070a12 0%,#05070d 46%,#04060b 100%);}
+  .grid{position:absolute;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(120,150,255,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,255,.075) 1px,transparent 1px);
+    background-size:54px 54px;
+    -webkit-mask-image:radial-gradient(120% 80% at 50% 22%,#000 12%,rgba(0,0,0,.35) 64%,transparent 96%)}
+  .glow{position:absolute;z-index:0;border-radius:50%;filter:blur(70px);pointer-events:none}
+  .glow.a{width:520px;height:380px;right:-120px;top:-90px;background:rgba(77,107,254,.28)}
+  .glow.b{width:420px;height:300px;left:-120px;bottom:80px;background:rgba(94,242,194,.07)}
+  .poster > :not(.grid):not(.glow){position:relative;z-index:2}
+  .grid,.glow{position:absolute!important;z-index:0!important}
+  .top{display:flex;align-items:center;justify-content:space-between;height:36px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand svg{width:38px;height:25px}
+  .brand .name{font-size:23px;font-weight:800;letter-spacing:-.03em}
+  .brand .tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:#9ecfc3;border:1px solid rgba(94,242,194,.3);border-radius:4px;padding:4px 6px 3px}
+  .top-right{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--dim)}
+  .top-right i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent);margin-right:7px;vertical-align:1px}
+  .hero{margin-top:38px}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--dim)}
+  .eyebrow b{color:var(--accent);font-weight:500}
+  h1{margin-top:16px;font-size:92px;line-height:1.08;font-weight:650;letter-spacing:-.035em}
+  h1 em{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:.82em;font-weight:600;letter-spacing:-.04em}
+  .tagline{display:flex;align-items:center;gap:12px;margin-top:16px;font-size:17px;color:#c6d0df}
+  .tagline .bar{width:24px;height:2px;background:var(--accent)}
+  .tagline .en{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:var(--dim)}
+  .deck{margin-top:14px;font-size:17.5px;line-height:1.7;color:var(--muted);max-width:930px}
+  .deck b{color:var(--accent);font-weight:600}
+
+  .market{margin-top:26px;border-radius:14px;padding:16px 18px;background:linear-gradient(160deg,rgba(20,28,48,.92),rgba(8,12,22,.94));border:1px solid var(--line);box-shadow:0 18px 46px rgba(0,0,0,.45)}
+  .mk-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:#8d99b0}
+  .mk-search{margin-top:10px;height:34px;border-radius:8px;display:flex;align-items:center;gap:9px;padding:0 12px;background:rgba(5,8,15,.85);border:1px solid rgba(120,150,255,.2)}
+  .mk-search svg{width:13px;height:13px;flex:none;opacity:.8}
+  .mk-search .q{font-family:var(--mono);font-size:13px;color:#eef3ff}
+  .mk-search .caret{width:2px;height:15px;background:var(--accent)}
+  .mk-search .hint{margin-left:auto;font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:#6f7b93}
+  .mk-card{margin-top:10px;display:flex;align-items:center;gap:13px;padding:12px 13px;border-radius:9px;background:rgba(13,19,34,.9);border:1px solid rgba(120,150,255,.14)}
+  .mk-ico{width:44px;height:44px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#14213d,#0a1220);border:1px solid rgba(120,150,255,.22)}
+  .mk-ico svg{width:30px;height:19px}
+  .mk-name{font-family:var(--mono);font-size:15px;font-weight:600;color:#f2f5ff}
+  .mk-meta{margin-top:4px;font-size:11px;color:#8d99b0}
+  .mk-ver{margin-left:auto;text-align:right;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:#9ecfc3}
+  .mk-ver b{display:block;font-size:13px;color:#f2f5ff;letter-spacing:0;margin-bottom:2px}
+  .mk-foot{margin-top:9px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:#76d9b4}
+  .mk-foot b{color:#c9f7e7;font-weight:500}
+
+  .cmd{margin-top:18px;border-radius:12px;padding:14px 17px 13px;background:linear-gradient(90deg,rgba(13,25,28,.95),rgba(8,12,16,.95));border:1px solid rgba(94,242,194,.26);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+  .cmd .lab{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;color:#9ecfc3}
+  .cmd .line{margin-top:7px;font-family:var(--mono);font-size:16px;color:#eaf3ff;white-space:nowrap}
+  .cmd .line b{color:var(--accent);font-weight:500}
+  .cmd .alt{margin-top:6px;font-size:11.5px;color:#8d99b0}
+  .cmd .alt b{color:#c6d0df;font-weight:500}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  .step{border-radius:11px;padding:14px 15px;background:rgba(11,16,28,.72);border:1px solid rgba(120,150,255,.14)}
+  .step .n{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--accent)}
+  .step h3{margin-top:6px;font-size:15px;font-weight:600;color:#eef3ff}
+  .step p{margin-top:5px;font-size:11.5px;line-height:1.55;color:#93a0b5}
+  .step b{color:#d9e6ff;font-weight:500}
+
+  .outputs{margin-top:20px}
+  .out-head{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--dim)}
+  .out-head b{color:var(--accent);font-weight:500}
+  .out-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin-top:9px}
+  .out-card{position:relative;border-radius:12px;overflow:hidden;background:#0a0f1a;border:1px solid rgba(120,150,255,.18);box-shadow:0 16px 36px rgba(0,0,0,.42)}
+  .out-card img{width:100%;height:196px;object-fit:cover;display:block;opacity:.92}
+  .out-card .cap{position:absolute;left:12px;bottom:10px;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:#dff7ee;background:rgba(4,8,14,.7);border:1px solid rgba(120,200,180,.2);border-radius:4px;padding:4px 7px}
+  .out-card .cap b{color:var(--accent);font-weight:500}
+  .note{margin-top:13px;font-size:11.5px;line-height:1.55;color:#7f8ba0}
+  .note b{color:#b9c6d9;font-weight:500}
+
+  .bottom{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-top:16px}
+  .star{max-width:620px}
+  .star .k{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--accent)}
+  .star h2{margin-top:8px;font-size:29px;line-height:1.25;font-weight:650;letter-spacing:-.01em}
+  .star h2 em{font-style:normal;color:var(--accent)}
+  .star .repo{margin-top:9px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;color:#cfe0ff}
+  .star .repo svg{width:15px;height:15px;opacity:.9}
+  .qr{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px}
+  .qr img{width:126px;height:auto;border-radius:8px;background:#fff;padding:5px}
+  .qr span{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:#8d99b0}
+  .foot{margin-top:14px;padding-top:11px;border-top:1px solid rgba(120,150,255,.14);display:flex;justify-content:space-between;font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:#6f7b93}
+  .foot b{color:#9ecfc3;font-weight:500}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="grid"></div><div class="glow a"></div><div class="glow b"></div>
+
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 40 26" aria-hidden="true"><path d="M3.2 13.2C3.2 6.6 9.6 3.2 16.2 4.2 22.8 5.2 28.6 9 28.6 13.8 28.6 19 22.2 22.2 15.7 22.2 9.2 22.2 3.2 19 3.2 13.2Z" fill="#4D6BFE"/><path d="M27.6 12.4C31 9.2 33.8 5.6 34.8 1.6 32.2 5.8 29.4 8.2 26 9.2L27.6 12.4Z" fill="#4D6BFE"/><path d="M27.6 15.2C31 18.4 33.8 22 34.8 26 32.2 21.8 29.4 19.4 26 18.4L27.6 15.2Z" fill="#4D6BFE"/><circle cx="21.4" cy="10" r="1.5" fill="#0a1220"/><circle cx="21.9" cy="9.5" r=".55" fill="#eaf3ff"/></svg>
+      <span class="name">deepseek</span><span class="tag">HARNESS</span>
+    </div>
+    <div class="top-right"><i></i>DSH PLUGIN · REEL STUDIO</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow"><b>DSH PLUGIN</b> / 插件宣传物料生成器</div>
+    <h1>把插件，<br>做成一条<em>片</em>。</h1>
+    <div class="tagline"><span class="bar"></span>从仓库到宣传片 + 宣传图，本地完成。<span class="en">ONE REEL FOR EVERY PLUGIN</span></div>
+    <p class="deck"><b>dsh-reel-studio</b> 读插件仓库、出分镜、渲 1080p 视频和 3:4 海报；让一个插件有可发的宣传物料。</p>
+  </section>
+
+  <section class="market">
+    <div class="mk-top"><span>DSH 插件市场 / npm</span><span>搜索安装</span></div>
+    <div class="mk-search">
+      <svg viewBox="0 0 16 16" fill="none" stroke="#9aa5bd" stroke-width="1.5"><circle cx="7" cy="7" r="4.4"/><path d="M10.4 10.4 14 14"/></svg>
+      <span class="q">dsh-reel-studio</span><span class="caret"></span><span class="hint">ENTER</span>
+    </div>
+    <div class="mk-card">
+      <div class="mk-ico"><svg viewBox="0 0 40 26"><path d="M3.2 13.2C3.2 6.6 9.6 3.2 16.2 4.2 22.8 5.2 28.6 9 28.6 13.8 28.6 19 22.2 22.2 15.7 22.2 9.2 22.2 3.2 19 3.2 13.2Z" fill="#4D6BFE"/><path d="M27.6 12.4C31 9.2 33.8 5.6 34.8 1.6 32.2 5.8 29.4 8.2 26 9.2L27.6 12.4Z" fill="#4D6BFE"/><path d="M27.6 15.2C31 18.4 33.8 22 34.8 26 32.2 21.8 29.4 19.4 26 18.4L27.6 15.2Z" fill="#4D6BFE"/><circle cx="21.4" cy="10" r="1.5" fill="#0a1220"/></svg></div>
+      <div><div class="mk-name">dsh-reel-studio</div><div class="mk-meta">Eileenes · 视频 / 海报 / 本地渲染</div></div>
+      <div class="mk-ver"><b>0.2.0</b>npm latest</div>
+    </div>
+    <div class="mk-foot"><b>安装后启用</b> · 市场索引可能有延迟，命令行安装最稳</div>
+  </section>
+
+  <section class="cmd">
+    <div class="lab">INSTALL · 命令行</div>
+    <div class="line"><b>$</b> dsh plugin --profile web add dsh-reel-studio@latest</div>
+    <div class="alt">桌面端：<b>设置 → 插件 → 搜索 dsh-reel-studio</b>；索引未刷新时用上面命令</div>
+  </section>
+
+  <section class="steps">
+    <div class="step"><div class="n">01 / INSTALL</div><h3>安装并启用</h3><p>市场搜索，或复制上面的命令；装完刷新 DSH。</p></div>
+    <div class="step"><div class="n">02 / USE</div><h3>在会话里说需求</h3><p>“读一下这个插件仓库，做成一条 30 秒宣传片。”</p></div>
+    <div class="step"><div class="n">03 / RENDER</div><h3>出片</h3><p><b>reel_scan → reel_plan → reel_render</b>；完整渲染器在 GitHub 仓库。</p></div>
+  </section>
+
+  <section class="outputs">
+    <div class="out-head"><span><b>OUTPUT</b> / 一条片 + 一张图</span><span>1080p · 3:4 · LOCAL</span></div>
+    <div class="out-grid">
+      <div class="out-card"><img src="../docs/better-sidebar-endcard.png" alt="宣传片片尾帧"><div class="cap"><b>16:9</b> · 28s 宣传片</div></div>
+      <div class="out-card"><img src="../docs/promo.png" alt="3:4 宣传图"><div class="cap"><b>3:4</b> · 宣传图</div></div>
+    </div>
+  </section>
+
+  <p class="note">npm 包是 <b>运行时 + 文档</b>；想用 Remotion 渲染器，请 clone 仓库并 <b>pnpm install</b>；V0.1 真机管线另见仓库 docs，Onetake 仅非商用，商用需另行授权。</p>
+
+  <div class="bottom">
+    <div class="star">
+      <div class="k">IF IT SAVES YOU A SHOOT</div>
+      <h2>省下一条片的时间，<br>去 GitHub 点个 <em>Star</em>。</h2>
+      <div class="repo"><svg viewBox="0 0 16 16" fill="#cfe0ff"><path d="M8 .4a7.6 7.6 0 0 0-2.4 14.8c.4.1.5-.2.5-.4v-1.4c-2.1.5-2.6-1-2.6-1-.3-.9-.8-1.1-.8-1.1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.8.9 2.3.7.1-.5.3-.9.5-1.1-1.7-.2-3.5-.9-3.5-3.9 0-.9.3-1.6.8-2.1-.1-.2-.3-1 .1-2.1 0 0 .6-.2 2.1.8a7.2 7.2 0 0 1 3.8 0c1.5-1 2.1-.8 2.1-.8.4 1.1.2 1.9.1 2.1.5.5.8 1.2.8 2.1 0 3-1.8 3.7-3.5 3.9.3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A7.6 7.6 0 0 0 8 .4Z"/></svg>github.com/Eileenes/dsh-reel</div>
+    </div>
+    <div class="qr"><img src="../docs/wechat-group.png" alt="扫码进群"><span>扫码进群 · dsh-deel</span></div>
+  </div>
+
+  <footer class="foot"><span><b>MIT</b> · 社区项目，非 DeepSeek 官方</span><span>DSH REEL STUDIO / 2026</span></footer>
+</div>
+</body>
+</html>
