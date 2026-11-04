@@ -635,7 +635,7 @@ export const C7Features: React.FC = () => {
         ))}
       </div>
 
-      <Caption kicker="03 / 四张王牌" title="文件 · Git · 任务 · 侧聊" delay={6} />
+      <Caption kicker="04 / 四张王牌" title="文件 · Git · 任务 · 侧聊" delay={6} />
       <Grain />
     </AbsoluteFill>
   );
@@ -706,7 +706,7 @@ export const C8Workbench: React.FC = () => {
       ))}
 
       <Caption
-        kicker="04 / 工作台"
+        kicker="03 / 侧栏就位"
         title="一个侧边栏，装下整个开发工作台。"
         delay={4}
         style={{maxWidth: 1060}}

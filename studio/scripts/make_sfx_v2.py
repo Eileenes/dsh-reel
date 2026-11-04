@@ -715,6 +715,7 @@ def load_events(timeline_path: Path = TIMELINE_TS):
 # 主流程
 # ─────────────────────────────────────────────────────────────────────────────
 def main():
+    global DUR, TOTAL_FRAMES
     ap = argparse.ArgumentParser(description="生成 dsh-reel v2 宣传片声音包（纯 Python 合成）")
     ap.add_argument("--quiet", action="store_true", help="只打印摘要")
     ap.add_argument("--timeline", default=str(TIMELINE_TS),
@@ -727,7 +728,11 @@ def main():
     ap.add_argument("--sfx-rms-music", type=float, default=-23.5, help="有音乐时 SFX 总线目标 RMS dBFS")
     ap.add_argument("--mix-rms", type=float, default=None, help="最终混音 RMS dBFS（默认：有音乐 -19.5，无音乐 -27）")
     ap.add_argument("--mix-peak", type=float, default=None, help="最终混音峰值上限 dBFS（默认：有音乐 -1.5，无音乐 -8.05）")
+    ap.add_argument("--duration", type=float, default=DUR, help="影片总长秒（默认 24；30s 片传 30）")
+    ap.add_argument("--total-frames", type=int, default=TOTAL_FRAMES, help="总帧数（默认 720；30s@30fps=900）")
     args = ap.parse_args()
+    DUR = args.duration
+    TOTAL_FRAMES = args.total_frames
     music_path = Path(args.music) if args.music else None
     mix_rms_target = args.mix_rms if args.mix_rms is not None else (-19.5 if music_path else MIX_RMS_DBFS)
     mix_peak_target = args.mix_peak if args.mix_peak is not None else (-1.5 if music_path else MIX_PEAK_CEIL_DBFS)

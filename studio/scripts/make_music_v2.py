@@ -28,7 +28,8 @@ make_music_v2.py — dsh-reel v2 24s campaign film 的卡点 BGM（纯 Python �
 重音与画面切点零误差，而节奏本身不跑偏。manifest 里给了每个 cut 的网格误差。
 
 用法：
-    python3 studio/scripts/make_music_v2.py            # 生成 WAV + manifest
+    python3 studio/scripts/make_music_v2.py                  # 24s 版（默认，产物与旧版逐字节一致）
+    python3 studio/scripts/make_music_v2.py --duration 30    # 30s Better Sidebar 版
     python3 studio/scripts/make_music_v2.py --quiet
 """
 
@@ -46,15 +47,11 @@ from pathlib import Path
 # 基础参数
 # ─────────────────────────────────────────────────────────────────────────────
 SR = 48000
-DUR = 24.0
-N = int(SR * DUR)
 FPS = 30
 BPM = 120.0
 BEAT = 60.0 / BPM          # 0.5 s
 BAR = BEAT * 4             # 2.0 s
 S16 = BEAT / 4             # 0.125 s（十六分音符）
-TOTAL_BEATS = int(round(DUR / BEAT))   # 48
-TOTAL_BARS = int(round(DUR / BAR))     # 12
 
 TAU = 2.0 * math.pi
 PI = math.pi
@@ -66,55 +63,174 @@ COS = math.cos
 
 STUDIO = Path(__file__).resolve().parents[1]
 AUDIO_DIR = STUDIO / "public" / "audio" / "v2"
-BED_PATH = AUDIO_DIR / "music-bed.wav"
-MANIFEST_PATH = AUDIO_DIR / "music-manifest.json"
 
-# ── 片子结构：场景切点（帧 → 秒；与 timeline.ts / case-timeline.ts 的 SCENES 一致）
-SCENE_FRAMES = [(0, "S1"), (78, "S2"), (156, "S3"), (228, "S4"), (348, "S5"),
-                (426, "S6"), (462, "S7"), (588, "S8"), (660, "S9"), (720, "END")]
-# 8 个 cut（所有场景边界，除 0）
-CUT_FRAMES = [78, 156, 228, 348, 426, 462, 588, 660]
-CUT_WEIGHT = {78: 0.80, 156: 1.00, 228: 0.70, 348: 0.85,
-              426: 1.00, 462: 0.60, 588: 1.15, 660: 1.00}
-# riser 窗口（帧对）
-RISER_FRAMES = [(48, 78), (318, 348), (396, 426), (558, 588)]
-
-# 每个 section 各层的相对增益（1.00 = 基准）。用来做能量弧线：
-# intro 最轻 → lift 起 → groove/build 稳 → peak 最高 → drop 掉下来 → outro 收
-SEC_GAIN = {
-    "intro":  {"pad": 1.12, "kick": 0.0, "perc": 1.00, "arp": 0.0, "bass": 0.0},
-    "lift":   {"pad": 1.00, "kick": 1.00, "perc": 0.90, "arp": 0.0, "bass": 0.0},
-    "groove": {"pad": 0.85, "kick": 1.00, "perc": 1.00, "arp": 1.00, "bass": 1.00},
-    "build":  {"pad": 0.88, "kick": 1.00, "perc": 1.05, "arp": 1.08, "bass": 1.00},
-    "peak":   {"pad": 0.95, "kick": 1.08, "perc": 1.25, "arp": 1.22, "bass": 1.00},
-    "drop":   {"pad": 0.78, "kick": 0.55, "perc": 0.00, "arp": 0.0, "bass": 0.0},
-    "outro":  {"pad": 1.00, "kick": 0.0, "perc": 0.00, "arp": 0.0, "bass": 0.0},
-}
-# 各层整条轨道的目标 RMS（dBFS）。母带前按这个值统一归一化，保证配比不靠猜。
-LAYER_TARGET_RMS = {
-    "pad": -20.5, "bass": -18.0, "kick": -15.5, "perc": -17.5,
-    "arp": -20.0, "bell": -28.0, "impact": -17.0, "riser": -20.0,
-}
-
-SECTIONS = [
-    # id,        from, to,    scene,  说明
-    ("intro", 0.0, 2.6, "S1", "pad 铺底 + 稀疏 hats + 末尾 riser，不要 kick"),
-    ("lift", 2.6, 5.2, "S2", "kick 进入（每小节 1、3 拍）+ hats 8 分"),
-    ("groove", 5.2, 11.6, "S3+S4", "4-on-floor kick + sub bass + 16 分 arp + 轻 clap"),
-    ("build", 11.6, 14.2, "S5", "full 编制 + 上升 riser（13.2→14.2）"),
-    ("peak", 14.2, 19.6, "S6+S7", "peak：全编制 + open hat + 16 分 hat，能量最高"),
-    ("drop", 19.6, 22.0, "S8", "drop 到 pad + bell + 慢 kick，impact 在 19.6"),
-    ("outro", 22.0, 24.0, "S9", "pad 收束 + 末击 23.5，最后 0.4s 淡出"),
-]
-
-# 和弦（MIDI）。Am / F / C / G，每小节 1 个，循环 3 遍
+# 和弦（MIDI）。Am / F / C / G，每小节 1 个
 CHORDS = {
     "Am": {"notes": [45, 48, 52], "bass": 33, "name": "Am"},   # A2 C3 E3 / bass A1
     "F":  {"notes": [41, 45, 48], "bass": 29, "name": "F"},    # F2 A2 C3 / bass F1
     "C":  {"notes": [48, 52, 55], "bass": 36, "name": "C"},    # C3 E3 G3 / bass C2
     "G":  {"notes": [43, 47, 50], "bass": 31, "name": "G"},    # G2 B2 D3 / bass G1
 }
-PROGRESSION = ["Am", "F", "C", "G"] * 3      # 12 小节
+
+# 各层整条轨道的目标 RMS（dBFS）。母带前按这个值统一归一化，保证配比不靠猜。两个 profile 共用。
+LAYER_TARGET_RMS = {
+    "pad": -20.5, "bass": -18.0, "kick": -15.5, "perc": -17.5,
+    "arp": -20.0, "bell": -28.0, "impact": -17.0, "riser": -20.0,
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 两个 profile：
+#   "24" → ReelPromo / ReelCase 24s 片（12 小节 / 8 cuts / 7 段）—— 默认行为，产物与旧版逐字节一致
+#   "30" → ReelCase30 30s Better Sidebar 片（15 小节 / 6 cuts / 7 段）
+# SEC_GAIN 里除各层增益外还带 kickpat / hat / clap / snare 四个编排开关，
+# 这样 build_kick / build_perc 不再写死 section id，两个 profile 共用同一套音色与代码路径。
+# ─────────────────────────────────────────────────────────────────────────────
+PROFILES = {
+    "24": {
+        "dur": 24.0,
+        "purpose": "24s campaign 片卡点 BGM，ReelPromo 与 ReelCase 共用（两条片场景边界一致）",
+        "bed": "music-bed.wav",
+        "manifest": "music-manifest.json",
+        "scene_frames": [(0, "S1"), (78, "S2"), (156, "S3"), (228, "S4"), (348, "S5"),
+                         (426, "S6"), (462, "S7"), (588, "S8"), (660, "S9"), (720, "END")],
+        "cut_frames": [78, 156, 228, 348, 426, 462, 588, 660],
+        "cut_weight": {78: 0.80, 156: 1.00, 228: 0.70, 348: 0.85,
+                       426: 1.00, 462: 0.60, 588: 1.15, 660: 1.00},
+        "riser_frames": [(48, 78), (318, 348), (396, 426), (558, 588)],
+        "sections": [
+            # id,        from, to,    scene,  说明
+            ("intro", 0.0, 2.6, "S1", "pad 铺底 + 稀疏 hats + 末尾 riser，不要 kick"),
+            ("lift", 2.6, 5.2, "S2", "kick 进入（每小节 1、3 拍）+ hats 8 分"),
+            ("groove", 5.2, 11.6, "S3+S4", "4-on-floor kick + sub bass + 16 分 arp + 轻 clap"),
+            ("build", 11.6, 14.2, "S5", "full 编制 + 上升 riser（13.2→14.2）"),
+            ("peak", 14.2, 19.6, "S6+S7", "peak：全编制 + open hat + 16 分 hat，能量最高"),
+            ("drop", 19.6, 22.0, "S8", "drop 到 pad + bell + 慢 kick，impact 在 19.6"),
+            ("outro", 22.0, 24.0, "S9", "pad 收束 + 末击 23.5，最后 0.4s 淡出"),
+        ],
+        "sec_gain": {
+            "intro":  {"pad": 1.12, "kick": 0.0,  "kickpat": "none",   "perc": 1.00, "hat": "8sparse", "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+            "lift":   {"pad": 1.00, "kick": 1.00, "kickpat": "13",     "perc": 0.90, "hat": "8",       "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+            "groove": {"pad": 0.85, "kick": 1.00, "kickpat": "4floor", "perc": 1.00, "hat": "16",      "arp": 1.00, "bass": 1.00, "clap": 1, "snare": 0},
+            "build":  {"pad": 0.88, "kick": 1.00, "kickpat": "4floor", "perc": 1.05, "hat": "16",      "arp": 1.08, "bass": 1.00, "clap": 1, "snare": 0},
+            "peak":   {"pad": 0.95, "kick": 1.08, "kickpat": "4floor", "perc": 1.25, "hat": "16open",  "arp": 1.22, "bass": 1.00, "clap": 1, "snare": 1},
+            "drop":   {"pad": 0.78, "kick": 0.55, "kickpat": "13",     "perc": 0.00, "hat": "none",    "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+            "outro":  {"pad": 1.00, "kick": 0.0,  "kickpat": "none",   "perc": 0.00, "hat": "none",    "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+        },
+        "progression": ["Am", "F", "C", "G"] * 3,      # 12 小节
+        "pad_last_bar_cut": 23.5,                       # 末小节在末击前收住
+        "bell_notes": [(76, 20.0, 0.32, 0.26, 1.15), (81, 20.5, 0.32, 0.26, 1.15),
+                       (84, 21.0, 0.32, 0.26, 1.15), (79, 21.5, 0.32, 0.26, 1.15)],
+        "final_bells": [(81, 23.5, 0.26, 0.22, 0.9), (84, 23.5, 0.26, 0.22, 0.9),
+                        (88, 23.5, 0.26, 0.22, 0.9)],
+        "final_hit": {"sec": 23.5, "weight": 1.0, "dur": 1.5, "gain": 0.9},
+        "grid_note": "持续律动严格贴 120BPM 网格；impact/riser/section 换挡按帧对齐 cut（2.6s=第5.2拍，故 cut 不在拍点上，属设计取舍，见 cuts.delta_ms_vs_beat）",
+        "final_hit_note": {"sec": 23.5, "type": "impact + Am bell chord（bVII→i 收束）"},
+        "usage": "Remotion: <Audio src={staticFile('audio/v2/music-bed.wav')} />；或由 make_sfx_v2.py --music public/audio/v2/music-bed.wav 混入（会自动跳过旧 drone）",
+    },
+    "30": {
+        "dur": 30.0,
+        "purpose": "30s Better Sidebar case 片（ReelCase30）卡点 BGM，按 case30-timeline.ts 的 C1–C7 场景边界对齐，两条片共用同一套音色写法",
+        "bed": "music-bed-30.wav",
+        "manifest": "music-manifest-30.json",
+        "version": "v2-30s",
+        "scene_frames": [(0, "C1"), (90, "C2"), (210, "C3"), (300, "C4"),
+                         (450, "C5"), (570, "C6"), (720, "C7"), (900, "END")],
+        "cut_frames": [90, 210, 300, 450, 570, 720],
+        "cut_weight": {90: 0.85, 210: 0.90, 300: 0.75, 450: 1.00, 570: 1.00, 720: 1.15},
+        "riser_frames": [(60, 90), (270, 300), (420, 450), (540, 570), (690, 720)],
+        "sections": [
+            ("intro", 0.0, 3.0, "C1", "hook：pad 铺底 + 稀疏 hats + 末尾 riser（1.0→3.0），不要 kick"),
+            ("lift", 3.0, 7.0, "C2", "whale + DSH window：kick 进入（每小节 1、3 拍）+ hats 8 分"),
+            ("groove", 7.0, 10.0, "C3", "official plugins page：4-on-floor kick + sub bass + 16 分 arp + 轻 clap"),
+            ("build", 10.0, 15.0, "C4", "search + install：full 编制 + riser（14.0→15.0）"),
+            ("peak", 15.0, 19.0, "C5", "sidebar ready：全编制 + open hat + 16 分 hat + snare，能量最高"),
+            ("resolve", 19.0, 24.0, "C6", "four features：收一档（half-time kick + 8 分 hat + clap），给 peak 让出落差"),
+            ("outro", 24.0, 30.0, "C7", "outro：Am 长音 pad + bell，末击 27.0，27–30s 静止收尾后 0.4s 淡出"),
+        ],
+        "sec_gain": {
+            "intro":   {"pad": 1.12, "kick": 0.0,  "kickpat": "none",   "perc": 1.00, "hat": "8sparse", "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+            "lift":    {"pad": 1.00, "kick": 1.00, "kickpat": "13",     "perc": 0.90, "hat": "8",       "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+            "groove":  {"pad": 0.85, "kick": 1.00, "kickpat": "4floor", "perc": 1.00, "hat": "16",      "arp": 1.00, "bass": 1.00, "clap": 1, "snare": 0},
+            "build":   {"pad": 0.88, "kick": 1.02, "kickpat": "4floor", "perc": 1.08, "hat": "16",      "arp": 1.12, "bass": 1.00, "clap": 1, "snare": 0},
+            "peak":    {"pad": 1.00, "kick": 1.12, "kickpat": "4floor", "perc": 1.32, "hat": "16open",  "arp": 1.28, "bass": 1.00, "clap": 1, "snare": 1},
+            "resolve": {"pad": 0.92, "kick": 0.72, "kickpat": "13",     "perc": 0.55, "hat": "8",       "arp": 0.0,  "bass": 0.88, "clap": 1, "snare": 0},
+            "outro":   {"pad": 1.06, "kick": 0.0,  "kickpat": "none",   "perc": 0.00, "hat": "none",    "arp": 0.0,  "bass": 0.0,  "clap": 0, "snare": 0},
+        },
+        # 12 小节完整循环 + 3 小节主和弦收束（否则 15 小节会停在 C/G 上，静止收尾不落地）
+        "progression": ["Am", "F", "C", "G"] * 3 + ["Am", "Am", "Am"],
+        "pad_last_bar_cut": None,
+        "bell_notes": [(76, 24.6, 0.30, 0.24, 1.15), (81, 25.4, 0.28, 0.22, 1.15),
+                       (84, 26.2, 0.26, 0.21, 1.15)],
+        "final_bells": [(81, 27.0, 0.30, 0.26, 2.6), (84, 27.0, 0.28, 0.24, 2.6),
+                        (88, 27.0, 0.25, 0.21, 2.6)],
+        "final_hit": {"sec": 27.0, "weight": 1.10, "dur": 2.2, "gain": 0.95},
+        # 30s 片子更长、密织段更满：riser 与结尾 bell 单独抬一点，24s 不受影响
+        "layer_targets": {"riser": -19.0, "bell": -26.0},
+        "grid_note": "持续律动与 impact/riser 都严格贴 120BPM 网格：6 个 cut 全部落在整拍（3s=第6拍、7s=14、10s=20、15s=30、19s=38、24s=48 拍），没有 24s 版那种 off-grid 取舍",
+        "final_hit_note": {"sec": 27.0, "type": "impact + Am bell chord（静止段第 1 秒收在主和弦）"},
+        "recommended_mix_note": "30s 片的 SFX 混音还没做（make_sfx_v2.py 目前写死 DUR=24 + timeline.ts 事件表）：music bus 仍按 -21 dBFS 摆，SFX bus -23.5、总 -19.5/-1.5 是同一套目标；做 30s mix 时需要把事件表换成 case30-timeline.ts 并把时长参数化",
+        "usage": "Remotion: <Audio src={staticFile('audio/v2/music-bed-30.wav')} />；ReelCase30 目前指向 preview-mix-case30.mp3，需要先做 30s 的 SFX 混音（make_sfx_v2.py 当前写死 24s，需另开 --duration 或新 mix 脚本）",
+        "extra_manifest": {
+            "profile": "30",
+            "sibling_24s": {"bed": "music-bed.wav", "manifest": "music-manifest.json"},
+            "hard_cap_note": "30.000s 硬上限：N = 30×48000 = 1 440 000 samples（正好 900 帧 @30fps），文件时长 30.000000s",
+        },
+    },
+}
+
+# 运行期全局：由 configure() 按 profile 设置。函数体在调用时读全局，
+# 所以 configure 后所有 build_* 都用当前 profile，且 24s 默认行为与旧版逐字节一致。
+DUR = 24.0
+N = int(SR * DUR)
+TOTAL_BEATS = int(round(DUR / BEAT))
+TOTAL_BARS = int(round(DUR / BAR))
+SCENE_FRAMES = []
+CUT_FRAMES = []
+CUT_WEIGHT = {}
+RISER_FRAMES = []
+SECTIONS = []
+SEC_GAIN = {}
+PROGRESSION = []
+PAD_LAST_BAR_CUT = None
+BELL_NOTES = []
+FINAL_BELLS = []
+FINAL_HIT = {}
+BED_PATH = AUDIO_DIR / "music-bed.wav"
+MANIFEST_PATH = AUDIO_DIR / "music-manifest.json"
+PROFILE_NAME = "24"
+PROFILE = None
+
+
+def configure(name: str):
+    """按 profile 名字设置模块级全局（默认 "24"）。"""
+    global DUR, N, TOTAL_BEATS, TOTAL_BARS, SCENE_FRAMES, CUT_FRAMES, CUT_WEIGHT, \
+        RISER_FRAMES, SECTIONS, SEC_GAIN, PROGRESSION, PAD_LAST_BAR_CUT, \
+        BELL_NOTES, FINAL_BELLS, FINAL_HIT, BED_PATH, MANIFEST_PATH, PROFILE_NAME, PROFILE
+    if name not in PROFILES:
+        raise SystemExit("未知 profile: %s（可选 %s）" % (name, " / ".join(PROFILES)))
+    p = PROFILES[name]
+    PROFILE_NAME = name
+    PROFILE = p
+    DUR = p["dur"]
+    N = int(SR * DUR)
+    TOTAL_BEATS = int(round(DUR / BEAT))
+    TOTAL_BARS = int(round(DUR / BAR))
+    SCENE_FRAMES = p["scene_frames"]
+    CUT_FRAMES = p["cut_frames"]
+    CUT_WEIGHT = p["cut_weight"]
+    RISER_FRAMES = p["riser_frames"]
+    SECTIONS = p["sections"]
+    SEC_GAIN = p["sec_gain"]
+    PROGRESSION = p["progression"]
+    PAD_LAST_BAR_CUT = p["pad_last_bar_cut"]
+    BELL_NOTES = p["bell_notes"]
+    FINAL_BELLS = p["final_bells"]
+    FINAL_HIT = p["final_hit"]
+    BED_PATH = AUDIO_DIR / p["bed"]
+    MANIFEST_PATH = AUDIO_DIR / p["manifest"]
+
+
+configure("24")   # 模块导入即 24s 默认（main 里可按 --duration 重新 configure）
 
 
 def midi_hz(m: float) -> float:
@@ -400,7 +516,9 @@ def synth_pluck(midi: float, dur: float = 0.22):
 # ─────────────────────────────────────────────────────────────────────────────
 # 总线 / 调度
 # ─────────────────────────────────────────────────────────────────────────────
-def zero_buf(n: int = N):
+def zero_buf(n: int = -1):
+    if n < 0:
+        n = N
     return array("f", [0.0]) * n
 
 
@@ -470,8 +588,8 @@ def build_pad():
     for bar in range(TOTAL_BARS):
         a = bar * BAR
         b = a + BAR
-        if bar == TOTAL_BARS - 1:
-            b = 23.5                      # 末小节在末击前收住
+        if PAD_LAST_BAR_CUT is not None and bar == TOTAL_BARS - 1:
+            b = PAD_LAST_BAR_CUT          # 24s：末小节在末击前收住
         chord = CHORDS[PROGRESSION[bar]]
         dur = min((b - a) + 0.45, DUR - a)   # 释放尾巴叠到下一小节
         n = int(dur * SR)
@@ -525,8 +643,6 @@ def build_bass():
         b = a + BAR
         # 只在有 bass 的 section 内发声
         sid = sec_of(a + 0.01)[0]
-        if sid not in ("groove", "build", "peak"):
-            continue
         bg = SEC_GAIN[sid]["bass"]
         if bg <= 0.0:
             continue
@@ -578,20 +694,15 @@ def build_kick():
         add_mono(right, kick, sample_at(t), 1.00 * g)
 
     for sid, a, b, scene, _note in SECTIONS:
-        if sid == "lift":
-            kick_at(a, sid)
-            for t in beat_grid(a, b):
-                if abs((t % BAR)) < 1e-6 or abs((t % BAR) - 1.0) < 1e-6:
-                    kick_at(t, sid)
-        elif sid in ("groove", "build", "peak"):
-            kick_at(a, sid)
-            for t in beat_grid(a, b):
+        pat = SEC_GAIN[sid]["kickpat"]
+        if pat == "none" or SEC_GAIN[sid]["kick"] <= 0.0:
+            continue
+        kick_at(a, sid)                       # section 入口 accent（正好是 cut / 换挡点）
+        for t in beat_grid(a, b):
+            if pat == "4floor":
                 kick_at(t, sid)
-        elif sid == "drop":
-            kick_at(a, sid)
-            for t in beat_grid(a, b):
-                if abs((t % BAR)) < 1e-6 or abs((t % BAR) - 1.0) < 1e-6:
-                    kick_at(t, sid)
+            elif abs((t % BAR)) < 1e-6 or abs((t % BAR) - 1.0) < 1e-6:
+                kick_at(t, sid)               # "13"：每小节 1、3 拍
     return left, right, kick_times
 
 
@@ -609,20 +720,16 @@ def build_perc():
         pg = SEC_GAIN[sid]["perc"]
         if pg <= 0.0:
             continue
-        if sid == "intro":
+        hm = SEC_GAIN[sid]["hat"]
+        if hm in ("8sparse", "8"):
+            g_l, g_r = (0.26, 0.22) if hm == "8sparse" else (0.34, 0.29)
             for t in s16_grid(a, b):
-                if abs((t / S16) % 2) < 1e-6:
+                if abs((t / S16) % 2) < 1e-6:          # 8 分
                     hat_times.append(round(t, 6))
-                    add_mono(left, hat_c, sample_at(t), 0.26 * pg)
-                    add_mono(right, hat_c, sample_at(t), 0.22 * pg)
-        elif sid == "lift":
-            for t in s16_grid(a, b):
-                if abs((t / S16) % 2) < 1e-6:
-                    hat_times.append(round(t, 6))
-                    add_mono(left, hat_c, sample_at(t), 0.34 * pg)
-                    add_mono(right, hat_c, sample_at(t), 0.29 * pg)
-        elif sid in ("groove", "build", "peak"):
-            hat_gain = 0.48 if sid != "peak" else 0.58
+                    add_mono(left, hat_c, sample_at(t), g_l * pg)
+                    add_mono(right, hat_c, sample_at(t), g_r * pg)
+        elif hm in ("16", "16open"):
+            hat_gain = 0.58 if hm == "16open" else 0.48
             for t in s16_grid(a, b):
                 on16 = int(round(t / S16))
                 acc = 1.0 if on16 % 4 == 0 else (0.72 if on16 % 2 == 0 else 0.5)
@@ -630,17 +737,18 @@ def build_perc():
                 pan = 0.55 if on16 % 2 == 0 else 0.45
                 add_mono(left, hat_c, sample_at(t), hat_gain * acc * (1.25 - pan) * pg)
                 add_mono(right, hat_c, sample_at(t), hat_gain * acc * pan * pg)
-                if sid == "peak" and on16 % 4 == 2:
+                if hm == "16open" and on16 % 4 == 2:
                     add_mono(left, hat_o, sample_at(t), 0.28 * pg)
                     add_mono(right, hat_o, sample_at(t), 0.25 * pg)
         # clap（2、4 拍）；peak 段再叠 snare
-        if sid in ("groove", "build", "peak"):
+        if SEC_GAIN[sid]["clap"]:
+            is_peak = sid == "peak"
             for t in beat_grid(a, b):
                 phase = t % BAR
                 if abs(phase - 0.5) < 1e-6 or abs(phase - 1.5) < 1e-6:
-                    add_mono(left, clap, sample_at(t), (0.46 if sid != "peak" else 0.52) * pg)
-                    add_mono(right, clap, sample_at(t), (0.40 if sid != "peak" else 0.46) * pg)
-                    if sid == "peak":
+                    add_mono(left, clap, sample_at(t), (0.52 if is_peak else 0.46) * pg)
+                    add_mono(right, clap, sample_at(t), (0.46 if is_peak else 0.40) * pg)
+                    if SEC_GAIN[sid]["snare"]:
                         add_mono(left, snare, sample_at(t), 0.46 * pg)
                         add_mono(right, snare, sample_at(t), 0.40 * pg)
     return left, right, hat_times
@@ -650,7 +758,7 @@ def build_arp():
     """16 分 arp pluck，偏右；0.25s 回声在左。"""
     dry = zero_buf()
     for sid, a, b, scene, _note in SECTIONS:
-        if sid not in ("groove", "build", "peak"):
+        if SEC_GAIN[sid]["arp"] <= 0.0:
             continue
         for t in s16_grid(a, b):
             bar = int(t // BAR)
@@ -661,10 +769,7 @@ def build_arp():
             octave = 12 if idx < 4 else 24
             pat = [0, 1, 2, 0, 2, 1, 0, 1][idx]
             midi = notes[pat] + octave
-            ag = SEC_GAIN[sid]["arp"]
-            if ag <= 0.0:
-                continue
-            add_mono(dry, synth_pluck(midi), sample_at(t), 0.55 * ag)
+            add_mono(dry, synth_pluck(midi), sample_at(t), 0.55 * SEC_GAIN[sid]["arp"])
     # 回声：0.25s + 0.5s 两级
     d = int(0.25 * SR)
     echo = [0.0] * N
@@ -685,18 +790,17 @@ def build_arp():
 
 
 def build_bell():
+    """钟声：profile 给两段 —— outro/drop 的动机 + 末击的和弦钟。"""
     left = zero_buf()
     right = zero_buf()
-    # drop 段：19.6 后一小段钟声动机
-    for midi, t in ((76, 20.0), (81, 20.5), (84, 21.0), (79, 21.5)):
-        b = synth_bell(midi)
-        add_mono(left, b, sample_at(t), 0.32)
-        add_mono(right, b, sample_at(t), 0.26)
-    # 末击 23.5：Am 和弦钟 + G/B? 这里给 Am 的 A5/C6/E6 做收束
-    for midi in (81, 84, 88):
-        b = synth_bell(midi, 0.9)
-        add_mono(left, b, sample_at(23.5), 0.26)
-        add_mono(right, b, sample_at(23.5), 0.22)
+    for midi, t, gl, gr, dur in BELL_NOTES:
+        b = synth_bell(midi, dur)
+        add_mono(left, b, sample_at(t), gl)
+        add_mono(right, b, sample_at(t), gr)
+    for midi, t, gl, gr, dur in FINAL_BELLS:
+        b = synth_bell(midi, dur)
+        add_mono(left, b, sample_at(t), gl)
+        add_mono(right, b, sample_at(t), gr)
     return left, right
 
 
@@ -711,11 +815,13 @@ def build_impacts():
         add_mono(left, imp, sample_at(t), 0.85)
         add_mono(right, imp, sample_at(t), 0.85)
         hits.append({"frame": fr, "sec": round(t, 6), "weight": w})
-    # 末击 23.5（不是 cut，但需要收束）
-    imp = synth_impact(weight=1.0, dur=1.5)
-    add_mono(left, imp, sample_at(23.5), 0.9)
-    add_mono(right, imp, sample_at(23.5), 0.9)
-    hits.append({"frame": int(23.5 * FPS), "sec": 23.5, "weight": 1.0, "note": "final hit"})
+    # 末击（不是 cut，但需要收束）——由 profile 给秒数/权重/长度/增益
+    hit = FINAL_HIT
+    imp = synth_impact(weight=hit["weight"], dur=hit["dur"])
+    add_mono(left, imp, sample_at(hit["sec"]), hit["gain"])
+    add_mono(right, imp, sample_at(hit["sec"]), hit["gain"])
+    hits.append({"frame": int(hit["sec"] * FPS), "sec": hit["sec"],
+                 "weight": hit["weight"], "note": "final hit"})
     return left, right, hits
 
 
@@ -827,12 +933,17 @@ def soft_limit_count(left, right, knee_db=-9.0):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="生成 dsh-reel v2 24s 卡点 BGM（纯 Python）")
+    ap = argparse.ArgumentParser(
+        description="生成 dsh-reel v2 卡点 BGM（纯 Python，120BPM / A 小调 / Am–F–C–G）")
+    ap.add_argument("--duration", type=int, choices=sorted(int(k) for k in PROFILES), default=24,
+                    help="片子时长 profile：24（默认，ReelPromo/ReelCase）或 30（ReelCase30）")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
+    configure(str(args.duration))
     say = (lambda *a, **k: None) if args.quiet else print
 
-    say("[1/5] 铺 pad（Am–F–C–G ×3，每小节一个和弦，3 音 ×2 detune 立体声）…")
+    say("[1/5] 铺 pad（%s，%d 小节，每小节一个和弦，3 音 ×2 detune 立体声）…"
+        % ("–".join(["Am", "F", "C", "G"]) + " 循环", TOTAL_BARS))
     pad_l, pad_r = build_pad()
     say("[2/5] 铺 sub bass（每小节根音，锯齿+正弦，低通 160Hz）…")
     bass_l, bass_r = build_bass()
@@ -869,13 +980,15 @@ def main():
         ("impact", imp_l, imp_r),
         ("riser", ris_l, ris_r),
     ]
+    layer_targets = dict(LAYER_TARGET_RMS)
+    layer_targets.update(PROFILE.get("layer_targets", {}))
     layer_info = {}
     for name, bl, br in layers:
         r = rms_of([bl, br])
-        target = db2lin(LAYER_TARGET_RMS[name])
+        target = db2lin(layer_targets[name])
         g = target / r if r > 0.0 else 0.0
         layer_info[name] = {"raw_rms_dbfs": round(dbfs(r), 2),
-                            "target_rms_dbfs": LAYER_TARGET_RMS[name],
+                            "target_rms_dbfs": layer_targets[name],
                             "applied_gain_db": round(20.0 * LOG10(g), 2)}
         for i in range(N):
             left[i] += bl[i] * g
@@ -955,9 +1068,9 @@ def main():
             "rms_dbfs": round(dbfs(sec_rms), 2),
         })
     manifest = {
-        "version": "v2",
+        "version": PROFILE.get("version", "v2"),
         "generator": "studio/scripts/make_music_v2.py",
-        "purpose": "24s campaign 片卡点 BGM，ReelPromo 与 ReelCase 共用（两条片场景边界一致）",
+        "purpose": PROFILE["purpose"],
         "format": {"sample_rate": SR, "channels": 2, "bit_depth": 16, "codec": "PCM"},
         "duration_sec": DUR,
         "tempo": {"bpm": BPM, "time_signature": "4/4", "beat_sec": BEAT,
@@ -994,21 +1107,25 @@ def main():
             "fade_in_sec": 0.05,
             "fade_out_sec": 0.4,
         },
-        "grid_note": "持续律动严格贴 120BPM 网格；impact/riser/section 换挡按帧对齐 cut（2.6s=第5.2拍，故 cut 不在拍点上，属设计取舍，见 cuts.delta_ms_vs_beat）",
-        "final_hit": {"sec": 23.5, "type": "impact + Am bell chord（bVII→i 收束）"},
+        "grid_note": PROFILE["grid_note"],
+        "final_hit": PROFILE["final_hit_note"],
         "recommended_mix": {
             "music_bus_rms_dbfs": -21.0,
             "sfx_bus_rms_dbfs": -23.5,
             "final_rms_dbfs": -19.5,
             "final_peak_dbfs": -1.5,
-            "note": "这组值就是 make_sfx_v2.py --music 的默认值；music 抢戏时把 music bus 降到 -22.5，或把 make_sfx_v2 的 sidechain 0.18 提到 0.25",
+            "note": PROFILE.get("recommended_mix_note",
+                                "这组值就是 make_sfx_v2.py --music 的默认值；music 抢戏时把 music bus 降到 -22.5，或把 make_sfx_v2 的 sidechain 0.18 提到 0.25"),
             "drop_old_drone": True,
         },
-        "usage": "Remotion: <Audio src={staticFile('audio/v2/music-bed.wav')} />；或由 make_sfx_v2.py --music public/audio/v2/music-bed.wav 混入（会自动跳过旧 drone）",
+        "usage": PROFILE["usage"],
     }
+    if PROFILE.get("extra_manifest"):
+        manifest.update(PROFILE["extra_manifest"])
     MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print("\n完成：")
+    print("  profile  %s（%d 帧 / %d 小节 / %d cuts）" % (PROFILE_NAME, int(round(DUR * FPS)), TOTAL_BARS, len(CUT_FRAMES)))
     print("  WAV      %s  %.3fs  %dHz  stereo 16bit" % (BED_PATH, N / SR, SR))
     print("  manifest %s" % MANIFEST_PATH)
     print("  电平     RMS %+.2f dBFS / peak %+.2f dBFS / clip %d / soft-limit %s"

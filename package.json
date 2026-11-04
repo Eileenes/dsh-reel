@@ -64,6 +64,7 @@
     "campaign:design": "node design/build.mjs && bash design/build.sh",
     "campaign:render": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --concurrency=1",
     "campaign:still": "cd studio && node_modules/.bin/remotion still src/v2/entry.tsx ReelPromo out/reel-frame.png --frame=300",
-    "campaign:render:case": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelCase out/case-better-sidebar.mp4 --codec h264 --crf 16 --concurrency=1"
+    "campaign:render:case": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelCase out/case-better-sidebar.mp4 --codec h264 --crf 16 --concurrency=1",
+    "campaign:render:case30": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelCase30 out/case-better-sidebar-30s.mp4 --codec h264 --crf 16 --concurrency=1"
   }
 }

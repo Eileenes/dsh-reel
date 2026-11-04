@@ -1,0 +1,621 @@
+{
+  "version": "v2-30s",
+  "generator": "studio/scripts/make_music_v2.py",
+  "purpose": "30s Better Sidebar case 片（ReelCase30）卡点 BGM，按 case30-timeline.ts 的 C1–C7 场景边界对齐，两条片共用同一套音色写法",
+  "format": {
+    "sample_rate": 48000,
+    "channels": 2,
+    "bit_depth": 16,
+    "codec": "PCM"
+  },
+  "duration_sec": 30.0,
+  "tempo": {
+    "bpm": 120.0,
+    "time_signature": "4/4",
+    "beat_sec": 0.5,
+    "bar_sec": 2.0,
+    "sixteenth_sec": 0.125,
+    "total_beats": 60,
+    "total_bars": 15
+  },
+  "key": "A minor",
+  "progression": {
+    "chords": [
+      "Am",
+      "F",
+      "C",
+      "G",
+      "Am",
+      "F",
+      "C",
+      "G",
+      "Am",
+      "F",
+      "C",
+      "G",
+      "Am",
+      "Am",
+      "Am"
+    ],
+    "per_bar": [
+      {
+        "bar": 1,
+        "from_sec": 0.0,
+        "to_sec": 2.0,
+        "chord": "Am"
+      },
+      {
+        "bar": 2,
+        "from_sec": 2.0,
+        "to_sec": 4.0,
+        "chord": "F"
+      },
+      {
+        "bar": 3,
+        "from_sec": 4.0,
+        "to_sec": 6.0,
+        "chord": "C"
+      },
+      {
+        "bar": 4,
+        "from_sec": 6.0,
+        "to_sec": 8.0,
+        "chord": "G"
+      },
+      {
+        "bar": 5,
+        "from_sec": 8.0,
+        "to_sec": 10.0,
+        "chord": "Am"
+      },
+      {
+        "bar": 6,
+        "from_sec": 10.0,
+        "to_sec": 12.0,
+        "chord": "F"
+      },
+      {
+        "bar": 7,
+        "from_sec": 12.0,
+        "to_sec": 14.0,
+        "chord": "C"
+      },
+      {
+        "bar": 8,
+        "from_sec": 14.0,
+        "to_sec": 16.0,
+        "chord": "G"
+      },
+      {
+        "bar": 9,
+        "from_sec": 16.0,
+        "to_sec": 18.0,
+        "chord": "Am"
+      },
+      {
+        "bar": 10,
+        "from_sec": 18.0,
+        "to_sec": 20.0,
+        "chord": "F"
+      },
+      {
+        "bar": 11,
+        "from_sec": 20.0,
+        "to_sec": 22.0,
+        "chord": "C"
+      },
+      {
+        "bar": 12,
+        "from_sec": 22.0,
+        "to_sec": 24.0,
+        "chord": "G"
+      },
+      {
+        "bar": 13,
+        "from_sec": 24.0,
+        "to_sec": 26.0,
+        "chord": "Am"
+      },
+      {
+        "bar": 14,
+        "from_sec": 26.0,
+        "to_sec": 28.0,
+        "chord": "Am"
+      },
+      {
+        "bar": 15,
+        "from_sec": 28.0,
+        "to_sec": 30.0,
+        "chord": "Am"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "intro",
+      "from_sec": 0.0,
+      "to_sec": 3.0,
+      "scene": "C1",
+      "note": "hook：pad 铺底 + 稀疏 hats + 末尾 riser（1.0→3.0），不要 kick",
+      "rms_dbfs": -25.28
+    },
+    {
+      "id": "lift",
+      "from_sec": 3.0,
+      "to_sec": 7.0,
+      "scene": "C2",
+      "note": "whale + DSH window：kick 进入（每小节 1、3 拍）+ hats 8 分",
+      "rms_dbfs": -23.57
+    },
+    {
+      "id": "groove",
+      "from_sec": 7.0,
+      "to_sec": 10.0,
+      "scene": "C3",
+      "note": "official plugins page：4-on-floor kick + sub bass + 16 分 arp + 轻 clap",
+      "rms_dbfs": -19.5
+    },
+    {
+      "id": "build",
+      "from_sec": 10.0,
+      "to_sec": 15.0,
+      "scene": "C4",
+      "note": "search + install：full 编制 + riser（14.0→15.0）",
+      "rms_dbfs": -19.73
+    },
+    {
+      "id": "peak",
+      "from_sec": 15.0,
+      "to_sec": 19.0,
+      "scene": "C5",
+      "note": "sidebar ready：全编制 + open hat + 16 分 hat + snare，能量最高",
+      "rms_dbfs": -17.73
+    },
+    {
+      "id": "resolve",
+      "from_sec": 19.0,
+      "to_sec": 24.0,
+      "scene": "C6",
+      "note": "four features：收一档（half-time kick + 8 分 hat + clap），给 peak 让出落差",
+      "rms_dbfs": -22.17
+    },
+    {
+      "id": "outro",
+      "from_sec": 24.0,
+      "to_sec": 30.0,
+      "scene": "C7",
+      "note": "outro：Am 长音 pad + bell，末击 27.0，27–30s 静止收尾后 0.4s 淡出",
+      "rms_dbfs": -23.43
+    }
+  ],
+  "cuts": [
+    {
+      "frame": 90,
+      "sec": 3.0,
+      "scene": "C2",
+      "beat_float": 6.0,
+      "nearest_beat": 6,
+      "nearest_beat_sec": 3.0,
+      "delta_ms_vs_beat": 0.0,
+      "nearest_16th": 24,
+      "nearest_16th_sec": 3.0,
+      "delta_ms_vs_16th": 0.0
+    },
+    {
+      "frame": 210,
+      "sec": 7.0,
+      "scene": "C3",
+      "beat_float": 14.0,
+      "nearest_beat": 14,
+      "nearest_beat_sec": 7.0,
+      "delta_ms_vs_beat": 0.0,
+      "nearest_16th": 56,
+      "nearest_16th_sec": 7.0,
+      "delta_ms_vs_16th": 0.0
+    },
+    {
+      "frame": 300,
+      "sec": 10.0,
+      "scene": "C4",
+      "beat_float": 20.0,
+      "nearest_beat": 20,
+      "nearest_beat_sec": 10.0,
+      "delta_ms_vs_beat": 0.0,
+      "nearest_16th": 80,
+      "nearest_16th_sec": 10.0,
+      "delta_ms_vs_16th": 0.0
+    },
+    {
+      "frame": 450,
+      "sec": 15.0,
+      "scene": "C5",
+      "beat_float": 30.0,
+      "nearest_beat": 30,
+      "nearest_beat_sec": 15.0,
+      "delta_ms_vs_beat": 0.0,
+      "nearest_16th": 120,
+      "nearest_16th_sec": 15.0,
+      "delta_ms_vs_16th": 0.0
+    },
+    {
+      "frame": 570,
+      "sec": 19.0,
+      "scene": "C6",
+      "beat_float": 38.0,
+      "nearest_beat": 38,
+      "nearest_beat_sec": 19.0,
+      "delta_ms_vs_beat": 0.0,
+      "nearest_16th": 152,
+      "nearest_16th_sec": 19.0,
+      "delta_ms_vs_16th": 0.0
+    },
+    {
+      "frame": 720,
+      "sec": 24.0,
+      "scene": "C7",
+      "beat_float": 48.0,
+      "nearest_beat": 48,
+      "nearest_beat_sec": 24.0,
+      "delta_ms_vs_beat": 0.0,
+      "nearest_16th": 192,
+      "nearest_16th_sec": 24.0,
+      "delta_ms_vs_16th": 0.0
+    }
+  ],
+  "impacts": [
+    {
+      "frame": 90,
+      "sec": 3.0,
+      "weight": 0.85
+    },
+    {
+      "frame": 210,
+      "sec": 7.0,
+      "weight": 0.9
+    },
+    {
+      "frame": 300,
+      "sec": 10.0,
+      "weight": 0.75
+    },
+    {
+      "frame": 450,
+      "sec": 15.0,
+      "weight": 1.0
+    },
+    {
+      "frame": 570,
+      "sec": 19.0,
+      "weight": 1.0
+    },
+    {
+      "frame": 720,
+      "sec": 24.0,
+      "weight": 1.15
+    },
+    {
+      "frame": 810,
+      "sec": 27.0,
+      "weight": 1.1,
+      "note": "final hit"
+    }
+  ],
+  "risers": [
+    {
+      "from_frame": 60,
+      "to_frame": 90,
+      "from_sec": 2.0,
+      "to_sec": 3.0
+    },
+    {
+      "from_frame": 270,
+      "to_frame": 300,
+      "from_sec": 9.0,
+      "to_sec": 10.0
+    },
+    {
+      "from_frame": 420,
+      "to_frame": 450,
+      "from_sec": 14.0,
+      "to_sec": 15.0
+    },
+    {
+      "from_frame": 540,
+      "to_frame": 570,
+      "from_sec": 18.0,
+      "to_sec": 19.0
+    },
+    {
+      "from_frame": 690,
+      "to_frame": 720,
+      "from_sec": 23.0,
+      "to_sec": 24.0
+    }
+  ],
+  "sidechain": {
+    "targets": {
+      "pad": -4.0,
+      "bass": -7.0
+    },
+    "trigger": "kick",
+    "recovery_sec": {
+      "pad": 0.22,
+      "bass": 0.3
+    }
+  },
+  "layer_mix": {
+    "pad": {
+      "raw_rms_dbfs": -4.34,
+      "target_rms_dbfs": -20.5,
+      "applied_gain_db": -16.16
+    },
+    "bass": {
+      "raw_rms_dbfs": -11.22,
+      "target_rms_dbfs": -18.0,
+      "applied_gain_db": -6.78
+    },
+    "kick": {
+      "raw_rms_dbfs": -15.32,
+      "target_rms_dbfs": -15.5,
+      "applied_gain_db": -0.18
+    },
+    "perc": {
+      "raw_rms_dbfs": -29.68,
+      "target_rms_dbfs": -17.5,
+      "applied_gain_db": 12.18
+    },
+    "arp": {
+      "raw_rms_dbfs": -25.67,
+      "target_rms_dbfs": -20.0,
+      "applied_gain_db": 5.67
+    },
+    "bell": {
+      "raw_rms_dbfs": -30.87,
+      "target_rms_dbfs": -26.0,
+      "applied_gain_db": 4.87
+    },
+    "impact": {
+      "raw_rms_dbfs": -17.69,
+      "target_rms_dbfs": -17.0,
+      "applied_gain_db": 0.69
+    },
+    "riser": {
+      "raw_rms_dbfs": -29.32,
+      "target_rms_dbfs": -19.0,
+      "applied_gain_db": 10.32
+    }
+  },
+  "instruments": [
+    "pad",
+    "sub_bass",
+    "kick",
+    "snare",
+    "clap",
+    "hat_closed",
+    "hat_open",
+    "arp_pluck",
+    "bell",
+    "impact",
+    "riser"
+  ],
+  "kick_count": 38,
+  "hat_count": 144,
+  "kick_times_sec": [
+    3.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    7.0,
+    7.5,
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    10.0,
+    10.0,
+    10.5,
+    11.0,
+    11.5,
+    12.0,
+    12.5,
+    13.0,
+    13.5,
+    14.0,
+    14.5,
+    15.0,
+    15.0,
+    15.5,
+    16.0,
+    16.5,
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.0,
+    20.0,
+    21.0,
+    22.0,
+    23.0
+  ],
+  "hat_times_sec": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    2.0,
+    2.25,
+    2.5,
+    2.75,
+    3.0,
+    3.25,
+    3.5,
+    3.75,
+    4.0,
+    4.25,
+    4.5,
+    4.75,
+    5.0,
+    5.25,
+    5.5,
+    5.75,
+    6.0,
+    6.25,
+    6.5,
+    6.75,
+    7.0,
+    7.125,
+    7.25,
+    7.375,
+    7.5,
+    7.625,
+    7.75,
+    7.875,
+    8.0,
+    8.125,
+    8.25,
+    8.375,
+    8.5,
+    8.625,
+    8.75,
+    8.875,
+    9.0,
+    9.125,
+    9.25,
+    9.375,
+    9.5,
+    9.625,
+    9.75,
+    9.875,
+    10.0,
+    10.125,
+    10.25,
+    10.375,
+    10.5,
+    10.625,
+    10.75,
+    10.875,
+    11.0,
+    11.125,
+    11.25,
+    11.375,
+    11.5,
+    11.625,
+    11.75,
+    11.875,
+    12.0,
+    12.125,
+    12.25,
+    12.375,
+    12.5,
+    12.625,
+    12.75,
+    12.875,
+    13.0,
+    13.125,
+    13.25,
+    13.375,
+    13.5,
+    13.625,
+    13.75,
+    13.875,
+    14.0,
+    14.125,
+    14.25,
+    14.375,
+    14.5,
+    14.625,
+    14.75,
+    14.875,
+    15.0,
+    15.125,
+    15.25,
+    15.375,
+    15.5,
+    15.625,
+    15.75,
+    15.875,
+    16.0,
+    16.125,
+    16.25,
+    16.375,
+    16.5,
+    16.625,
+    16.75,
+    16.875,
+    17.0,
+    17.125,
+    17.25,
+    17.375,
+    17.5,
+    17.625,
+    17.75,
+    17.875,
+    18.0,
+    18.125,
+    18.25,
+    18.375,
+    18.5,
+    18.625,
+    18.75,
+    18.875,
+    19.0,
+    19.25,
+    19.5,
+    19.75,
+    20.0,
+    20.25,
+    20.5,
+    20.75,
+    21.0,
+    21.25,
+    21.5,
+    21.75,
+    22.0,
+    22.25,
+    22.5,
+    22.75,
+    23.0,
+    23.25,
+    23.5,
+    23.75
+  ],
+  "levels": {
+    "rms_dbfs": -21.0,
+    "peak_dbfs": -6.3,
+    "target_rms_dbfs": -21.0,
+    "peak_ceiling_dbfs": -6.0,
+    "clipped_samples": 0,
+    "soft_limiter_applied": true,
+    "soft_limiter_samples": 20153,
+    "normalize_gain_db": -11.63,
+    "fade_in_sec": 0.05,
+    "fade_out_sec": 0.4
+  },
+  "grid_note": "持续律动与 impact/riser 都严格贴 120BPM 网格：6 个 cut 全部落在整拍（3s=第6拍、7s=14、10s=20、15s=30、19s=38、24s=48 拍），没有 24s 版那种 off-grid 取舍",
+  "final_hit": {
+    "sec": 27.0,
+    "type": "impact + Am bell chord（静止段第 1 秒收在主和弦）"
+  },
+  "recommended_mix": {
+    "music_bus_rms_dbfs": -21.0,
+    "sfx_bus_rms_dbfs": -23.5,
+    "final_rms_dbfs": -19.5,
+    "final_peak_dbfs": -1.5,
+    "note": "30s 片的 SFX 混音还没做（make_sfx_v2.py 目前写死 DUR=24 + timeline.ts 事件表）：music bus 仍按 -21 dBFS 摆，SFX bus -23.5、总 -19.5/-1.5 是同一套目标；做 30s mix 时需要把事件表换成 case30-timeline.ts 并把时长参数化",
+    "drop_old_drone": true
+  },
+  "usage": "Remotion: <Audio src={staticFile('audio/v2/music-bed-30.wav')} />；ReelCase30 目前指向 preview-mix-case30.mp3，需要先做 30s 的 SFX 混音（make_sfx_v2.py 当前写死 24s，需另开 --duration 或新 mix 脚本）",
+  "profile": "30",
+  "sibling_24s": {
+    "bed": "music-bed.wav",
+    "manifest": "music-manifest.json"
+  },
+  "hard_cap_note": "30.000s 硬上限：N = 30×48000 = 1 440 000 samples（正好 900 帧 @30fps），文件时长 30.000000s"
+}

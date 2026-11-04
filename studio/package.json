@@ -14,7 +14,8 @@
     "render:v2": "remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --concurrency=1",
     "still:v2": "remotion still src/v2/entry.tsx ReelPromo out/reel-frame.png --frame=300",
     "dev:v2": "remotion studio src/v2/entry.tsx",
-    "render:case": "remotion render src/v2/entry.tsx ReelCase out/case-better-sidebar.mp4 --codec h264 --crf 16 --concurrency=1"
+    "render:case": "remotion render src/v2/entry.tsx ReelCase out/case-better-sidebar.mp4 --codec h264 --crf 16 --concurrency=1",
+    "render:case30": "remotion render src/v2/entry.tsx ReelCase30 out/case-better-sidebar-30s.mp4 --codec h264 --crf 16 --concurrency=1"
   },
   "dependencies": {
     "remotion": "4.0.409",
