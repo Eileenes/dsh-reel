@@ -82,9 +82,16 @@ bash design/build.sh
 > 本机 macOS 上 3D 场景走 ANGLE/Metal；`remotion.config.ts` 已设置 `setChromiumOpenGlRenderer('angle')`。
 > 1080p 全片建议 `--concurrency=1`，4 并发在 24GB 机器上会 OOM。
 >
-> 音轨 `studio/public/audio/v2/preview-mix.mp3` 已随仓库提供；需要重做声音时运行
-> `python3 studio/scripts/make_sfx_v2.py`（纯标准库生成 drone + 15 类音效 + 24s 混音），
-> 再把 `studio/out/p1-audio-mix.wav` 转成 mp3 覆盖该文件即可。
+> 音轨 `studio/public/audio/v2/preview-mix.mp3` 已随仓库提供：**120 BPM 卡点 BGM（A 小调，Am–F–C–G）
+> + 事件驱动音效**，两条 24s 片共用。重做声音：
+> ```bash
+> python3 studio/scripts/make_music_v2.py          # -> public/audio/v2/music-bed.wav
+> python3 studio/scripts/make_sfx_v2.py \
+>   --music public/audio/v2/music-bed.wav \
+>   --mix out/p1-audio-mix.wav
+> ffmpeg -i out/p1-audio-mix.wav -b:a 192k public/audio/v2/preview-mix.mp3
+> ```
+> 没有音乐时 `make_sfx_v2.py` 仍会退回到原来的 drone + 音效版本。
 
 ### 3. 检查案例，再渲染（v1 模板）
 
@@ -171,10 +178,10 @@ dsh plugin --profile scratch add github:Eileenes/dsh-reel
 | 渲染 v1 案例 | Node.js 22+、pnpm、Chrome／Chromium | 用 `scripts/reel.mjs --mode both` 在本地生成，仓库不再内置旧的 Better Sidebar 样片 |
 | 换成其他插件 | 已核实的信息、可使用的截图、JSON 与 TSX 修改 | v1 模板仍含 Better Sidebar 固定内容；v2 尚未参数化 |
 | 调整画幅或时长 | 修改 Composition、布局、镜头时间线和配乐 | v2 目前 24s / 16:9 + 3:4 + 1:1；无通用竖屏预设 |
-| 重新生成音效 | Python 3（纯标准库） | `python3 studio/scripts/make_sfx_v2.py` 重新合成 drone + 15 类音效并铺 24s 混音 |
+| 重新生成配乐/音效 | Python 3（纯标准库） | `make_music_v2.py` 合成 120BPM 卡点 BGM；`make_sfx_v2.py --music ...` 叠 15 类音效并铺 24s 混音 |
 | 旁白与宿主自动化 | 额外实现与验证 | 当前没有旁白生成；宿主流程仍未完成真实环境验收 |
 
-campaign 片为 H.264 / yuv420p / AAC 48kHz 双声道，24.04s（720 帧 @30fps）；音效为参考片同规格的 drone + 事件驱动音效（无版权音乐）。仓库没有独立自动化测试套件；`--dry-run` 只检查参数路径，不能替代完整渲染和画面验收。
+campaign 片为 H.264 / yuv420p / AAC 48kHz 双声道，24.0s（720 帧 @30fps）；配乐为本地合成的 120BPM 卡点 BGM（A 小调、Am–F–C–G，8 个 cut 各带 impact）+ 事件驱动音效，无第三方版权音乐。仓库没有独立自动化测试套件；`--dry-run` 只检查参数路径，不能替代完整渲染和画面验收。
 
 ## 文档与维护
 
@@ -184,7 +191,8 @@ campaign 片为 H.264 / yuv420p / AAC 48kHz 双声道，24.04s（720 帧 @30fps�
 | [v2 渲染入口](studio/src/v2/entry.tsx) | 24 秒 campaign 片的 Composition |
 | [v2 时间线](studio/src/v2/data/timeline.ts) | 场景边界与音效锚点（改节奏先改这里） |
 | [设计源文件](design/README.md) | 海报 / 封面 / 方图模板与生成命令 |
-| [音效合成](studio/scripts/make_sfx_v2.py) | drone + 15 类事件音效，纯 Python |
+| [配乐合成](studio/scripts/make_music_v2.py) | 120BPM 卡点 BGM（120 拍/12 小节/8 个 impact），纯 Python |
+| [音效/混音](studio/scripts/make_sfx_v2.py) | 15 类事件音效 + 与 music bed 混音（可选 --music），纯 Python |
 | [渲染 CLI](scripts/reel.mjs) | v1 参数、浏览器查找与输出路径 |
 | [Composition 定义](studio/src/Root.tsx) | v1 视频时长、帧率与两种画幅 |
 | [发布检查清单](PUBLISHING.md) | npm 打包与 DSH 市场发布的规划 |
@@ -208,7 +216,7 @@ dsh-reel/
 │   ├── src/                  # v1 Remotion 模板
 │   ├── src/v2/               # 2026 campaign：tokens / 鲸鱼 / 市场 UI / 场景
 │   ├── public/v2/            # campaign 用素材
-│   ├── public/audio/v2/      # drone + 15 类事件音效
+│   ├── public/audio/v2/      # 120BPM 卡点 BGM + 15 类事件音效 + 混音
 │   └── scripts/make_sfx_v2.py# 音效合成
 ├── PUBLISHING.md             # 发布检查清单
 └── LICENSE                   # MIT 许可证

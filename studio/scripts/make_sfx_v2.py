@@ -721,7 +721,16 @@ def main():
                     help="带 SOUND_EVENTS 的时间轴 TS 文件（默认 v2 campaign 的 timeline.ts）")
     ap.add_argument("--mix", default=str(MIX_PATH), help="预览混音输出 WAV 路径")
     ap.add_argument("--manifest", default=str(AUDIO_DIR / "manifest.json"), help="manifest 输出路径")
+    ap.add_argument("--music", default=None, help="可选：music bed WAV（24s/48k/stereo）。给了就跳过 drone、把音乐混进来")
+    ap.add_argument("--music-rms", type=float, default=-21.0, help="music bed 在混音总线里的目标 RMS dBFS")
+    ap.add_argument("--sfx-rms", type=float, default=-27.0, help="无音乐时 SFX 总线目标 RMS dBFS（旧行为）")
+    ap.add_argument("--sfx-rms-music", type=float, default=-23.5, help="有音乐时 SFX 总线目标 RMS dBFS")
+    ap.add_argument("--mix-rms", type=float, default=None, help="最终混音 RMS dBFS（默认：有音乐 -19.5，无音乐 -27）")
+    ap.add_argument("--mix-peak", type=float, default=None, help="最终混音峰值上限 dBFS（默认：有音乐 -1.5，无音乐 -8.05）")
     args = ap.parse_args()
+    music_path = Path(args.music) if args.music else None
+    mix_rms_target = args.mix_rms if args.mix_rms is not None else (-19.5 if music_path else MIX_RMS_DBFS)
+    mix_peak_target = args.mix_peak if args.mix_peak is not None else (-1.5 if music_path else MIX_PEAK_CEIL_DBFS)
     say = (lambda *a, **k: None) if args.quiet else print
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
@@ -760,16 +769,11 @@ def main():
             (kind, len(left) / SR, SFX_PEAK_DBFS, wet * 100))
 
     # 3) 预览混音 -------------------------------------------------------------
-    say("[3/4] 按 timeline.ts 的 SOUND_EVENTS 铺 24s 预览混音…")
     events = load_events(Path(args.timeline))
     n = int(SR * DUR)
     left = [0.0] * n
     right = [0.0] * n
-    # drone 铺底
-    for i in range(n):
-        left[i] = d_left[i]
-        right[i] = d_right[i]
-    # 同种音效的循环计数（用于 key/tile 的音高变化，模仿参考片 wood 音高 1500+180*i）
+    # 先把事件音效铺成一条 SFX 总线（不加 drone）
     counters = {}
     placed = 0
     for ev in events:
@@ -782,30 +786,73 @@ def main():
             f = pitches[idx % len(pitches)]
             sl = resample_pitch(sl, f)
             sr_ = resample_pitch(sr_, f)
-        # 直接按帧落位：48000/30 = 1600 samples/帧，事件与视频帧零误差对齐
         start = int(round(ev["frame"] * SR / FPS))
         gain = ev["gain"]
         m = len(sl)
         if start >= n:
             continue
-        end = min(n, start + m)
-        for i in range(start, end):
+        end_i = min(n, start + m)
+        for i in range(start, end_i):
             j = i - start
             left[i] += sl[j] * gain
             right[i] += sr_[j] * gain
         placed += 1
 
-    # 整体归一化：目标 RMS −27 dBFS，峰值不超过 −8 dBFS
+    # SFX 总线电平：有音乐时压低一点，让音乐是主体、音效是"点"
+    sfx_target = args.sfx_rms_music if music_path else args.sfx_rms
+    sfx_rms_raw = rms_of([left, right])
+    sfx_gain = POW(10.0, ((sfx_target - dbfs(sfx_rms_raw)) / 20.0))
+    for i in range(n):
+        left[i] *= sfx_gain
+        right[i] *= sfx_gain
+
+    music_info = None
+    if music_path:
+        # 有音乐：跳过 drone（避免低频打架），音乐在 SFX 瞬态处做轻 duck
+        say("[3/4] 混入 music bed（%s）…" % music_path.name)
+        ml, mr, sr_m, ch_m = read_wav(music_path)
+        if sr_m != SR or ch_m != 2:
+            raise SystemExit(f"music bed 必须是 48kHz stereo，实际 {sr_m}Hz/{ch_m}ch")
+        ml = (ml + [0.0] * n)[:n]
+        mr = (mr + [0.0] * n)[:n]
+        music_rms_raw = rms_of([ml, mr])
+        music_gain = POW(10.0, ((args.music_rms - dbfs(music_rms_raw)) / 20.0))
+        # sidechain-lite：SFX 瞬态出现时把音乐压最多 18%（约 -1.7dB），0.9995 释放
+        env = 0.0
+        for i in range(n):
+            a = abs(left[i]) if abs(left[i]) > abs(right[i]) else abs(right[i])
+            env = a if a > env else env * 0.9995
+            duck = 1.0 - 0.24 * min(1.0, env / 0.22)
+            left[i] += ml[i] * music_gain * duck
+            right[i] += mr[i] * music_gain * duck
+        music_info = {
+            "file": str(music_path),
+            "duration_sec": round(len(ml) / SR, 4),
+            "rms_dbfs_raw": round(dbfs(music_rms_raw), 2),
+            "target_rms_dbfs": args.music_rms,
+            "applied_gain_db": round(20.0 * LOG10(music_gain), 2),
+            "sidechain_duck": 0.18,
+        }
+        say("      music  RMS %+.1f → %+.1f dBFS（gain %+.2f dB）/ SFX bus %+.1f dBFS" %
+            (dbfs(music_rms_raw), args.music_rms, 20.0 * LOG10(music_gain), args.sfx_rms_music))
+    else:
+        # 旧行为：drone 铺底
+        for i in range(n):
+            left[i] = d_left[i] + left[i]
+            right[i] = d_right[i] + right[i]
+
+    # 整体归一化：目标 RMS，峰值不超过上限
     rms_raw = rms_of([left, right])
     peak_raw = stereo_peak(left, right)
-    gain_rms = POW(10.0, ((MIX_RMS_DBFS - dbfs(rms_raw)) / 20.0))
-    gain_peak = POW(10.0, ((MIX_PEAK_CEIL_DBFS - dbfs(peak_raw)) / 20.0))
+    gain_rms = POW(10.0, ((mix_rms_target - dbfs(rms_raw)) / 20.0))
+    gain_peak = POW(10.0, ((mix_peak_target - dbfs(peak_raw)) / 20.0))
     gain = min(gain_rms, gain_peak)
     for i in range(n):
         left[i] *= gain
         right[i] *= gain
-    # 末尾 100ms 淡到 0：片尾最后 0.8s 本就是"静止淡出"，同时兜住 chime 尾巴越过 24.0s 的截断
-    fade_n = int(MIX_END_FADE_SEC * SR)
+    # 结尾淡出：有音乐时跟随 music bed 的收束，保持短
+    fade_sec = 0.20 if music_path else MIX_END_FADE_SEC
+    fade_n = int(fade_sec * SR)
     for i in range(fade_n):
         g = 0.5 - 0.5 * COS(PI * (i + 1) / fade_n)
         left[n - 1 - i] *= g
@@ -818,8 +865,8 @@ def main():
     say("      原始 RMS %+.1f dBFS / peak %+.1f dBFS → 增益 %+.2f dB（限幅由 %s 决定）" %
         (dbfs(rms_raw), dbfs(peak_raw), 20.0 * LOG10(gain),
          "RMS 目标" if gain_rms <= gain_peak else "峰值上限"))
-    say("      混音 RMS %+.1f dBFS / peak %+.1f dBFS / %d 事件" %
-        (mix_rms, mix_peak, placed))
+    say("      混音 RMS %+.1f dBFS / peak %+.1f dBFS / %d 事件%s" %
+        (mix_rms, mix_peak, placed, " + music" if music_path else ""))
 
     # 4) manifest -------------------------------------------------------------
     say("[4/4] 写 manifest.json…")
@@ -862,7 +909,10 @@ def main():
             "mix_peak_dbfs": round(mix_peak, 2),
             "master_gain_db": round(20.0 * LOG10(gain), 2),
             "master_limit": ("RMS 目标" if gain_rms <= gain_peak else "峰值上限"),
-            "mix_end_fade_sec": MIX_END_FADE_SEC,
+            "mix_target_rms_dbfs": mix_rms_target,
+            "mix_target_peak_dbfs": mix_peak_target,
+            "mix_end_fade_sec": 0.20 if music_path else MIX_END_FADE_SEC,
+            "music": music_info,
             "note_chime_overrun": "最后一个 chime 事件在 frame 690 / 23.0s，文件 1.1s，会越过 24.0s 约 0.1s；混音已在末尾 100ms 淡出，若分轨摆放请同样处理",
             "reference_film_rms_dbfs": -27.5,
             "reference_film_peak_dbfs": -8.0,
@@ -886,7 +936,7 @@ def main():
     checked = 0
     for label, path, expect_peak in (
         ("drone", drone_path, drone_stats["peak_dbfs"]),
-        ("mix", MIX_PATH, mix_peak),
+        ("mix", mix_path, mix_peak),
         *[(k, SFX_DIR / f"{k}.wav", SFX_PEAK_DBFS) for k in SFX_SPECS],
     ):
         l, r, sr, ch = read_wav(path)
