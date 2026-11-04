@@ -1,10 +1,10 @@
 # Publishing to npm & the DSH plugin market
 
-This repo is currently **GitHub-install friendly**, not npm-market ready. Read this before publishing.
+This repo is **GitHub-install friendly**; `dsh-reel-studio@0.2.0` was published to npm on 2026-11-04 with a slim runtime-only package. The full studio/renderer remains GitHub-only. Read this before publishing again.
 
 ## 1. Current state
 
-- `package.json` has `"private": true`.
+- `package.json` has `"private": false`; npm 0.2.0 is published.
 - The repo includes the full Remotion studio + demo media for development.
 - `reel_render` shells out to `scripts/reel.mjs` and needs `studio/` + Chrome.
 - The host package has **not been validated in a real DSH profile** yet.

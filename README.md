@@ -54,7 +54,22 @@ v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://g
 
 ![Better Sidebar 片尾](docs/better-sidebar-endcard.png)
 
-> 这条管线目前是**手动分镜 + 外部 Onetake 渲染**：素材、tab 坐标、音频事件需要按目标插件逐个调整；不是“给仓库地址就自动出片”。Onetake 为 PolyForm Noncommercial 许可，商用需另行授权。
+> 这条管线目前是**手动分镜 + 外部 Onetake 渲染**：素材、tab 坐标、音频事件需要按目标插件逐个调整；不是“给仓库地址就自动出片”。
+
+### Onetake 许可说明（重要）
+
+- 本仓库里的 Onetake comp / 工作流，**仅用于开发和制作 DSH 插件相关的宣传素材**；
+- **Onetake 本身不是商用授权**：它是 PolyForm Noncommercial 许可，只能用于非商业用途；
+- 任何人如果要把 Onetake 或其渲染产物用于**商业用途**，需要自行向 Onetake 作者取得**另行商业授权**；
+- 本仓库不包含、也不分发 Onetake 运行时；商用前请同时确认 Onetake、截图、字体、音乐等全部素材的许可。
+
+## 交流群
+
+对 dsh-reel-studio 感兴趣、想反馈问题或一起做插件宣传片，可以扫码进群：
+
+<img src="https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/wechat-group.png" width="280" alt="dsh-reel-studio 交流群二维码" />
+
+群聊：`dsh-deel` · 二维码 7 天内有效（11 月 11 日前）
 
 <a id="quick-start"></a>
 

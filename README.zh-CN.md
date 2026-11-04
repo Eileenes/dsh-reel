@@ -26,7 +26,15 @@ npm 包名：`dsh-reel-studio` · 仓库：`Eileenes/dsh-reel`
 - [案例拆解](docs/case-better-sidebar-v0.1.md)：功能表、28s 时间线、素材来源、限制；
 - [Onetake comp 参考](promo/comp-better-sidebar.html)：实际分镜/动画代码（依赖 Onetake，不随仓库分发）。
 
-> 目前是手动分镜 + 外部 Onetake 渲染；Onetake 为 PolyForm Noncommercial，商用需授权。
+> 目前是手动分镜 + 外部 Onetake 渲染。
+
+**Onetake 许可说明**：Onetake 不是商用授权，采用 PolyForm Noncommercial；本仓库的 comp/工作流仅用于开发和制作 DSH 插件宣传素材。任何人将 Onetake 或其渲染产物用于商业用途，需自行向 Onetake 作者取得另行商业授权。本仓库不分发 Onetake 运行时。
+
+## 交流群
+
+<img src="https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/wechat-group.png" width="260" alt="dsh-reel-studio 交流群二维码" />
+
+群聊：`dsh-deel` · 二维码 7 天内有效（11 月 11 日前）
 
 ## 能产出什么
 

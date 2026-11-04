@@ -2,6 +2,8 @@
 
 > 适用：给任意 DSH 插件做一条 **30 秒以内、以真实界面为主** 的宣传片。
 > 首个案例：Better Sidebar（见 [`case-better-sidebar-v0.1.md`](./case-better-sidebar-v0.1.md)）。
+>
+> **Onetake 许可**：Onetake 是 PolyForm Noncommercial，**不是商用授权**。本方法/comp 仅用于开发和制作 DSH 插件宣传素材；任何人将 Onetake 或其渲染产物用于商业用途，需另行向 Onetake 作者取得商业授权；本仓库不分发 Onetake 运行时。
 > 成片：[`better-sidebar-v0.1.mp4`](./better-sidebar-v0.1.mp4)。
 
 ---

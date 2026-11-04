@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: turn a DSH plugin repo into a promo video and promo image locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp, storyboard method, audio/QA checklist).",
+  "description": "dsh-reel-studio: turn a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp + storyboard method). Onetake is PolyForm Noncommercial, not a commercial license.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -28,14 +28,14 @@
   "files": [
     "lib",
     "scripts",
-    "studio",
-    "design",
-    "cases",
     "cordis.patch.yml",
     "README.md",
     "README.zh-CN.md",
     "PUBLISHING.md",
-    "LICENSE"
+    "LICENSE",
+    "docs/promo-method-v0.1.md",
+    "docs/case-better-sidebar-v0.1.md",
+    "docs/wechat-group.png"
   ],
   "exports": {
     ".": "./lib/index.js",

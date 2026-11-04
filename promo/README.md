@@ -5,7 +5,8 @@
 ## 依赖
 
 - Onetake 渲染器（`motion.js`、`three.bundle.js`、`comp.html` 等）；
-- Onetake 是 **PolyForm Noncommercial** 许可，不在本仓库内分发；商用需另行授权；
+- **Onetake 不是商用授权**：它是 PolyForm Noncommercial，只能用于非商业用途；本仓库的 comp/工作流仅用于开发和制作 DSH 插件宣传素材；
+- 任何人把 Onetake 或其渲染产物用于**商业用途**，需自行向 Onetake 作者取得**另行商业授权**；本仓库不分发 Onetake 运行时；
 - comp 里引用的图片以 `data:image/png;base64` 形式注入（`dshwin.js`、`dshpage.js`、Better Sidebar 截图等），这些素材文件未随仓库提供，需按 `docs/promo-method-v0.1.md` 的素材规范自行准备。
 
 ## 使用
