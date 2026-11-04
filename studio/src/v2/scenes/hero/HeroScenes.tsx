@@ -314,6 +314,68 @@ export type S1HookProps = {
   hook?: string;
   /** 右上 mono 小标 */
   eyebrow?: string;
+  /** 是否在结尾出现小鲸鱼 + 喷水（用于 30s 故事版的 S1） */
+  whale?: boolean;
+};
+
+const S1Whale: React.FC<{f: number}> = ({f}) => {
+  const enter = E.cubicOut(seg(f, 88, 104));
+  const bob = Math.sin(f / 9) * 4;
+  const spoutT = Math.max(0, Math.min(1, (f - 106) / 22));
+  const spoutOn = f >= 106 && f <= 130;
+  const drops = [
+    {x: -26, y: -8, s: 14, d: 0},
+    {x: -12, y: -16, s: 11, d: 2},
+    {x: 4, y: -20, s: 15, d: 1},
+    {x: 20, y: -14, s: 11, d: 3},
+    {x: 34, y: -6, s: 10, d: 4},
+    {x: -34, y: 2, s: 10, d: 5},
+    {x: 42, y: 4, s: 9, d: 6},
+  ];
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 520,
+        bottom: 520 + bob,
+        width: 320,
+        opacity: enter,
+        transform: `scale(${0.5 + enter * 0.5})`,
+        transformOrigin: '50% 100%',
+      }}
+    >
+      {spoutOn
+        ? drops.map((d, i) => {
+            const k = Math.max(0, Math.min(1, (f - 106 - d.d * 2) / 20));
+            return (
+              <span
+                key={i}
+                style={{
+                  position: 'absolute',
+                  left: 160 + d.x,
+                  top: 20 + d.y - k * (70 + d.s * 2),
+                  width: d.s,
+                  height: d.s,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(180deg,#eaf7ff,#8ecbff)',
+                  boxShadow: '0 0 10px rgba(150,215,255,0.85)',
+                  opacity: k > 0 ? (1 - k) * 0.95 : 0,
+                  transform: `translateX(${k * (d.x * 0.5)}px) scale(${1 - k * 0.3})`,
+                }}
+              />
+            );
+          })
+        : null}
+      <img
+        src={staticFile('shots/whale-sprite.png')}
+        style={{
+          width: 280,
+          height: 170,
+          filter: 'drop-shadow(0 18px 30px rgba(0,0,0,0.45)) drop-shadow(0 0 18px rgba(120,180,255,0.35))',
+        }}
+      />
+    </div>
+  );
 };
 
 export const S1Hook: React.FC<S1HookProps> = ({
@@ -321,6 +383,7 @@ export const S1Hook: React.FC<S1HookProps> = ({
   termTitle = 'dsh-reel — zsh — 120×32',
   hook = '给每个插件，一条自己的宣传片。',
   eyebrow = 'DSH PLUGIN · PROMO KIT',
+  whale = false,
 }) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -360,27 +423,37 @@ export const S1Hook: React.FC<S1HookProps> = ({
       {/* 背景动势：淡竖光 + 扫描光（在终端下面，不会盖过打字） */}
       <S1Sweep f={f} />
       {/* 终端：放大 1.3 倍、往画面中心偏左下移，让 `$ dsh` 打字更清楚 */}
-      <div
-        style={{
-          position: 'absolute',
-          left: S1_TERM_LEFT,
-          bottom: S1_TERM_BOTTOM,
-          width: TERM_W,
-          transformOrigin: 'left bottom',
-          transform: `perspective(2000px) rotateY(4deg) rotateX(1.6deg) scale(${S1_TERM_SCALE})`,
-        }}
-      >
-        <TerminalWindow
-          typed={shown}
-          copy={typedCopy}
-          termTitle={termTitle}
-          product={product}
-          caretOn={caretOn}
-          gather={gather}
-        />
+      {(() => {
+        const exit = whale ? E.cubicInOut(seg(f, 128, 146)) : 0;
+        return (
+          <div
+            style={{
+              position: 'absolute',
+              left: S1_TERM_LEFT,
+              bottom: S1_TERM_BOTTOM,
+              width: TERM_W,
+              transformOrigin: 'left bottom',
+              transform: `perspective(2000px) translateY(${exit * 90}px) rotateY(4deg) rotateX(1.6deg) scale(${S1_TERM_SCALE * (1 - 0.22 * exit)})`,
+              opacity: 1 - exit,
+            }}
+          >
+            <TerminalWindow
+              typed={shown}
+              copy={typedCopy}
+              termTitle={termTitle}
+              product={product}
+              caretOn={f < 100}
+              gather={gather}
+            />
+          </div>
+        );
+      })()}
+      {/* 小鲸鱼出现 + 喷水 */}
+      {whale ? <S1Whale f={f} /> : null}
+      {/* 右上品牌 + 中文钩子（f18 后淡入，鲸鱼出现后让位） */}
+      <div style={{opacity: whale ? 1 - E.cubicOut(seg(f, 92, 108)) : 1}}>
+        <S1Brand f={f} hook={hook} eyebrow={eyebrow} />
       </div>
-      {/* 右上品牌 + 中文钩子（f18 后淡入） */}
-      <S1Brand f={f} hook={hook} eyebrow={eyebrow} />
       {/* 黑场起幅：前 ~8 帧压黑，f0–f8 保持黑场，之后淡入 */}
       <AbsoluteFill
         style={{
