@@ -31,21 +31,36 @@ const WhaleJump: React.FC<JumpProps> = ({frame, from, to, start, end, height, wi
   const y = from[1] + (to[1] - from[1]) * p;
   const arc = Math.sin(Math.PI * p) * height;
   const rot = Math.sin(Math.PI * p) * 10 - p * 6;
-  const h = (width * 270) / 470;
+  const h = (width * 340) / 560;
   return (
-    <img
-      src={staticFile('shots/whale-sprite.png')}
-      style={{
-        position: 'absolute',
-        left: x - width / 2,
-        top: y - arc - h / 2,
-        width,
-        height: h,
-        transform: `rotate(${rot}deg) scale(${1 + squash}, ${1 - squash})`,
-        filter: 'drop-shadow(0 14px 24px rgba(10,20,40,.35))',
-        pointerEvents: 'none',
-      }}
-    />
+    <>
+      <div
+        style={{
+          position: 'absolute',
+          left: x - width * 0.7,
+          top: y - arc - h * 0.72,
+          width: width * 1.4,
+          height: h * 1.45,
+          borderRadius: '50%',
+          background: 'radial-gradient(closest-side, rgba(140,195,255,.42), rgba(140,195,255,0) 72%)',
+          filter: 'blur(9px)',
+          pointerEvents: 'none',
+        }}
+      />
+      <img
+        src={staticFile('shots/whale-sprite.png')}
+        style={{
+          position: 'absolute',
+          left: x - width / 2,
+          top: y - arc - h / 2,
+          width,
+          height: h,
+          transform: `rotate(${rot}deg) scale(${1 + squash}, ${1 - squash})`,
+          filter: 'drop-shadow(0 16px 26px rgba(10,20,40,.38)) drop-shadow(0 0 16px rgba(120,180,255,.28))',
+          pointerEvents: 'none',
+        }}
+      />
+    </>
   );
 };
 
@@ -71,7 +86,7 @@ const ClickRipple: React.FC<{frame: number; at: number; x: number; y: number}> =
 };
 
 const WindowFrame: React.FC<{children: React.ReactNode; opacity: number; transform: string}> = ({children, opacity, transform}) => (
-  <div style={{position: 'absolute', left: LEFT, top: TOP, width: W, height: H, opacity, transformOrigin: '50% 50%', transform}}>
+  <div style={{position: 'absolute', left: LEFT, top: TOP, width: W, height: H, opacity, transformOrigin: '5.6% 25.8%', transform}}>
     <div
       style={{
         position: 'absolute',
@@ -93,17 +108,18 @@ const WindowFrame: React.FC<{children: React.ReactNode; opacity: number; transfo
 export const C3OpenPlugins: React.FC = () => {
   const f = useCurrentFrame();
   const enter = smooth(seg(f, 0, 14));
-  const out = smooth(seg(f, 78, 90));
-  const push = 1 + 0.035 * smooth(seg(f, 0, 90));
-  const targetX = (72 / 1280) * W;
-  const targetY = (186 / 720) * H;
+  const out = smooth(seg(f, 108, 122));
+  const push = 1 + 0.035 * smooth(seg(f, 0, 122));
+  const startZoom = 1 + 0.75 * (1 - smooth(seg(f, 0, 44)));
+  const targetX = (90 / 1600) * W;
+  const targetY = (171 / 900) * H - (130 * 340) / 560 / 2 + 14;
   return (
     <AbsoluteFill style={{backgroundColor: COLORS.bg0}}>
       <DshBackdrop />
       <Grain />
-      <WindowFrame opacity={enter} transform={`perspective(1900px) translateY(${(1 - enter) * 30}px) rotateX(${(1 - enter) * 5}deg) scale(${push}) translateX(${out * 40}px)`}>
+      <WindowFrame opacity={enter} transform={`perspective(1900px) translateY(${(1 - enter) * 30}px) rotateX(${(1 - enter) * 5}deg) scale(${push * startZoom}) translateX(${out * 40}px)`}>
         <Img src={staticFile('shots/dsh-main-clean.png')} style={{width: '100%', height: '100%', objectFit: 'cover', display: 'block'}} />
-        <WhaleJump frame={f} from={[W + 110, H + 50]} to={[targetX, targetY]} start={10} end={54} height={140} width={170} />
+        <WhaleJump frame={f} from={[W + 110, H + 50]} to={[targetX, targetY]} start={10} end={54} height={140} width={130} />
         <ClickRipple frame={f} at={60} x={targetX} y={targetY} />
       </WindowFrame>
       <Caption kicker="01 / 打开" title="跳到「插件」，点一下。" delay={6} />
@@ -129,8 +145,8 @@ export const C4SearchInstall: React.FC = () => {
   const showText = f >= 20;
   const resultIn = smooth(seg(f, 78, 98));
   const clickAt = 172;
-  const progress = smooth(seg(f, 184, 250));
-  const installed = smooth(seg(f, 256, 274));
+  const progress = smooth(seg(f, 184, 240));
+  const installed = smooth(seg(f, 246, 266));
   const jumpStart = 116;
   const jumpEnd = 160;
   const steps = ['下载包', '校验完整性', '写入 profile'];
@@ -220,7 +236,7 @@ export const C4SearchInstall: React.FC = () => {
           </div>
         </div>
 
-        <WhaleJump frame={f} from={[W + 80, H + 60]} to={[INSTALL_X, INSTALL_Y]} start={jumpStart} end={jumpEnd} height={130} width={160} />
+        <WhaleJump frame={f} from={[W + 80, H + 60]} to={[INSTALL_X, INSTALL_Y]} start={jumpStart} end={jumpEnd} height={120} width={130} />
         <ClickRipple frame={f} at={clickAt} x={INSTALL_X} y={INSTALL_Y} />
 
         <div

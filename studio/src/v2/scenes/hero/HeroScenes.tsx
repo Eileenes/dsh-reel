@@ -147,7 +147,7 @@ const TerminalWindow: React.FC<{
         {/* 终端正文 */}
         <div style={{padding: '32px 40px 34px', fontFamily: FONT.mono}}>
           <div style={{fontSize: 17, color: COLORS.faint, letterSpacing: 0.3}}>
-            Last login: Tue Nov 4 10:51:02 on ttys001
+            Last login: Tue Nov 4 10:51:02 on harness
           </div>
           <div style={{display: 'flex', alignItems: 'center', gap: 16, marginTop: 26}}>
             <span style={{fontSize: 28, color: COLORS.mint}}>$</span>
@@ -439,7 +439,7 @@ const DshWindow: React.FC<{reveal: number; glow: number; zoom: number}> = ({reve
         top: 140,
         width: 1560,
         height: 900,
-        transformOrigin: '46% 60%',
+        transformOrigin: '4% 19%',
         transform: `scale(${zoom})`,
       }}
     >
@@ -507,7 +507,7 @@ export const S2Hatch: React.FC = () => {
   const windowGlow = Math.max(0, 1 - Math.abs(f - 64) / 18);
   // 结尾 8 帧：窗口放大（进入 DSH）+ 画面轻微压暗
   const enter = seg(f, 70, 78);
-  const windowZoom = 1 + 1.0 * enter * enter;
+  const windowZoom = 1 + 0.75 * enter * enter;
   const endDim = 0.4 * Math.pow(seg(f, 71, 78), 1.3);
 
   return (
@@ -525,6 +525,27 @@ export const S2Hatch: React.FC = () => {
       </LayerCanvas>
       <DshVignette />
       <DshWindow reveal={windowReveal} glow={windowGlow} zoom={windowZoom} />
+      {/* 终端在鲸鱼出现时保留：从 S1 的完整尺寸缩小到左侧，不消失 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: S1_TERM_LEFT,
+          bottom: S1_TERM_BOTTOM,
+          width: TERM_W,
+          transformOrigin: 'left bottom',
+          transform: `perspective(2000px) rotateY(4deg) rotateX(1.6deg) scale(${S1_TERM_SCALE - 0.5 * E.cubicOut(seg(f, 0, 24))})`,
+          opacity: 0.96,
+        }}
+      >
+        <TerminalWindow
+          typed={3}
+          copy="dsh"
+          termTitle="better-sidebar — zsh — 120×32"
+          product="BETTER-SIDEBAR"
+          caretOn={false}
+          gather={0}
+        />
+      </div>
       {/* 鲸鱼单独一层，盖在 HTML 窗口上面（跳到窗口上才不会被盖住） */}
       <LayerCanvas camera={cam}>
         <HeroLights />

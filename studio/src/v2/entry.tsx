@@ -41,8 +41,8 @@ const V2Root: React.FC = () => (
       component={WhaleSpriteComp}
       durationInFrames={1}
       fps={FPS}
-      width={700}
-      height={700}
+      width={1200}
+      height={800}
     />
     <Composition
       id="ReelCaseVoxelReal30"

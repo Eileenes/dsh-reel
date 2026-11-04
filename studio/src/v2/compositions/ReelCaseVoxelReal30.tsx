@@ -16,11 +16,11 @@ import {C7Outro} from '../scenes/case30/OutroScene';
 
 const CUTS: Array<[number, number]> = [
   [90, 0.15],
-  [210, 0.18],
+  [178, 0.18],
   [300, 0.26],
-  [560, 0.24],
-  [690, 0.16],
-  [770, 0.15],
+  [580, 0.24],
+  [710, 0.16],
+  [780, 0.15],
 ];
 
 const CutFlash: React.FC = () => {
@@ -67,12 +67,12 @@ const CASE_HOOK = {
 
 const SCENES = [
   {from: 0, duration: 90, name: 'c1-hook', Comp: () => <S1Hook {...CASE_HOOK} />},
-  {from: 90, duration: 120, name: 'c2-whale-real-dsh', Comp: () => <S2Hatch />},
-  {from: 210, duration: 90, name: 'c3-open-plugins', Comp: () => <C3OpenPlugins />},
-  {from: 300, duration: 260, name: 'c4-search-install', Comp: () => <C4SearchInstall />},
-  {from: 560, duration: 130, name: 'c5-features', Comp: () => <C7Features />},
-  {from: 690, duration: 80, name: 'c6-workbench', Comp: () => <C8Workbench />},
-  {from: 770, duration: 130, name: 'c7-outro', Comp: () => <C7Outro />},
+  {from: 90, duration: 88, name: 'c2-whale-real-dsh', Comp: () => <S2Hatch />},
+  {from: 178, duration: 122, name: 'c3-open-plugins', Comp: () => <C3OpenPlugins />},
+  {from: 300, duration: 280, name: 'c4-search-install', Comp: () => <C4SearchInstall />},
+  {from: 580, duration: 130, name: 'c5-features', Comp: () => <C7Features />},
+  {from: 710, duration: 70, name: 'c6-workbench', Comp: () => <C8Workbench />},
+  {from: 780, duration: 120, name: 'c7-outro', Comp: () => <C7Outro />},
 ];
 
 const OVERLAP = 10;
