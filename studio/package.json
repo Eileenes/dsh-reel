@@ -10,11 +10,17 @@
     "render": "remotion render src/index.ts PluginDemo out/demo.mp4 --codec h264 --crf 18",
     "still": "remotion still src/index.ts PluginDemo out/still.png",
     "promo": "remotion still src/index.ts PromoCard out/promo.png --frame=0 --scale=2",
-    "dev": "remotion studio src/index.ts"
+    "dev": "remotion studio src/index.ts",
+    "render:v2": "remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --concurrency=1",
+    "still:v2": "remotion still src/v2/entry.tsx ReelPromo out/reel-frame.png --frame=300",
+    "dev:v2": "remotion studio src/v2/entry.tsx"
   },
   "dependencies": {
     "remotion": "4.0.409",
     "@remotion/cli": "4.0.409",
+    "@remotion/three": "4.0.409",
+    "@react-three/fiber": "8.17.10",
+    "three": "0.169.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   }

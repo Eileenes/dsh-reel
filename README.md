@@ -4,15 +4,15 @@
 
 ### 从插件介绍，到一条宣传片与一张宣传图。
 
-面向 DeepSeek Harness（DSH）插件的本地 Remotion 宣传素材原型。<br />
-从可编辑案例与截图出发，生成横屏视频、视频封面和竖版宣传图；当前内置 Better Sidebar 示例模板。
+面向 DeepSeek Harness（DSH）插件的本地 Remotion 宣传素材工具。<br />
+从可编辑案例与截图出发，生成横屏视频、视频封面和竖版宣传图；另有 2026 campaign 管线：24 秒品牌片 + 3:4 海报 + 16:9 封面 + 1:1 方图。
 
 ![Node](https://img.shields.io/badge/Node.js-22%2B-6366F1?style=flat-square)
 ![Remotion](https://img.shields.io/badge/Remotion-4.0.409-EC4899?style=flat-square)
 ![Video](https://img.shields.io/badge/video-16%3A9-F59E0B?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-334155?style=flat-square)
 
-**[下载源码](https://github.com/Eileenes/dsh-reel/archive/refs/heads/main.zip)** · **[快速开始](#quick-start)** · **[观看样片](docs/demo.mp4)** · **[编辑案例](#cases)** · **[插件接入](#host-plugin)**
+**[下载源码](https://github.com/Eileenes/dsh-reel/archive/refs/heads/main.zip)** · **[快速开始](#quick-start)** · **[观看 24 秒样片](docs/demo.mp4)** · **[查看新版宣传图](docs/promo.png)** · **[编辑案例](#cases)** · **[插件接入](#host-plugin)**
 
 </div>
 
@@ -20,21 +20,28 @@
 
 ## 能做什么
 
-| 宣传片 | 宣传图与封面 | 本地工作流 |
+| 2026 campaign（v2） | 案例模板（v1） | 本地工作流 |
 | --- | --- | --- |
-| 32.5 秒、1920×1080、30fps 的横屏视频模板 | 2160×2880 PNG 宣传图 | 通过 JSON 配置插件信息、功能卡片和宣传文案 |
-| 引入、问题、方案、功能、用法、数据、片尾共七段 | 从视频指定帧导出 1920×1080 封面 | CLI 分别导出视频、图片或全部产物 |
-| 程序化 BGM、字幕、截图与合成界面 | DSH 风格配色、网格和卡通鲸鱼 | `--dry-run` 先生成渲染参数，不启动渲染 |
+| 24 秒、1920×1080、30fps 品牌宣传片 | 32.5 秒横屏视频模板（case JSON 驱动） | 全部素材在本机 Remotion / Chrome 内渲染 |
+| 2160×2880 海报、1920×1080 封面、1080×1080 方图 | 2160×2880 宣传图 + 从视频导出的 16:9 封面 | CLI 分别导出视频、图片或全部产物 |
+| 体素鲸鱼、DSH 插件市场真实界面、事件音效 | 七段结构、程序化 BGM、截图与合成界面 | `--dry-run` 先生成渲染参数，不启动渲染 |
 
-**当前是可运行的示例原型。** 仓库包含现成样片和渲染代码，但多个镜头仍写死 Better Sidebar 的内容；换成其他插件时，需要同时修改案例和模板代码。DSH 宿主插件尚未在真实 profile 中验证。
+**两条管线并存：**
+
+- **v2 campaign（新）**：`studio/src/v2/` 下的品牌片与海报系统，默认讲 dsh-reel-studio 自己的故事（在 DSH 里搜插件 → 安装 → 读仓库 → 写分镜 → 出片），画面使用暗色 DSH 插件市场 UI 与体素鲸鱼。海报/封面由 [`design/`](design/README.md) 的 HTML 模板生成。
+- **v1 案例模板**：`studio/src/PluginDemo.tsx` + `cases/*.json`，用于把某个插件的资料套进固定 32.5 秒模板；仍需要人工适配部分镜头（见[编辑案例](#cases)）。
+
+**当前是可运行的示例项目，不是"给个仓库地址就自动出片"的成品。** 宿主工具（`reel_scan` / `reel_plan` / `reel_render`）仍是脚手架能力；v2 campaign 目前是 dsh-reel 自己的品牌物料，参数化到任意插件是下一步路线。
 
 ## 样片与素材
 
-[观看约 32.5 秒的宣传片](docs/demo.mp4) · [查看宣传图](docs/promo.png) · [查看视频封面](docs/poster.png)
+[观看 24 秒 campaign 片](docs/demo.mp4) · [3:4 海报](docs/promo.png) · [16:9 封面](docs/poster.png) · [1:1 方图](docs/promo-1x1.png) · [关键帧](docs/stills/)
 
-![Better Sidebar 宣传图](docs/promo.png)
+![dsh-reel-studio campaign 海报](docs/promo.png)
 
-示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar)，不是本仓库自身的功能。原仓库说明记录：截图来自该 MIT 许可项目，任务与侧边对话面板使用合成界面。案例里的版本、下载量和 Stars 是静态示例数据，不会自动更新。
+新版 campaign 讲的是 dsh-reel-studio 自己：在 DSH 插件市场里搜到它、安装、让它把一个插件仓库读成一条片子和一张图。片中市场界面按真实 dshmarket / DSH 插件页结构重建，文案逐字取自已核对文案；**不包含伪造的下载量、星数或"官方认证"**。
+
+v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar)（MIT 许可，截图来自该仓库，任务/侧边对话面板为合成界面）；案例里的下载量与 Stars 是静态示例数据。
 
 <a id="quick-start"></a>
 
@@ -59,7 +66,27 @@ export CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 
 未找到浏览器时，CLI 会使用 Remotion 的默认浏览器处理方式。首次安装依赖或获取浏览器可能需要联网。
 
-### 2. 检查案例，再渲染
+### 2. 渲染 2026 campaign（v2，推荐先看这个）
+
+```bash
+# 24 秒品牌片（1920×1080 / 30fps）
+cd studio
+node_modules/.bin/remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 \
+  --codec h264 --crf 16 --concurrency=1
+cd ..
+
+# 海报 / 封面 / 方图（HTML 模板 → headless Chrome → docs/）
+bash design/build.sh
+```
+
+> 本机 macOS 上 3D 场景走 ANGLE/Metal；`remotion.config.ts` 已设置 `setChromiumOpenGlRenderer('angle')`。
+> 1080p 全片建议 `--concurrency=1`，4 并发在 24GB 机器上会 OOM。
+>
+> 音轨 `studio/public/audio/v2/preview-mix.mp3` 已随仓库提供；需要重做声音时运行
+> `python3 studio/scripts/make_sfx_v2.py`（纯标准库生成 drone + 15 类音效 + 24s 混音），
+> 再把 `studio/out/p1-audio-mix.wav` 转成 mp3 覆盖该文件即可。
+
+### 3. 检查案例，再渲染（v1 模板）
 
 在仓库根目录执行：
 
@@ -81,7 +108,7 @@ node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode video
 node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode image
 ```
 
-### 3. 查看结果并检查内容
+### 4. 查看结果并检查内容
 
 产物写入 `studio/out/`。文件名前缀取自 `plugin.handle`，未提供时使用 `plugin.name`，再转换成小写英文、数字和连字符。
 
@@ -109,6 +136,8 @@ node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode image
 功能截图的 `img` 路径相对 `studio/public/`，例如 `shots/files-tree.png`；内置 `mock` 可选 `tasks` 或 `sidechat`。完整字段形状见 [数据类型与默认值](studio/src/data.ts)。CLI 只校验 `plugin.name`、非空 `features` 和 `promo.address`，通过 dry-run 不代表其他字段、素材或画面已经完整。
 
 **案例配置尚未覆盖整个画面。** [视频模板](studio/src/PluginDemo.tsx) 和 [宣传图模板](studio/src/PromoCard.tsx) 中仍有固定标题、侧栏文案、截图路径、MIT 标签和 DSH 版本文字；宣传图主截图也不是从 `features` 读取。为其他项目制作素材时，请逐项替换这些内容，不能仅更改 JSON 就直接发布。
+
+**v2 campaign 与 v1 案例是两套模板。** `studio/src/v2/` 的 24 秒片、海报与封面目前为 dsh-reel-studio 自身定制，数据与文案集中在 `src/v2/data/`、`src/v2/scenes/`；把 campaign 参数化到任意插件（由 case JSON 驱动镜头与文案）是下一阶段工作，尚未完成。
 
 **已核实的介绍与截图 → 案例 JSON → 模板适配 → 本地渲染 → 内容与画面检查**
 
@@ -138,22 +167,27 @@ dsh plugin --profile scratch add github:Eileenes/dsh-reel
 
 | 场景 | 需要什么 | 当前状态 |
 | --- | --- | --- |
-| 渲染内置示例 | Node.js 22+、pnpm、Chrome／Chromium | 仓库包含 MP4、封面与宣传图成品及相应源码 |
-| 换成其他插件 | 已核实的信息、可使用的截图、JSON 与 TSX 修改 | 模板仍含 Better Sidebar 固定内容，需要人工适配 |
-| 调整画幅或时长 | 修改 Composition、布局、镜头时间线和配乐 | 目前固定 16:9 视频和 3:4 宣传图；无通用竖屏或方形预设 |
-| 重新生成 BGM | Python 3 | 可运行 `python3 studio/scripts/make_bgm.py`，会覆盖内置 `bgm.wav` |
-| 旁白与宿主自动化 | 额外实现与验证 | 当前没有旁白生成，宿主流程未完成真实环境验收 |
+| 渲染 2026 campaign | Node.js 22+、Chrome／Chromium | 24 秒片由 `studio/src/v2/entry.tsx` 渲染；海报/封面由 `design/build.sh` 生成；均已实测 |
+| 渲染 v1 案例 | Node.js 22+、pnpm、Chrome／Chromium | 仓库包含旧 MP4、封面与宣传图成品及源码 |
+| 换成其他插件 | 已核实的信息、可使用的截图、JSON 与 TSX 修改 | v1 模板仍含 Better Sidebar 固定内容；v2 尚未参数化 |
+| 调整画幅或时长 | 修改 Composition、布局、镜头时间线和配乐 | v2 目前 24s / 16:9 + 3:4 + 1:1；无通用竖屏预设 |
+| 重新生成音效 | Python 3（纯标准库） | `python3 studio/scripts/make_sfx_v2.py` 重新合成 drone + 15 类音效并铺 24s 混音 |
+| 旁白与宿主自动化 | 额外实现与验证 | 当前没有旁白生成；宿主流程仍未完成真实环境验收 |
 
-现有样片为 H.264 视频与 AAC 双声道音轨，视频时间线是 975 帧／30fps。仓库没有独立自动化测试套件；dry-run 只检查参数路径，不能替代完整渲染和画面验收。
+campaign 片为 H.264 / yuv420p / AAC 48kHz 双声道，24.04s（720 帧 @30fps）；音效为参考片同规格的 drone + 事件驱动音效（无版权音乐）。仓库没有独立自动化测试套件；`--dry-run` 只检查参数路径，不能替代完整渲染和画面验收。
 
 ## 文档与维护
 
 | 文档或入口 | 内容 |
 | --- | --- |
-| [案例 JSON](cases/dsh-better-sidebar.json) | 内置 Better Sidebar 示例数据 |
-| [渲染 CLI](scripts/reel.mjs) | 参数、浏览器查找与输出路径 |
-| [Composition 定义](studio/src/Root.tsx) | 视频时长、帧率与两种画幅 |
-| [发布检查清单](PUBLISHING.md) | npm 打包与 DSH 市场发布的原始规划 |
+| [案例 JSON](cases/dsh-better-sidebar.json) | v1 内置 Better Sidebar 示例数据 |
+| [v2 渲染入口](studio/src/v2/entry.tsx) | 24 秒 campaign 片的 Composition |
+| [v2 时间线](studio/src/v2/data/timeline.ts) | 场景边界与音效锚点（改节奏先改这里） |
+| [设计源文件](design/README.md) | 海报 / 封面 / 方图模板与生成命令 |
+| [音效合成](studio/scripts/make_sfx_v2.py) | drone + 15 类事件音效，纯 Python |
+| [渲染 CLI](scripts/reel.mjs) | v1 参数、浏览器查找与输出路径 |
+| [Composition 定义](studio/src/Root.tsx) | v1 视频时长、帧率与两种画幅 |
+| [发布检查清单](PUBLISHING.md) | npm 打包与 DSH 市场发布的规划 |
 | [原中文说明](README.zh-CN.md) | 原型制作与初版使用记录 |
 
 发布清单中关于根目录 `package.json` 的 `private: true` 描述已过时：当前根包是 `private: false`，`studio` 子包仍是私有包。原中文说明中的“扫描／规划自动化”应结合上面的实际实现理解。打包状态以当前配置为准，发布和兼容性仍需要单独验证。
@@ -166,14 +200,17 @@ dsh-reel/
 ├── README.md                 # 介绍、使用与当前边界
 ├── lib/index.js              # DSH 宿主工具
 ├── cordis.patch.yml          # DSH 插件配置入口
-├── scripts/reel.mjs          # 本地渲染 CLI
-├── cases/                    # 案例 JSON
-├── docs/                     # 样片、视频封面与宣传图
+├── scripts/reel.mjs          # v1 本地渲染 CLI
+├── cases/                    # v1 案例 JSON
+├── docs/                     # 24s 片、海报、封面、方图
+├── design/                   # 海报/封面/方图 HTML 模板 + 构建脚本
 ├── studio/
-│   ├── src/                  # Remotion 组件、模板与数据类型
-│   ├── public/               # 截图与配乐
-│   └── scripts/make_bgm.py   # 程序化配乐脚本
-├── PUBLISHING.md             # 原始发布检查清单
+│   ├── src/                  # v1 Remotion 模板
+│   ├── src/v2/               # 2026 campaign：tokens / 鲸鱼 / 市场 UI / 场景
+│   ├── public/v2/            # campaign 用素材
+│   ├── public/audio/v2/      # drone + 15 类事件音效
+│   └── scripts/make_sfx_v2.py# 音效合成
+├── PUBLISHING.md             # 发布检查清单
 └── LICENSE                   # MIT 许可证
 ```
 
@@ -183,6 +220,6 @@ dsh-reel/
 
 ## 来源与授权
 
-项目代码采用 [MIT 许可证](LICENSE)，版权声明为 `2026 dsh-reel-studio contributors`。第三方截图、名称和标识的使用仍需遵守各自授权条件；适配新案例时请使用自己的素材或已获许可的素材。
+项目代码采用 [MIT 许可证](LICENSE)，版权声明为 `2026 dsh-reel-studio contributors`。campaign 中的体素鲸鱼、海报、封面与音效均为本仓库自制（无第三方采样/字体/图片），市场界面按真实产品结构重绘、文案取自已核对内容。第三方截图、名称和标识的使用仍需遵守各自授权条件；适配新案例时请使用自己的素材或已获许可的素材。
 
 这是非官方社区项目，与 DeepSeek 无隶属或背书关系。“DeepSeek”“DSH”等名称用于描述兼容目标，相关标识归其所有者。原说明将卡通鲸鱼标注为原创插画，并非官方 Logo；任务与侧边对话画面是合成示例。

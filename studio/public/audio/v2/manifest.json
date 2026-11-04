@@ -1,0 +1,600 @@
+{
+  "version": "v2",
+  "generator": "studio/scripts/make_sfx_v2.py",
+  "generated_note": "纯 Python 标准库合成，无第三方采样/音乐，固定种子可重复生成",
+  "format": {
+    "sample_rate": 48000,
+    "channels": 2,
+    "bit_depth": 16,
+    "codec": "PCM"
+  },
+  "video": {
+    "duration_sec": 24.0,
+    "fps": 30,
+    "total_frames": 720,
+    "resolution": "1920x1080"
+  },
+  "levels": {
+    "sfx_peak_dbfs": -12.0,
+    "drone_rms_dbfs": -37.5,
+    "drone_in_mix_rms_dbfs": -34.03,
+    "mix_rms_dbfs": -27.0,
+    "mix_peak_dbfs": -8.47,
+    "master_gain_db": 3.69,
+    "master_limit": "RMS 目标",
+    "mix_end_fade_sec": 0.1,
+    "note_chime_overrun": "最后一个 chime 事件在 frame 690 / 23.0s，文件 1.1s，会越过 24.0s 约 0.1s；混音已在末尾 100ms 淡出，若分轨摆放请同样处理",
+    "reference_film_rms_dbfs": -27.5,
+    "reference_film_peak_dbfs": -8.0
+  },
+  "files": {
+    "drone": {
+      "file": "drone.wav",
+      "duration_sec": 24.0,
+      "peak_dbfs": -28.48,
+      "rms_dbfs": -37.72,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "全片低音 bed：110/164.8/220.5Hz 三音，900Hz 低通，1.5s 淡入 / 最后 0.8s 淡出 / 4s sin² 呼吸（参考片 score.py 同款）"
+    },
+    "key": {
+      "file": "sfx/key.wav",
+      "duration_sec": 0.1,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -27.48,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "键盘逐字 tick（S1 打 dsh / S4 打 reel-studio / S6 打字 / S9 安装命令）",
+      "pitch_cycle": [
+        1.0,
+        1.12,
+        1.24,
+        1.36
+      ],
+      "pitch_cycle_note": "同一音效多次触发时，混音脚本按此系数线性插值重采样做音高变化（模仿参考片 wood 音高 1500+180*i 的手法），文件本身只有一个"
+    },
+    "riser": {
+      "file": "sfx/riser.wav",
+      "duration_sec": 1.0,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -24.96,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "拼合/装机前的上冲 riser（S1→S2、S5 安装）"
+    },
+    "whoosh": {
+      "file": "sfx/whoosh.wav",
+      "duration_sec": 0.62,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -27.23,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "气流转场：窗口生长 / 卡片提起 / 回到会话 / 扫描"
+    },
+    "landBig": {
+      "file": "sfx/landBig.wav",
+      "duration_sec": 0.55,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -25.64,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "大落地：鲸鱼砸落 / 海报落桌（带震屏）"
+    },
+    "landSmall": {
+      "file": "sfx/landSmall.wav",
+      "duration_sec": 0.22,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -27.46,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "小落地：踩键盘 / 视频帧落桌"
+    },
+    "tile": {
+      "file": "sfx/tile.wav",
+      "duration_sec": 0.26,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -26.34,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "踩格子：Dock/胶片条逐格点亮（6 格）",
+      "pitch_cycle": [
+        1.0,
+        1.05,
+        1.1,
+        1.16,
+        1.22,
+        1.28
+      ],
+      "pitch_cycle_note": "同一音效多次触发时，混音脚本按此系数线性插值重采样做音高变化（模仿参考片 wood 音高 1500+180*i 的手法），文件本身只有一个"
+    },
+    "window": {
+      "file": "sfx/window.wav",
+      "duration_sec": 0.5,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -26.02,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "窗口/面板生长：市场面板、详情页"
+    },
+    "enter": {
+      "file": "sfx/enter.wav",
+      "duration_sec": 0.335,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -26.36,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "回车确认：发送 prompt"
+    },
+    "result": {
+      "file": "sfx/result.wav",
+      "duration_sec": 0.24,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -23.97,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "结果弹入：搜索结果刷新出一张卡"
+    },
+    "click": {
+      "file": "sfx/click.wav",
+      "duration_sec": 0.09,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -28.47,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "按压 click：点「安装」"
+    },
+    "chime": {
+      "file": "sfx/chime.wav",
+      "duration_sec": 1.1,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -26.82,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "成功 chime：已安装 / 安装完成"
+    },
+    "toolPop": {
+      "file": "sfx/toolPop.wav",
+      "duration_sec": 0.2,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -24.02,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "工具 chip 点亮：reel_scan / reel_plan / reel_render"
+    },
+    "spout": {
+      "file": "sfx/spout.wav",
+      "duration_sec": 0.5,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -25.08,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "鲸鱼喷水（全片 3 次以内）"
+    },
+    "hum": {
+      "file": "sfx/hum.wav",
+      "duration_sec": 1.2,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -21.62,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "渲染低鸣 / 开场 drone 进入"
+    },
+    "title": {
+      "file": "sfx/title.wav",
+      "duration_sec": 1.1,
+      "peak_dbfs": -12.0,
+      "rms_dbfs": -29.04,
+      "channels": 2,
+      "sample_rate": 48000,
+      "purpose": "片尾标题 chime"
+    }
+  },
+  "mix": {
+    "file": "../../out/p1-audio-mix.wav",
+    "duration_sec": 24.0,
+    "frame_samples": 1600,
+    "event_count": 57,
+    "events_source": "studio/src/v2/data/timeline.ts :: SOUND_EVENTS（运行时解析，未复制）"
+  },
+  "events": [
+    {
+      "frame": 0,
+      "time_sec": 0.0,
+      "kind": "hum",
+      "gain": 0.55,
+      "note": "drone bed in"
+    },
+    {
+      "frame": 12,
+      "time_sec": 0.4,
+      "kind": "key",
+      "gain": 0.5,
+      "note": "d"
+    },
+    {
+      "frame": 21,
+      "time_sec": 0.7,
+      "kind": "key",
+      "gain": 0.5,
+      "note": "s"
+    },
+    {
+      "frame": 30,
+      "time_sec": 1.0,
+      "kind": "key",
+      "gain": 0.5,
+      "note": "h"
+    },
+    {
+      "frame": 62,
+      "time_sec": 2.0667,
+      "kind": "riser",
+      "gain": 0.65,
+      "note": "voxels gather"
+    },
+    {
+      "frame": 116,
+      "time_sec": 3.8667,
+      "kind": "landBig",
+      "gain": 0.95,
+      "note": "whale lands (S2 f38)"
+    },
+    {
+      "frame": 122,
+      "time_sec": 4.0667,
+      "kind": "spout",
+      "gain": 0.5,
+      "note": "first spout (S2 f44)"
+    },
+    {
+      "frame": 126,
+      "time_sec": 4.2,
+      "kind": "window",
+      "gain": 0.6,
+      "note": "DSH window grows (S2 f40-62)"
+    },
+    {
+      "frame": 130,
+      "time_sec": 4.3333,
+      "kind": "whoosh",
+      "gain": 0.45,
+      "note": "hop to window (S2 f52)"
+    },
+    {
+      "frame": 152,
+      "time_sec": 5.0667,
+      "kind": "tile",
+      "gain": 0.55,
+      "note": "lands on window edge (S2 f74)"
+    },
+    {
+      "frame": 158,
+      "time_sec": 5.2667,
+      "kind": "window",
+      "gain": 0.5,
+      "note": "plugin market rises"
+    },
+    {
+      "frame": 236,
+      "time_sec": 7.8667,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "r"
+    },
+    {
+      "frame": 241,
+      "time_sec": 8.0333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "e"
+    },
+    {
+      "frame": 246,
+      "time_sec": 8.2,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "e"
+    },
+    {
+      "frame": 251,
+      "time_sec": 8.3667,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "l"
+    },
+    {
+      "frame": 256,
+      "time_sec": 8.5333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "-"
+    },
+    {
+      "frame": 261,
+      "time_sec": 8.7,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "s"
+    },
+    {
+      "frame": 266,
+      "time_sec": 8.8667,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "t"
+    },
+    {
+      "frame": 271,
+      "time_sec": 9.0333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "u"
+    },
+    {
+      "frame": 276,
+      "time_sec": 9.2,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "d"
+    },
+    {
+      "frame": 281,
+      "time_sec": 9.3667,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "i"
+    },
+    {
+      "frame": 286,
+      "time_sec": 9.5333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "o"
+    },
+    {
+      "frame": 292,
+      "time_sec": 9.7333,
+      "kind": "result",
+      "gain": 0.6,
+      "note": "result lands (S4 f64)"
+    },
+    {
+      "frame": 308,
+      "time_sec": 10.2667,
+      "kind": "whoosh",
+      "gain": 0.5,
+      "note": "push into card (S4 f80)"
+    },
+    {
+      "frame": 360,
+      "time_sec": 12.0,
+      "kind": "click",
+      "gain": 0.7,
+      "note": "install click (S5 f12)"
+    },
+    {
+      "frame": 374,
+      "time_sec": 12.4667,
+      "kind": "riser",
+      "gain": 0.4,
+      "note": "installing (S5 f26)"
+    },
+    {
+      "frame": 386,
+      "time_sec": 12.8667,
+      "kind": "chime",
+      "gain": 0.7,
+      "note": "installed + toast (S5 f36)"
+    },
+    {
+      "frame": 433,
+      "time_sec": 14.4333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": "prompt typing"
+    },
+    {
+      "frame": 436,
+      "time_sec": 14.5333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": ""
+    },
+    {
+      "frame": 439,
+      "time_sec": 14.6333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": ""
+    },
+    {
+      "frame": 442,
+      "time_sec": 14.7333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": ""
+    },
+    {
+      "frame": 445,
+      "time_sec": 14.8333,
+      "kind": "key",
+      "gain": 0.35,
+      "note": ""
+    },
+    {
+      "frame": 447,
+      "time_sec": 14.9,
+      "kind": "enter",
+      "gain": 0.8,
+      "note": "send (S6 f20)"
+    },
+    {
+      "frame": 449,
+      "time_sec": 14.9667,
+      "kind": "toolPop",
+      "gain": 0.5,
+      "note": "reel_scan chip"
+    },
+    {
+      "frame": 452,
+      "time_sec": 15.0667,
+      "kind": "toolPop",
+      "gain": 0.5,
+      "note": "reel_plan chip"
+    },
+    {
+      "frame": 455,
+      "time_sec": 15.1667,
+      "kind": "toolPop",
+      "gain": 0.5,
+      "note": "reel_render chip"
+    },
+    {
+      "frame": 481,
+      "time_sec": 16.0333,
+      "kind": "whoosh",
+      "gain": 0.5,
+      "note": "scan sweep (S7 f19)"
+    },
+    {
+      "frame": 501,
+      "time_sec": 16.7,
+      "kind": "window",
+      "gain": 0.45,
+      "note": "film strip enters (S7 f39)"
+    },
+    {
+      "frame": 508,
+      "time_sec": 16.9333,
+      "kind": "tile",
+      "gain": 0.45,
+      "note": "shot 01"
+    },
+    {
+      "frame": 514,
+      "time_sec": 17.1333,
+      "kind": "tile",
+      "gain": 0.45,
+      "note": "shot 02"
+    },
+    {
+      "frame": 520,
+      "time_sec": 17.3333,
+      "kind": "tile",
+      "gain": 0.45,
+      "note": "shot 03"
+    },
+    {
+      "frame": 526,
+      "time_sec": 17.5333,
+      "kind": "tile",
+      "gain": 0.45,
+      "note": "shot 04"
+    },
+    {
+      "frame": 532,
+      "time_sec": 17.7333,
+      "kind": "tile",
+      "gain": 0.45,
+      "note": "shot 05"
+    },
+    {
+      "frame": 538,
+      "time_sec": 17.9333,
+      "kind": "tile",
+      "gain": 0.45,
+      "note": "shot 06"
+    },
+    {
+      "frame": 548,
+      "time_sec": 18.2667,
+      "kind": "landSmall",
+      "gain": 0.5,
+      "note": "poster lands (S7 f86)"
+    },
+    {
+      "frame": 556,
+      "time_sec": 18.5333,
+      "kind": "landSmall",
+      "gain": 0.5,
+      "note": "video lands (S7 f94)"
+    },
+    {
+      "frame": 558,
+      "time_sec": 18.6,
+      "kind": "hum",
+      "gain": 0.45,
+      "note": "render progress (S7 f96)"
+    },
+    {
+      "frame": 580,
+      "time_sec": 19.3333,
+      "kind": "chime",
+      "gain": 0.55,
+      "note": "render done (S7 f118)"
+    },
+    {
+      "frame": 590,
+      "time_sec": 19.6667,
+      "kind": "whoosh",
+      "gain": 0.4,
+      "note": "poster drops (S8 f2)"
+    },
+    {
+      "frame": 599,
+      "time_sec": 19.9667,
+      "kind": "landSmall",
+      "gain": 0.6,
+      "note": "poster lands (S8 f11)"
+    },
+    {
+      "frame": 604,
+      "time_sec": 20.1333,
+      "kind": "landSmall",
+      "gain": 0.55,
+      "note": "video lands (S8 f16)"
+    },
+    {
+      "frame": 606,
+      "time_sec": 20.2,
+      "kind": "chime",
+      "gain": 0.35,
+      "note": "both outputs on desk"
+    },
+    {
+      "frame": 674,
+      "time_sec": 22.4667,
+      "kind": "title",
+      "gain": 0.7,
+      "note": "title lands (S9 f14)"
+    },
+    {
+      "frame": 688,
+      "time_sec": 22.9333,
+      "kind": "key",
+      "gain": 0.3,
+      "note": "install cmd typing"
+    },
+    {
+      "frame": 692,
+      "time_sec": 23.0667,
+      "kind": "key",
+      "gain": 0.3,
+      "note": ""
+    },
+    {
+      "frame": 696,
+      "time_sec": 23.2,
+      "kind": "key",
+      "gain": 0.3,
+      "note": ""
+    },
+    {
+      "frame": 700,
+      "time_sec": 23.3333,
+      "kind": "chime",
+      "gain": 0.5,
+      "note": "freeze / end"
+    }
+  ]
+}

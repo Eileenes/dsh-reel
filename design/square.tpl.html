@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-reel-studio · 1:1 方图</title>
+<style>
+  :root{
+    --accent:#5ef2c2; --a-16:rgba(94,242,194,.16); --a-26:rgba(94,242,194,.26); --a-34:rgba(94,242,194,.34);
+    --ink:#eff6ff; --muted:#a2adbc; --dim:#8a95a3; --soft-ink:#9ecfc3;
+    --sans:"PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+    --mono:"SF Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000}
+  .sq{position:relative;width:1080px;height:1080px;overflow:hidden;color:var(--ink);
+    font-family:var(--sans);
+    background:
+      radial-gradient(62% 54% at 80% 16%, rgba(30,92,86,.44), transparent 62%),
+      radial-gradient(56% 46% at 8% 20%, rgba(42,62,132,.44), transparent 64%),
+      linear-gradient(180deg,#070b14 0%,#05080f 52%,#04060b 100%);}
+  .grid{position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(120,150,255,.075) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(120,150,255,.075) 1px,transparent 1px);
+    background-size:72px 72px;
+    -webkit-mask-image:radial-gradient(ellipse 92% 80% at 48% 40%,#000 20%,rgba(0,0,0,.32) 64%,transparent 96%);
+    mask-image:radial-gradient(ellipse 92% 80% at 48% 40%,#000 20%,rgba(0,0,0,.32) 64%,transparent 96%)}
+  .sq::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:60;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='0.5'/></svg>");
+    opacity:.06;mix-blend-mode:overlay}
+  .sq::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:59;
+    background:radial-gradient(120% 92% at 48% 38%, transparent 42%, rgba(2,3,8,.84) 100%)}
+
+  .brand{position:absolute;left:64px;top:58px;z-index:30;display:flex;align-items:center;gap:11px}
+  .brand-whale{width:38px;height:24px;display:block}
+  .brand-name{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .brand-tag{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.2em;color:var(--soft-ink);
+    border:1px solid var(--a-34);border-radius:5px;padding:4px 7px 3px;line-height:1;margin-left:2px}
+  .top-right{position:absolute;right:64px;top:66px;z-index:30;display:flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--dim)}
+  .top-right i{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+
+  h1{position:absolute;left:60px;top:146px;z-index:30;font-size:100px;line-height:1.07;font-weight:600;
+    letter-spacing:-.025em;color:var(--ink)}
+  h1 em{font-family:var(--mono);font-style:normal;font-size:.78em;font-weight:600;letter-spacing:-.035em;color:var(--accent)}
+
+  .tagline{position:absolute;left:66px;top:392px;z-index:30;display:flex;align-items:center;gap:12px;
+    font-size:21px;color:var(--soft-ink)}
+  .tagline .bar{width:24px;height:2px;background:var(--accent);border-radius:1px;flex:none}
+
+  .product{position:absolute;left:64px;top:436px;z-index:30;display:flex;align-items:baseline;gap:16px}
+  .product .pn{font-family:var(--mono);font-size:66px;letter-spacing:-.02em;line-height:1}
+  .product .pn::before{content:"$";color:var(--accent);margin-right:12px}
+  .product .pt{font-family:var(--mono);font-size:13px;letter-spacing:.16em;color:var(--dim)}
+
+  .whale-glow{position:absolute;right:-40px;top:380px;width:640px;height:480px;z-index:1;filter:blur(30px);
+    background:radial-gradient(closest-side,rgba(94,242,194,.20),rgba(77,107,254,.12) 52%,transparent 76%)}
+  .whale{position:absolute;right:-8px;top:508px;width:540px;z-index:12;transform:scaleX(-1) rotate(-2.2deg);
+    filter:drop-shadow(0 28px 38px rgba(0,0,0,.55)) drop-shadow(-20px 10px 40px rgba(94,242,194,.24)) drop-shadow(0 0 38px rgba(77,107,254,.3))}
+  .whale svg{width:100%;height:auto;display:block}
+  .whale-cast{position:absolute;right:-8px;top:508px;width:540px;z-index:6;pointer-events:none;
+    transform-origin:50% 100%;filter:blur(8px) brightness(0);opacity:.32;
+    transform:translate(20px,96px) scaleY(.18) scaleX(1.02) rotate(-2.2deg);
+    -webkit-mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.4) 62%,transparent 92%);
+    mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.4) 62%,transparent 92%)}
+  .whale-cast svg{width:100%;height:auto;display:block;transform:scaleX(-1)}
+
+  .shot-frame{position:absolute;border-radius:10px;overflow:hidden;z-index:18;background:#0a1020;
+    box-shadow:0 28px 64px rgba(0,0,0,.6),0 0 50px rgba(77,107,254,.12);border:1px solid rgba(142,166,255,.28)}
+  .shot-video{left:64px;top:648px;width:318px;height:179px;transform:rotate(-1.2deg)}
+  .shot-poster{left:318px;top:684px;width:148px;height:197px;transform:rotate(2.6deg);z-index:20;
+    border-color:rgba(255,255,255,.2)}
+  .shot-frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .shot-tag{position:absolute;left:10px;bottom:9px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+    color:#f2f6ff;background:rgba(4,8,14,.62);border:1px solid rgba(142,166,255,.28);border-radius:4px;padding:3px 7px}
+
+  .installline{position:absolute;left:64px;right:64px;top:936px;z-index:30;display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+    font-family:var(--mono);font-size:15px;color:var(--ink);letter-spacing:-.01em}
+  .installline b{color:var(--accent);font-weight:500}
+  .installline .cmd{display:flex;align-items:baseline;gap:10px;white-space:nowrap}
+  .installline .dim{font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--dim)}
+  .foot{position:absolute;left:64px;right:64px;bottom:52px;z-index:30;display:flex;align-items:center;
+    justify-content:space-between;padding-top:16px;border-top:1px solid rgba(142,166,255,.14);
+    font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--dim)}
+  .foot .gh{display:flex;align-items:center;gap:9px}
+  .foot .gh svg{width:15px;height:15px;opacity:.85}
+  .foot .gh b{color:var(--soft-ink);font-weight:500;letter-spacing:.03em}
+  .foot .right{display:flex;align-items:center;gap:9px}
+  .foot .right i{width:3px;height:3px;border-radius:50%;background:rgba(140,140,140,.4)}
+  .disclaimer{position:absolute;left:64px;bottom:22px;z-index:30;font-family:var(--sans);font-size:11px;
+    letter-spacing:.04em;color:rgba(150,160,175,.4)}
+</style>
+</head>
+<body>
+<div class="sq">
+  <div class="grid"></div>
+
+  <div class="brand">
+    <svg class="brand-whale" viewBox="0 0 40 26" aria-hidden="true">
+      <path d="M3.2 13.2C3.2 6.6 9.6 3.2 16.2 4.2 22.8 5.2 28.6 9 28.6 13.8 28.6 19 22.2 22.2 15.7 22.2 9.2 22.2 3.2 19 3.2 13.2Z" fill="#4D6BFE"/>
+      <path d="M27.6 12.4C31 9.2 33.8 5.6 34.8 1.6 32.2 5.8 29.4 8.2 26 9.2L27.6 12.4Z" fill="#4D6BFE"/>
+      <path d="M27.6 15.2C31 18.4 33.8 22 34.8 26 32.2 21.8 29.4 19.4 26 18.4L27.6 15.2Z" fill="#4D6BFE"/>
+      <circle cx="21.4" cy="10" r="1.5" fill="#0a1220"/>
+      <circle cx="21.9" cy="9.5" r=".55" fill="#eaf3ff"/>
+      <path d="M11 15.2c1.6 1.5 3.6 1.5 5.2.2" stroke="#0a1220" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".75"/>
+    </svg>
+    <span class="brand-name">deepseek</span>
+    <span class="brand-tag">HARNESS</span>
+  </div>
+  <div class="top-right"><i></i>DSH PLUGIN</div>
+
+  <h1>好插件，<br>不该只有 <em>README</em>。</h1>
+  <div class="tagline"><span class="bar"></span>让每个插件，都有一条自己的宣传片。</div>
+  <div class="product">
+    <span class="pn">dsh-reel-studio</span>
+    <span class="pt">本地渲染 · 1080p · MIT</span>
+  </div>
+
+  <div class="whale-glow"></div>
+  <div class="whale-cast">{{WHALE}}</div>
+  <div class="whale">{{WHALE}}</div>
+
+  <div class="shot-frame shot-video">
+    <img src="{{VIDEO}}" alt="">
+    <span class="shot-tag">16:9 · 宣传片</span>
+  </div>
+  <div class="shot-frame shot-poster">
+    <img src="{{POSTER}}" alt="">
+    <span class="shot-tag">3:4 · 宣传图</span>
+  </div>
+
+  <div class="installline"><span class="cmd"><b>$</b> dsh plugin --profile web add dsh-reel-studio</span><span class="dim">桌面端：设置 → 插件 → 安装</span></div>
+
+  <footer class="foot">
+    <div class="gh">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="#b7ad9d" d="M8 .4a7.6 7.6 0 0 0-2.4 14.8c.4.1.5-.2.5-.4v-1.4c-2.1.5-2.6-1-2.6-1-.3-.9-.8-1.1-.8-1.1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.8.9 2.3.7.1-.5.3-.9.5-1.1-1.7-.2-3.5-.9-3.5-3.9 0-.9.3-1.6.8-2.1-.1-.2-.3-1 .1-2.1 0 0 .6-.2 2.1.8a7.2 7.2 0 0 1 3.8 0c1.5-1 2.1-.8 2.1-.8.4 1.1.2 1.9.1 2.1.5.5.8 1.2.8 2.1 0 3-1.8 3.7-3.5 3.9.3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A7.6 7.6 0 0 0 8 .4Z"/></svg>
+      <span>github.com/<b>Eileenes/dsh-reel</b></span>
+    </div>
+    <div class="right">
+      <span>MIT LICENSE</span><i></i><span>本地渲染</span><i></i><span>1080p</span>
+    </div>
+  </footer>
+  <div class="disclaimer">非官方社区项目；DeepSeek / DSH 商标归其所有者。</div>
+</div>
+</body>
+</html>

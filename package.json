@@ -1,9 +1,9 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: turn a DSH plugin repo into a deterministic promo video and promo image (host tools + Remotion studio).",
+  "description": "dsh-reel-studio: turn a DSH plugin repo into a promo video and promo image locally (host tools + Remotion studio), plus the 2026 campaign design system.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "lib",
     "scripts",
     "studio",
+    "design",
     "cases",
     "cordis.patch.yml",
     "README.md",
@@ -59,6 +60,9 @@
     "@deepseek-ai/dsh-tools": "*"
   },
   "scripts": {
-    "reel": "node scripts/reel.mjs"
+    "reel": "node scripts/reel.mjs",
+    "campaign:design": "node design/build.mjs && bash design/build.sh",
+    "campaign:render": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --concurrency=1",
+    "campaign:still": "cd studio && node_modules/.bin/remotion still src/v2/entry.tsx ReelPromo out/reel-frame.png --frame=300"
   }
 }

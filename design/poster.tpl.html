@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-reel-studio · P1 v2 海报</title>
+<style>
+  /*__THEME__*/
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000}
+  .poster{position:relative;width:1080px;height:1440px;overflow:hidden;color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+    padding:46px 64px 42px;display:flex;flex-direction:column;
+    background:
+      radial-gradient(78% 40% at 74% 20%, var(--bg-glow), transparent 62%),
+      radial-gradient(70% 38% at 14% 14%, rgba(42,62,132,.44), transparent 62%),
+      linear-gradient(180deg,#07090f 0%,#05070d 44%,#04060b 100%);}
+  .grid{position:absolute;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      linear-gradient(rgba(120,150,255,.075) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(120,150,255,.075) 1px,transparent 1px);
+    background-size:60px 60px;
+    -webkit-mask-image:radial-gradient(115% 78% at 42% 28%,#000 18%,rgba(0,0,0,.32) 62%,transparent 94%)}
+  .poster::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:80;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='0.5'/></svg>");
+    opacity:.06;mix-blend-mode:overlay}
+  .poster::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:79;
+    background:radial-gradient(112% 84% at 50% 36%, transparent 42%, rgba(2,3,8,.84) 100%)}
+
+  /* ---------- header ---------- */
+  .top{position:relative;z-index:40;display:flex;align-items:center;justify-content:space-between;height:34px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand-whale{width:36px;height:23px;display:block}
+  .brand-name{font-size:23px;font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1}
+  .brand-tag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.2em;color:var(--tag-ink);
+    border:1px solid var(--a-34);border-radius:4px;padding:4px 6px 3px;line-height:1;margin-left:2px}
+  .top-right{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10px;
+    letter-spacing:.2em;color:var(--dim)}
+  .top-right i{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent)}
+  .top-right em{font-style:normal;color:var(--soft-ink)}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;z-index:40;margin-top:28px}
+  .eyebrow{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.26em;color:var(--dim)}
+  .eyebrow b{color:var(--accent);font-weight:500;letter-spacing:.24em}
+  .eyebrow .sep{color:rgba(140,140,140,.55)}
+  h1{margin-top:13px;font-size:96px;line-height:1.10;font-weight:600;letter-spacing:-.025em;color:var(--ink)}
+  h1 em{font-family:var(--mono);font-style:normal;font-size:.79em;font-weight:600;letter-spacing:-.035em;color:var(--accent)}
+  .tagline{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:17.5px;
+    color:var(--soft-ink);letter-spacing:.02em}
+  .tagline .bar{width:22px;height:2px;background:var(--accent);border-radius:1px;flex:none}
+  .tagline .en{font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;color:var(--dim)}
+  .deck{margin-top:10px;font-size:18.5px;line-height:1.7;color:var(--muted);max-width:930px}
+  .deck b{color:var(--accent);font-weight:600}
+  .product{margin-top:13px;display:flex;align-items:center;gap:13px}
+  .product .pn{font-family:var(--mono);font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+  .product .pn::before{content:"$";color:var(--accent);margin-right:8px}
+  .product .pt{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--dim);
+    border-left:1px solid var(--a-26);padding-left:13px}
+
+  /* ---------- set ---------- */
+  .scene{position:relative;height:606px;margin-top:10px;z-index:10}
+  .frame{position:absolute;left:-13px;right:-13px;top:-12px;height:512px;border-radius:16px;z-index:1;
+    background:linear-gradient(160deg,#0c1018,#070a10);border:1px solid rgba(255,255,255,.07);
+    box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 70px rgba(140,170,255,.07),inset 0 1px 0 rgba(255,255,255,.05)}
+  .screen{position:absolute;left:0;right:0;top:0;height:486px;border-radius:12px;overflow:hidden;
+    background:linear-gradient(170deg,#eef2f9 0%,#dfe5f0 55%,#cfd7e6 100%);
+    filter:blur(4.8px) brightness(var(--screen-brightness)) saturate(var(--screen-saturate));
+    transform:rotate(-1.3deg);opacity:.95;
+    box-shadow:0 40px 90px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.07),0 0 70px rgba(180,205,255,.10)}
+  .ui-top{height:34px;background:#f7f9fd;border-bottom:1px solid #d6dce8;display:flex;align-items:center;gap:7px;padding:0 14px}
+  .ui-top i{width:9px;height:9px;border-radius:50%;background:#d7dce7}
+  .ui-top i:first-child{background:#f3a29b}.ui-top i:nth-child(2){background:#f2cf8a}.ui-top i:nth-child(3){background:#a8dab2}
+  .ui-top span{margin-left:10px;font-size:11px;color:#7c869c}
+  .ui-body{display:flex;height:100%}
+  .ui-side{width:164px;border-right:1px solid #d6dce8;padding:14px 12px;background:#f4f6fb}
+  .ui-pill{height:22px;border-radius:5px;background:#e4e9f3;margin-bottom:10px}
+  .ui-pill.act{background:#dbe4fb}
+  .ui-pill.sm{height:12px;width:76%;background:#e9edf5;margin-bottom:8px}
+  .ui-main{flex:1;background:#fff;padding:20px 24px;position:relative}
+  .ui-title{width:38%;height:16px;border-radius:4px;background:#dfe5ef;margin-bottom:18px}
+  .ui-line{height:9px;border-radius:4px;background:#e9edf5;margin-bottom:11px}
+  .ui-line.w1{width:72%}.ui-line.w2{width:88%}.ui-line.w3{width:54%}
+  .ui-bubble{width:60%;height:50px;border-radius:9px;background:#eaf0ff;margin:18px 0 14px;border:1px solid #d9e3fb}
+  .ui-code{margin-top:16px;height:70px;border-radius:8px;background:#1b2233;opacity:.9}
+  .ui-right{width:198px;background:#f7f9fd;border-left:1px solid #d6dce8;padding:16px 12px}
+  .ui-thumb{height:60px;border-radius:6px;background:#e6ebf4;margin-bottom:10px}
+  .ui-thumb.act{background:#dbe6ff}
+
+  .screen-fade{position:absolute;left:0;right:0;top:0;height:536px;z-index:2;
+    background:
+      radial-gradient(92% 62% at 50% 0%, rgba(6,9,16,.62), transparent 72%),
+      linear-gradient(180deg,rgba(5,7,13,.42) 0%,rgba(5,7,13,.08) 32%,rgba(4,6,11,.86) 86%,#04060b 100%)}
+
+  .beam{position:absolute;top:-46px;height:700px;z-index:3;filter:blur(18px);pointer-events:none}
+  .beam.warm{right:-50px;width:560px;transform:rotate(11deg);transform-origin:top center;
+    background:linear-gradient(180deg,var(--key-light),var(--key-light-2) 72%,transparent);
+    clip-path:polygon(44% 0,58% 0,100% 100%,0 100%)}
+  .beam.cool{left:-50px;width:450px;transform:rotate(-12deg);transform-origin:top center;
+    background:linear-gradient(180deg,rgba(77,107,254,.30),rgba(77,107,254,.05) 70%,transparent);
+    clip-path:polygon(44% 0,58% 0,100% 100%,0 100%)}
+  .practical{position:absolute;left:30px;bottom:96px;width:470px;height:300px;z-index:4;filter:blur(22px);pointer-events:none;
+    background:radial-gradient(closest-side,var(--practical),transparent 72%)}
+
+  .slate{position:absolute;left:16px;top:16px;z-index:8;display:flex;align-items:center;gap:8px}
+  .tag{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:8.5px;
+    letter-spacing:.22em;color:var(--soft-ink);padding:6px 9px;border-radius:4px;
+    background:rgba(10,8,6,.42);border:1px solid var(--a-26)}
+  .tag i{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent)}
+  .tag.plain{letter-spacing:.16em;color:var(--scene-ink);background:rgba(10,8,6,.32);border-color:rgba(255,255,255,.1)}
+
+  /* INDEPENDENT WHALE LAYER — swap this node for a 3D render still (transparent PNG/SVG).
+     All scene lighting / shadow is applied on .whale-layer, so a replacement inherits it. */
+  .whale-layer{position:absolute;right:-34px;top:-46px;width:535px;z-index:7;
+    transform:scaleX(-1) rotate(-2.2deg);
+    filter:drop-shadow(0 26px 34px rgba(0,0,0,.55)) drop-shadow(-20px 12px 40px var(--accent-shadow)) drop-shadow(0 0 40px rgba(77,107,254,.30))}
+  .whale-layer svg,.whale-layer img{width:100%;height:auto;display:block}
+  .whale-shadow{position:absolute;right:52px;top:318px;width:470px;height:158px;border-radius:50%;z-index:4;
+    background:
+      radial-gradient(closest-side,rgba(94,242,194,.20),rgba(77,107,254,.13) 50%,transparent 76%);
+    filter:blur(20px);pointer-events:none}
+  /* 鲸鱼轮廓的投影（复制同一 SVG，压扁 + 模糊 + 压黑） */
+  .whale-cast{position:absolute;right:-34px;top:-46px;width:535px;z-index:6;pointer-events:none;
+    transform-origin:50% 100%;filter:blur(4px) brightness(0);opacity:.42;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.55) 60%,transparent 92%);
+    mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.55) 60%,transparent 92%)}
+  .whale-cast svg{width:100%;height:auto;display:block;transform:scaleX(-1)}
+  .whale-cast.cast-core{transform:translate(22px,64px) scaleY(.135) scaleX(.98) rotate(-2.2deg);z-index:6}
+  .whale-cast.cast-soft{transform:translate(38px,96px) scaleY(.20) scaleX(1.05) rotate(-2.2deg);
+    filter:blur(12px) brightness(0);opacity:.36;z-index:5}
+  .whale-contact{position:absolute;right:152px;top:374px;width:248px;height:26px;border-radius:50%;z-index:6;
+    background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,.18) 52%,transparent 76%);
+    filter:blur(6px);pointer-events:none}
+
+  /* clapperboard */
+  .clap{position:absolute;left:14px;top:16px;width:276px;z-index:9;transform:rotate(-8.5deg);
+    filter:drop-shadow(0 26px 34px rgba(0,0,0,.62))}
+  .clap .bar{height:32px;border-radius:4px;transform:rotate(-2.6deg);transform-origin:left bottom;
+    background:repeating-linear-gradient(112deg,#f7f3ea 0 19px,#10131c 19px 38px);
+    box-shadow:0 4px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.5);margin-bottom:6px}
+  .clap .board{border-radius:5px;padding:12px 13px 32px;position:relative;
+    background:linear-gradient(158deg,#1a2233 0%,#0d1320 60%,#080d18 100%);
+    border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 10px 30px rgba(0,0,0,.5)}
+  .clap .b-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;
+    letter-spacing:.2em;color:var(--soft-ink)}
+  .clap .b-title{margin-top:10px;font-size:15.5px;font-weight:600;color:var(--paper);letter-spacing:.01em}
+  .clap .b-title b{color:var(--accent);font-weight:600}
+  .clap .b-rows{margin-top:9px;display:flex;flex-direction:column;gap:5px;
+    font-family:var(--mono);font-size:8px;letter-spacing:.11em;color:#98a2bb}
+  .clap .b-rows span b{color:#f0eadf;font-weight:500}
+  .clap .b-dir{position:absolute;left:13px;bottom:11px;font-family:var(--mono);font-size:7px;
+    letter-spacing:.16em;color:#8b93a8;line-height:1.4}
+  .clap .b-dir b{color:var(--accent);font-weight:500}
+
+  /* polaroids */
+  .pol{position:absolute;background:var(--paper);padding:11px 11px 38px;border-radius:2px;z-index:10;
+    box-shadow:0 26px 50px rgba(0,0,0,.64),inset 0 2px 0 rgba(255,255,255,.4)}
+  .pol .img{position:relative;overflow:hidden;background:#080d17}
+  .pol .cap{position:absolute;left:13px;bottom:11px;font-family:var(--mono);font-size:9px;
+    letter-spacing:.11em;color:var(--paper-sub)}
+  .pol .cap b{color:var(--paper-ink);font-weight:600}
+  .pol1{left:18px;top:322px;width:306px;transform:rotate(-7deg)}
+  .pol1 .img{width:284px;height:160px}
+  .pol2{left:278px;top:344px;width:160px;transform:rotate(5.5deg)}
+  .pol2 .img{width:138px;height:184px}
+  .pol .p-grid{position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(rgba(120,150,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,255,.16) 1px,transparent 1px);
+    background-size:24px 24px;
+    -webkit-mask-image:radial-gradient(90% 90% at 50% 50%,#000 30%,transparent 92%)}
+  .pol .p-whale{position:absolute;right:-8px;top:8px;width:158px;filter:drop-shadow(0 0 14px rgba(77,107,254,.55))}
+  .pol .p-whale svg{width:100%;height:auto;display:block;transform:scaleX(-1)}
+  .pol .p-h{position:absolute;left:10px;top:9px;font-size:13px;font-weight:600;color:#f2f5ff;line-height:1.4}
+  .pol .p-h b{font-family:var(--mono);font-size:9px;color:var(--accent);font-weight:600}
+  .pol .p-sub{position:absolute;left:10px;bottom:8px;font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:#aab7d8}
+  .pol2 .p-whale{width:160px;right:-24px;top:30px}
+  .pol2 .p-title{position:absolute;left:9px;bottom:22px;font-size:12px;font-weight:600;color:#f2f5ff;line-height:1.4}
+  .pol2 .p-line{position:absolute;left:9px;right:9px;bottom:12px;height:2px;background:linear-gradient(90deg,var(--accent),rgba(77,107,254,.2))}
+
+  /* plugin-market evidence window */
+  .market{position:absolute;right:0;top:434px;width:384px;z-index:11;border-radius:10px;padding:12px 13px 11px;
+    background:linear-gradient(160deg,rgba(26,31,46,.97),rgba(10,13,22,.98));
+    border:1px solid var(--a-26);
+    box-shadow:0 26px 54px rgba(0,0,0,.66),0 0 44px var(--accent-shadow),inset 0 1px 0 rgba(255,220,180,.1)}
+  .mk-top{display:flex;align-items:center;justify-content:space-between;
+    font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--soft-ink)}
+  .mk-top span:last-child{color:var(--dim);letter-spacing:.14em}
+  .mk-search{margin-top:9px;height:30px;border-radius:6px;display:flex;align-items:center;gap:8px;padding:0 10px;
+    background:rgba(8,11,18,.92);border:1px solid rgba(126,150,255,.18)}
+  .mk-search svg{width:12px;height:12px;flex:none;opacity:.8}
+  .mk-search .q{font-family:var(--mono);font-size:11.5px;color:#e8ecf7;letter-spacing:.01em}
+  .mk-search .caret{width:6px;height:13px;background:var(--accent);box-shadow:0 0 8px var(--accent-soft);margin-left:1px}
+  .mk-search .hint{margin-left:auto;font-family:var(--mono);font-size:7.5px;letter-spacing:.16em;color:#6c778f}
+  .mk-card{margin-top:9px;display:flex;gap:10px;padding:9px;border-radius:8px;
+    background:rgba(17,23,40,.9);border:1px solid var(--a-16)}
+  .mk-ico{width:40px;height:40px;border-radius:6px;flex:none;position:relative;overflow:hidden;
+    background:linear-gradient(160deg,#101a30,#080d18);border:1px solid rgba(126,150,255,.2)}
+  .mk-ico .m1{position:absolute;left:6px;top:6px;width:15px;height:9px;border-radius:2px;background:rgba(120,150,255,.5)}
+  .mk-ico .m2{position:absolute;right:5px;bottom:5px;width:12px;height:12px;border-radius:2px;background:var(--accent);opacity:.85}
+  .mk-body{flex:1;min-width:0}
+  .mk-name{display:flex;align-items:baseline;gap:7px}
+  .mk-name b{font-family:var(--mono);font-size:13px;font-weight:600;color:#f2f5ff;letter-spacing:.01em}
+  .mk-repo{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:#8d97ae;margin-top:4px}
+  .mk-tags{display:flex;gap:5px;margin-top:6px}
+  .mk-tags span{font-family:var(--mono);font-size:7px;letter-spacing:.1em;color:var(--soft-ink);
+    border:1px solid var(--a-20);border-radius:3px;padding:2px 5px;background:var(--a-05)}
+  .mk-foot{margin-top:8px;padding-top:7px;border-top:1px solid rgba(126,150,255,.14);
+    font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--dim)}
+  .mk-foot b{color:var(--soft-ink);font-weight:500}
+
+  /* ---------- three capabilities ---------- */
+  .caps{position:relative;z-index:40;display:grid;grid-template-columns:repeat(3,1fr);
+    margin-top:22px;border-top:1px solid var(--a-16);padding-top:15px}
+  .cap{padding-right:22px;margin-right:22px;border-right:1px solid rgba(255,255,255,.07)}
+  .cap:last-child{border-right:0;margin-right:0;padding-right:0}
+  .cap .ci{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--accent)}
+  .cap h3{margin-top:7px;font-size:16.5px;font-weight:600;color:var(--ink);letter-spacing:.02em}
+  .cap p{margin-top:6px;font-size:11.5px;line-height:1.58;color:var(--muted)}
+
+  /* ---------- install ---------- */
+  .install{position:relative;z-index:40;display:flex;align-items:center;height:54px;margin-top:14px;padding:0 20px;
+    border-radius:9px;background:var(--install-bg);
+    border:1px solid var(--a-20);box-shadow:inset 0 1px 0 rgba(255,220,180,.08),0 14px 34px rgba(0,0,0,.42)}
+  .install .lab{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--scene-ink);
+    padding-right:18px;border-right:1px solid var(--a-20)}
+  .install .cmd{font-family:var(--mono);font-size:15px;color:var(--ink);margin-left:18px;white-space:nowrap;letter-spacing:-.01em}
+  .install .cmd b{color:var(--accent);font-weight:500}
+  .install .ok{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--dim)}
+  .hint{margin-top:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);display:flex;align-items:center;gap:10px}
+  .hint b{color:var(--soft-ink);font-weight:500}
+  .hint i{width:3px;height:3px;border-radius:50%;background:rgba(140,140,140,.45)}
+
+  /* ---------- footer ---------- */
+  .foot{position:relative;z-index:40;margin-top:auto;display:flex;flex-direction:column;gap:9px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);padding-top:16px}
+  .foot-row{display:flex;align-items:center;justify-content:space-between}
+  .disclaimer{font-family:var(--sans);font-size:12.5px;letter-spacing:.04em;color:rgba(160,168,180,.52);line-height:1.4}
+  .foot .gh{display:flex;align-items:center;gap:8px}
+  .foot .gh svg{width:13px;height:13px;opacity:.85}
+  .foot .gh b{color:var(--soft-ink);font-weight:500;letter-spacing:.03em}
+  .foot .right{display:flex;align-items:center;gap:9px}
+  .foot .right i{width:3px;height:3px;border-radius:50%;background:rgba(140,140,140,.35)}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="grid"></div>
+  <header class="top">
+    <div class="brand">
+      <svg class="brand-whale" viewBox="0 0 40 26" aria-hidden="true">
+        <path d="M3.2 13.2C3.2 6.6 9.6 3.2 16.2 4.2 22.8 5.2 28.6 9 28.6 13.8 28.6 19 22.2 22.2 15.7 22.2 9.2 22.2 3.2 19 3.2 13.2Z" fill="#4D6BFE"/>
+        <path d="M27.6 12.4C31 9.2 33.8 5.6 34.8 1.6 32.2 5.8 29.4 8.2 26 9.2L27.6 12.4Z" fill="#4D6BFE"/>
+        <path d="M27.6 15.2C31 18.4 33.8 22 34.8 26 32.2 21.8 29.4 19.4 26 18.4L27.6 15.2Z" fill="#4D6BFE"/>
+        <circle cx="21.4" cy="10" r="1.5" fill="#0a1220"/>
+        <circle cx="21.9" cy="9.5" r=".55" fill="#eaf3ff"/>
+        <path d="M11 15.2c1.6 1.5 3.6 1.5 5.2.2" stroke="#0a1220" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".75"/>
+      </svg>
+      <span class="brand-name">deepseek</span>
+      <span class="brand-tag">HARNESS</span>
+    </div>
+    <div class="top-right"><i></i>DSH PLUGIN<em>/</em>REEL STUDIO</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow"><b>DSH PLUGIN</b><span class="sep">/</span>插件宣传物料生成器</div>
+    <h1>好插件，<br>不该只有 <em>README</em>。</h1>
+    <div class="tagline"><span class="bar"></span>让每个插件，都有一条自己的宣传片。<span class="en">ONE REEL FOR EVERY PLUGIN</span></div>
+    <p class="deck">把任意 DSH 插件仓库，做成 <b>16:9 宣传片</b>和 <b>3:4 宣传图</b>；扫描、分镜、渲染，全程本地。</p>
+    <div class="product">
+      <span class="pn">dsh-reel-studio</span>
+      <span class="pt">DSH PLUGIN · 本地渲染 · 1080p · MIT</span>
+    </div>
+  </section>
+
+  <section class="scene">
+    <div class="frame"></div>
+    <div class="screen">
+      <div class="ui-top"><i></i><i></i><i></i><span>deepseek harness — dsh-reel-studio</span></div>
+      <div class="ui-body">
+        <div class="ui-side">
+          <div class="ui-pill act"></div><div class="ui-pill"></div><div class="ui-pill"></div>
+          <div class="ui-pill sm"></div><div class="ui-pill sm"></div><div class="ui-pill sm"></div>
+          <div class="ui-pill sm"></div><div class="ui-pill sm"></div><div class="ui-pill sm"></div>
+        </div>
+        <div class="ui-main">
+          <div class="ui-title"></div>
+          <div class="ui-line w1"></div><div class="ui-line w2"></div>
+          <div class="ui-bubble"></div>
+          <div class="ui-line w2"></div><div class="ui-line w3"></div><div class="ui-line w1"></div>
+          <div class="ui-code"></div>
+        </div>
+        <div class="ui-right">
+          <div class="ui-thumb"></div><div class="ui-thumb act"></div><div class="ui-thumb"></div><div class="ui-thumb"></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-fade"></div>
+    <div class="beam warm"></div>
+    <div class="beam cool"></div>
+    <div class="practical"></div>
+
+    <div class="whale-shadow"></div>
+    <div class="whale-cast cast-soft">{{WHALE}}</div>
+    <div class="whale-cast cast-core">{{WHALE}}</div>
+    <div class="whale-contact"></div>
+    <!-- WHALE LAYER (independent, transparent): replace this node with a 3D still if needed -->
+    <div class="whale-layer">{{WHALE}}</div>
+
+    <div class="clap">
+      <div class="bar"></div>
+      <div class="board">
+        <div class="b-top"><span>DSH REEL</span><span>SCENE 01</span></div>
+        <div class="b-title">你的插件，<b>开拍</b>。</div>
+        <div class="b-rows">
+          <span>TAKE 01 · <b>16:9 + 3:4</b></span>
+          <span>RENDER <b>LOCAL · REMOTION · 1080p</b></span>
+        </div>
+        <div class="b-dir">DIRECTOR · <b>DEEPSEEK WHALE</b></div>
+      </div>
+    </div>
+
+    <div class="pol pol1">
+      <div class="img">
+        <div class="p-grid"></div>
+        <div class="p-h">你的插件<br>16:9 宣传片</div>
+        <div class="p-whale">{{WHALE}}</div>
+        <div class="p-sub">1080p · LOCAL RENDER</div>
+      </div>
+      <div class="cap">TAKE 01 · <b>16:9 宣传片</b></div>
+    </div>
+
+    <div class="pol pol2">
+      <div class="img">
+        <div class="p-grid"></div>
+        <div class="p-whale">{{WHALE}}</div>
+        <div class="p-title">你的插件<br>宣传图</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="cap">POSTER · <b>3:4</b></div>
+    </div>
+
+    <div class="market">
+      <div class="mk-top"><span>DSH PLUGIN MARKET</span><span>PLUGINS</span></div>
+      <div class="mk-search">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#9aa5bd" stroke-width="1.5"><circle cx="7" cy="7" r="4.4"/><path d="M10.4 10.4 14 14"/></svg>
+        <span class="q">reel-studio</span><span class="caret"></span>
+        <span class="hint">RESULT 1</span>
+      </div>
+      <div class="mk-card">
+        <div class="mk-ico"><span class="m1"></span><span class="m2"></span></div>
+        <div class="mk-body">
+          <div class="mk-name"><b>dsh-reel</b></div>
+          <div class="mk-repo">Eileenes · 0.1.0</div>
+          <div class="mk-tags"><span>工具与能力</span></div>
+        </div>
+      </div>
+      <div class="mk-foot">包名 <b>dsh-reel-studio</b> · 收录 2026-10-20</div>
+    </div>
+  </section>
+
+  <section class="caps">
+    <div class="cap">
+      <div class="ci">01</div>
+      <h3>读仓库</h3>
+      <p>扫描入口、README 与界面截图，先看懂插件。</p>
+    </div>
+    <div class="cap">
+      <div class="ci">02</div>
+      <h3>写分镜</h3>
+      <p>把能力写成脚本、镜头与字幕节奏。</p>
+    </div>
+    <div class="cap">
+      <div class="ci">03</div>
+      <h3>渲成片</h3>
+      <p>Remotion 本地渲 1080p，视频与宣传图一起出。</p>
+    </div>
+  </section>
+
+  <div class="install">
+    <span class="lab">INSTALL</span>
+    <span class="cmd"><b>$</b> dsh plugin --profile web add dsh-reel-studio</span>
+    <span class="ok">MIT</span>
+  </div>
+  <div class="hint">桌面端：<b>设置 → 插件 → 安装</b><i></i>本地渲染，不上传仓库</div>
+
+  <footer class="foot">
+    <div class="foot-row">
+    <div class="gh">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="#b7ad9d" d="M8 .4a7.6 7.6 0 0 0-2.4 14.8c.4.1.5-.2.5-.4v-1.4c-2.1.5-2.6-1-2.6-1-.3-.9-.8-1.1-.8-1.1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.8.9 2.3.7.1-.5.3-.9.5-1.1-1.7-.2-3.5-.9-3.5-3.9 0-.9.3-1.6.8-2.1-.1-.2-.3-1 .1-2.1 0 0 .6-.2 2.1.8a7.2 7.2 0 0 1 3.8 0c1.5-1 2.1-.8 2.1-.8.4 1.1.2 1.9.1 2.1.5.5.8 1.2.8 2.1 0 3-1.8 3.7-3.5 3.9.3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A7.6 7.6 0 0 0 8 .4Z"/></svg>
+      <span>github.com/<b>Eileenes/dsh-reel</b></span>
+    </div>
+    <div class="right">
+      <span>MIT LICENSE</span><i></i><span>本地渲染</span><i></i><span>1080p</span><i></i><span>REMOTION</span>
+    </div>
+    </div>
+    <div class="disclaimer">非官方社区项目；DeepSeek / DSH 商标归其所有者。</div>
+  </footer>
+</div>
+</body>
+</html>
