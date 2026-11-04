@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {COLORS, FONT, RADIUS, SPACE, TYPE} from '../tokens';
 
 const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const};
@@ -33,86 +33,15 @@ export const Wordmark: React.FC<{scale?: number; dark?: boolean; style?: React.C
   dark = false,
   style,
 }) => (
-  <div style={{display: 'flex', alignItems: 'center', gap: 12 * scale, ...style}}>
-    <WhaleMark size={44 * scale} />
-    <span
-      style={{
-        fontFamily: FONT.latin,
-        fontWeight: 700,
-        fontSize: 34 * scale,
-        letterSpacing: -0.8,
-        color: dark ? '#0B1220' : COLORS.text,
-      }}
-    >
-      deepseek
-    </span>
-    <span
-      style={{
-        fontFamily: FONT.mono,
-        fontSize: 13 * scale,
-        fontWeight: 600,
-        letterSpacing: 2.4,
-        color: COLORS.blue2,
-        border: `1px solid ${COLORS.lineStrong}`,
-        borderRadius: 6 * scale,
-        padding: `${4 * scale}px ${8 * scale}px`,
-        lineHeight: 1,
-      }}
-    >
-      HARNESS
-    </span>
+  <div style={{display: 'flex', alignItems: 'center', ...style}}>
+    <img
+      src={staticFile(dark ? 'brand/dsh-wordmark-dark.svg' : 'brand/dsh-wordmark-white.svg')}
+      style={{width: 364 * scale, height: 48 * scale, display: 'block'}}
+      alt="deepseek HARNESS"
+    />
   </div>
 );
 
-export const Pill: React.FC<{
-  children: React.ReactNode;
-  color?: string;
-  style?: React.CSSProperties;
-}> = ({children, color = COLORS.blue2, style}) => (
-  <span
-    style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 10,
-      padding: '10px 18px',
-      borderRadius: RADIUS.pill,
-      border: `1px solid ${color}55`,
-      background: `${color}14`,
-      color,
-      fontFamily: FONT.mono,
-      fontSize: 17,
-      letterSpacing: 3,
-      textTransform: 'uppercase',
-      ...style,
-    }}
-  >
-    <span style={{width: 7, height: 7, borderRadius: 99, background: color, boxShadow: `0 0 14px ${color}`}} />
-    {children}
-  </span>
-);
-
-export const Step: React.FC<{no: string; color?: string}> = ({no, color = COLORS.mint}) => (
-  <span
-    style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: 64,
-      height: 64,
-      borderRadius: 18,
-      border: `1px solid ${color}66`,
-      background: `${color}12`,
-      color,
-      fontFamily: FONT.mono,
-      fontSize: 28,
-      fontWeight: 700,
-    }}
-  >
-    {no}
-  </span>
-);
-
-/** Bottom-left caption block. Appears with a short rise; never overlaps the UI center. */
 export const Caption: React.FC<{
   kicker?: string;
   title: React.ReactNode;

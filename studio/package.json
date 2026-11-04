@@ -17,7 +17,8 @@
     "render:case": "remotion render src/v2/entry.tsx ReelCase out/case-better-sidebar.mp4 --codec h264 --crf 16 --concurrency=1",
     "render:case30": "remotion render src/v2/entry.tsx ReelCase30 out/case-better-sidebar-30s.mp4 --codec h264 --crf 16 --concurrency=1",
     "render:proof": "remotion render src/v2/entry.tsx ProofMini out/proof-mini-whale-15s.mp4 --codec h264 --crf 16 --concurrency=1",
-    "render:story30": "remotion render src/v2/entry.tsx ProofStory30 out/proof-story-30s.mp4 --codec h264 --crf 16 --concurrency=1"
+    "render:story30": "remotion render src/v2/entry.tsx ProofStory30 out/proof-story-30s.mp4 --codec h264 --crf 16 --concurrency=1",
+    "render:voxel30": "remotion render src/v2/entry.tsx ReelCaseVoxel30 out/case-better-sidebar-voxel-30s.mp4 --codec h264 --crf 16 --concurrency=1"
   },
   "dependencies": {
     "remotion": "4.0.409",

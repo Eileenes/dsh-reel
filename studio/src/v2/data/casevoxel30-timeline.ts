@@ -1,0 +1,53 @@
+/** Sound events for the 30s voxel-whale Better Sidebar film. */
+export const FPS = 30;
+export const TOTAL_FRAMES = 900;
+
+export type SfxKind = 'key' | 'riser' | 'whoosh' | 'landBig' | 'landSmall' | 'tile' | 'window' | 'enter' | 'result' | 'click' | 'chime' | 'toolPop' | 'spout' | 'hum' | 'title';
+export type SoundEvent = {frame: number; kind: SfxKind; gain?: number; note?: string};
+
+export const SOUND_EVENTS: SoundEvent[] = [
+  {frame: 0, kind: 'hum', gain: 0.55, note: 'music bed'},
+  {frame: 12, kind: 'key', gain: 0.5},
+  {frame: 21, kind: 'key', gain: 0.5},
+  {frame: 30, kind: 'key', gain: 0.5},
+  {frame: 70, kind: 'riser', gain: 0.6, note: 'whale assemble'},
+  {frame: 100, kind: 'landBig', gain: 0.8, note: 'whale lands'},
+  {frame: 112, kind: 'window', gain: 0.6, note: 'DSH window'},
+  {frame: 150, kind: 'tile', gain: 0.5},
+  {frame: 188, kind: 'chime', gain: 0.4},
+  {frame: 212, kind: 'whoosh', gain: 0.5, note: 'market opens'},
+  {frame: 220, kind: 'window', gain: 0.55},
+  {frame: 278, kind: 'key', gain: 0.35},
+  {frame: 284, kind: 'key', gain: 0.35},
+  {frame: 290, kind: 'key', gain: 0.35},
+  {frame: 296, kind: 'key', gain: 0.35},
+  {frame: 302, kind: 'key', gain: 0.35},
+  {frame: 308, kind: 'key', gain: 0.35},
+  {frame: 314, kind: 'key', gain: 0.35},
+  {frame: 320, kind: 'key', gain: 0.35},
+  {frame: 326, kind: 'key', gain: 0.35},
+  {frame: 342, kind: 'result', gain: 0.6, note: 'result card'},
+  {frame: 432, kind: 'click', gain: 0.65, note: 'detail / install highlight'},
+  {frame: 446, kind: 'click', gain: 0.7, note: 'install'},
+  {frame: 458, kind: 'riser', gain: 0.4},
+  {frame: 468, kind: 'chime', gain: 0.7, note: 'installed'},
+  {frame: 512, kind: 'whoosh', gain: 0.45, note: 'features'},
+  {frame: 520, kind: 'tile', gain: 0.45, note: 'card 1'},
+  {frame: 540, kind: 'tile', gain: 0.45, note: 'card 2'},
+  {frame: 560, kind: 'tile', gain: 0.45, note: 'card 3'},
+  {frame: 580, kind: 'tile', gain: 0.45, note: 'card 4'},
+  {frame: 612, kind: 'chime', gain: 0.4},
+  {frame: 632, kind: 'whoosh', gain: 0.5, note: 'workbench'},
+  {frame: 636, kind: 'landSmall', gain: 0.55},
+  {frame: 642, kind: 'landSmall', gain: 0.55},
+  {frame: 648, kind: 'landSmall', gain: 0.6},
+  {frame: 654, kind: 'landSmall', gain: 0.6},
+  {frame: 664, kind: 'chime', gain: 0.4},
+  {frame: 722, kind: 'title', gain: 0.65, note: 'end card'},
+  {frame: 752, kind: 'key', gain: 0.3},
+  {frame: 758, kind: 'key', gain: 0.3},
+  {frame: 764, kind: 'key', gain: 0.3},
+  {frame: 770, kind: 'key', gain: 0.3},
+  {frame: 790, kind: 'chime', gain: 0.5},
+  {frame: 850, kind: 'chime', gain: 0.35, note: 'final resolve'},
+];
