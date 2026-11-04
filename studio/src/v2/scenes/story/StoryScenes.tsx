@@ -164,10 +164,10 @@ export const StoryDock: React.FC = () => {
             src={staticFile('shots/whale-sprite.png')}
             style={{
               position: 'absolute',
-              left: finalPos[0] - 85,
-              top: finalPos[1] - arc - 52,
-              width: 170,
-              height: 103,
+              left: finalPos[0] - 28,
+              top: finalPos[1] - arc - 17,
+              width: 56,
+              height: 34,
               transform: `rotate(${look * 8}deg) scale(${face}, 1)`,
               filter: 'drop-shadow(0 16px 26px rgba(0,0,0,.42)) drop-shadow(0 0 16px rgba(120,180,255,.3))',
             }}
@@ -246,7 +246,7 @@ export const StoryWhaleButton: React.FC = () => {
         >
           <img src={staticFile('brand/dsh-whale-black.svg')} style={{width: 30, height: 26}} />
         </div>
-        <Whale f={f} from={[W - 80, 120]} to={target} start={4} end={38} height={110} width={120} face={1} />
+        <Whale f={f} from={[W - 80, 120]} to={target} start={4} end={38} height={60} width={56} face={1} />
         <Ripple f={f} at={40} x={target[0]} y={target[1]} />
       </Window>
     </AbsoluteFill>
@@ -276,7 +276,7 @@ export const StorySearch: React.FC = () => {
             <span style={{opacity: Math.floor(f / 7) % 2 === 0 ? 1 : 0}}>|</span>
           </div>
         ) : null}
-        <Whale f={f} from={[W - 60, H + 40]} to={target} start={8} end={40} height={100} width={90} />
+        <Whale f={f} from={[W - 60, H + 40]} to={target} start={8} end={40} height={50} width={56} />
         <div
           style={{
             position: 'absolute',
@@ -308,7 +308,7 @@ export const StorySearch: React.FC = () => {
             <div style={{marginTop: 7, fontSize: 13, color: '#5b6370', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>侧边栏完整工作台：内置文件渲染编辑、终端、Git 与子代理，支持三方插件注册新 Tab。</div>
           </div>
         </div>
-        <Whale f={f} from={[CARD.left + 80, CARD.top - 10]} to={[CARD.left + CARD.w - 80, CARD.top + 20]} start={104} end={124} height={60} width={90} />
+        <Whale f={f} from={[CARD.left + 80, CARD.top - 10]} to={[CARD.left + CARD.w - 80, CARD.top + 20]} start={104} end={124} height={34} width={56} />
       </Window>
     </AbsoluteFill>
   );
