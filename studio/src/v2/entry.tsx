@@ -14,6 +14,7 @@ import {ProofMiniComp} from './compositions/ProofMiniComp';
 import {ProofStory30Comp} from './compositions/ProofStory30Comp';
 import {ReelCaseVoxel30} from './compositions/ReelCaseVoxel30';
 import {ReelCaseVoxelReal30} from './compositions/ReelCaseVoxelReal30';
+import {WhaleSpriteComp} from './scenes/casevoxel/WhaleSpriteComp';
 import {TOTAL_FRAMES, FPS} from './data/timeline';
 import {VIDEO} from './tokens';
 
@@ -34,6 +35,14 @@ const V2Root: React.FC = () => (
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
+    />
+    <Composition
+      id="WhaleSprite"
+      component={WhaleSpriteComp}
+      durationInFrames={1}
+      fps={FPS}
+      width={700}
+      height={700}
     />
     <Composition
       id="ReelCaseVoxelReal30"

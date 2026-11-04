@@ -477,7 +477,7 @@ const DshWindow: React.FC<{reveal: number; glow: number; zoom: number}> = ({reve
           }}
         >
           <Img
-            src={staticFile('shots/dsh-main-interface.png')}
+            src={staticFile('shots/dsh-main-clean.png')}
             style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block'}}
           />
         </div>
@@ -528,7 +528,9 @@ export const S2Hatch: React.FC = () => {
       {/* 鲸鱼单独一层，盖在 HTML 窗口上面（跳到窗口上才不会被盖住） */}
       <LayerCanvas camera={cam}>
         <HeroLights />
-        <WhaleVoxel time={warpS2(f)} cursorWorld={S2_CURSOR} />
+        <group scale={0.55} position={[0.6, -0.02, 0.1]}>
+          <WhaleVoxel time={warpS2(f)} cursorWorld={S2_CURSOR} />
+        </group>
       </LayerCanvas>
       {/* 进入窗口的压暗（接 S3 市场页） */}
       <AbsoluteFill style={{backgroundColor: COLORS.bg0, opacity: endDim, pointerEvents: 'none'}} />
