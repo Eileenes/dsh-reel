@@ -19,6 +19,15 @@ npm 包名：`dsh-reel-studio` · 仓库：`Eileenes/dsh-reel`
 
 样片目标插件：[omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar)（MIT）。这是非官方样片，用来验证“插件仓库 → 发布物料”的流程。截图来自该公开仓库；任务拓扑/侧边对话面板是合成的，不包含真实会话内容。
 
+## V0.1 真机界面宣传片管线（2026-11）
+
+- [28 秒成片](docs/better-sidebar-v0.1.mp4)：Better Sidebar，1080p / 30fps / 带声音；
+- [方法总结](docs/promo-method-v0.1.md)：读插件 → 分镜 → 素材 → 侧栏壳 → 鲸鱼运动 → 声音 → QA；
+- [案例拆解](docs/case-better-sidebar-v0.1.md)：功能表、28s 时间线、素材来源、限制；
+- [Onetake comp 参考](promo/comp-better-sidebar.html)：实际分镜/动画代码（依赖 Onetake，不随仓库分发）。
+
+> 目前是手动分镜 + 外部 Onetake 渲染；Onetake 为 PolyForm Noncommercial，商用需授权。
+
 ## 能产出什么
 
 ### 宣传片

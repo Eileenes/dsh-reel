@@ -43,6 +43,19 @@
 
 v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar)（MIT 许可，截图来自该仓库，任务/侧边对话面板为合成界面）；案例里的下载量与 Stars 是静态示例数据。
 
+## V0.1 真机界面宣传片管线（Better Sidebar）
+
+2026-11 新增：以**目标插件的真实界面**为主、30 秒以内的宣传片方法。首个案例是 Better Sidebar（MIT，截图来自其官方仓库）。
+
+- [28 秒成片](docs/better-sidebar-v0.1.mp4)（1080p / 30fps / 带声音）
+- [方法总结](docs/promo-method-v0.1.md)：读插件 → 定分镜 → 收干净素材 → 侧栏壳 → 鲸鱼运动 → 声音 → QA
+- [案例拆解](docs/case-better-sidebar-v0.1.md)：功能表、28s 时间线、素材来源、已知限制
+- [Onetake comp 参考](promo/comp-better-sidebar.html)：实际分镜/动画代码（依赖 Onetake 运行时，不随仓库分发）
+
+![Better Sidebar 片尾](docs/better-sidebar-endcard.png)
+
+> 这条管线目前是**手动分镜 + 外部 Onetake 渲染**：素材、tab 坐标、音频事件需要按目标插件逐个调整；不是“给仓库地址就自动出片”。Onetake 为 PolyForm Noncommercial 许可，商用需另行授权。
+
 <a id="quick-start"></a>
 
 ## 快速开始

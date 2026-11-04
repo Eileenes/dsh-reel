@@ -1,9 +1,9 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: turn a DSH plugin repo into a promo video and promo image locally (host tools + Remotion studio), plus the 2026 campaign design system.",
+  "description": "dsh-reel-studio: turn a DSH plugin repo into a promo video and promo image locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp, storyboard method, audio/QA checklist).",
   "license": "MIT",
   "repository": {
     "type": "git",
