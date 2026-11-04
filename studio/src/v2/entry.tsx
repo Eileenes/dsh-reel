@@ -35,7 +35,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ProofMini"
       component={ProofMiniComp}
-      durationInFrames={240}
+      durationInFrames={450}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}

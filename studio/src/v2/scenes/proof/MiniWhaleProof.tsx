@@ -9,12 +9,18 @@
  * 240 frames @30fps = 8.0s. Rendered in 3D with canvas textures for exact Chinese.
  */
 
-import React, {Suspense, useMemo} from 'react';
+import React, {Suspense, useEffect, useMemo} from 'react';
 import {AbsoluteFill, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ThreeCanvas} from '@remotion/three';
 import {useLoader, useThree} from '@react-three/fiber';
 import * as THREE from 'three';
 import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
+import {BokehPass} from 'three/examples/jsm/postprocessing/BokehPass.js';
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';
+import {useFrame} from '@react-three/fiber';
 
 const BG = '#06080d';
 const CYAN = '#28e0ff';
@@ -168,15 +174,17 @@ const ComposerCard: React.FC = () => {
 const WhaleFigurine: React.FC<{frame: number}> = ({frame}) => {
   const tex = useLoader(THREE.TextureLoader, staticFile('proof/whale-app-icon.png'));
   tex.colorSpace = THREE.SRGBColorSpace;
-  const walk = smooth(seg(frame, 26, 60));
-  const press = smooth(seg(frame, 62, 70)) * (1 - smooth(seg(frame, 78, 96)));
-  const settle = smooth(seg(frame, 100, 140));
+  const walk = smooth(seg(frame, 34, 122));
+  const walking = walk > 0.02 && walk < 0.98 ? 1 : 0;
+  const press = smooth(seg(frame, 128, 140)) * (1 - smooth(seg(frame, 150, 172)));
+  const settle = smooth(seg(frame, 180, 220));
   const bob = Math.abs(Math.sin((frame / 9) * Math.PI)) * 0.035 * (1 - settle * 0.7);
-  const x = -1.75 + walk * 2.05 - settle * 0.7;
+  const rock = Math.sin(frame * 0.7) * 0.06 * walking;
+  const x = -1.75 + walk * 2.05 - settle * 0.55;
   const y = 0.36 + 0.52 + bob - press * 0.02;
   const z = 0.22 + press * 0.32;
-  const rotZ = -press * 0.28;
-  const rotY = -0.35 + walk * 0.12 + settle * -0.35;
+  const rotZ = -press * 0.28 + rock;
+  const rotY = -0.35 + walk * 0.12 + settle * -0.3;
   return (
     <group position={[x, y, z]} rotation={[0.12, rotY, rotZ]}>
       <mesh castShadow position={[0, 0, 0]}>
@@ -196,7 +204,7 @@ const WhaleFigurine: React.FC<{frame: number}> = ({frame}) => {
 };
 
 const InstallButton: React.FC<{frame: number}> = ({frame}) => {
-  const press = smooth(seg(frame, 64, 72)) * (1 - smooth(seg(frame, 78, 100)));
+  const press = smooth(seg(frame, 132, 142)) * (1 - smooth(seg(frame, 152, 180)));
   const tex = useButtonTex();
   const geo = useMemo(() => new RoundedBoxGeometry(0.62, 0.46, 0.62, 6, 0.12), []);
   return (
@@ -231,16 +239,65 @@ const InstallButton: React.FC<{frame: number}> = ({frame}) => {
   );
 };
 
+function makeDrawerTexture(active: number): THREE.CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 1024;
+  c.height = 1400;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#0f131b';
+  g.beginPath();
+  g.roundRect(0, 0, 1024, 1400, 40);
+  g.fill();
+  g.strokeStyle = 'rgba(255,255,255,0.10)';
+  g.lineWidth = 5;
+  g.stroke();
+  g.fillStyle = 'rgba(255,255,255,0.94)';
+  g.font = `600 56px ${FONT}`;
+  g.fillText('Better Sidebar', 64, 118);
+  g.fillStyle = 'rgba(255,255,255,0.42)';
+  g.font = `400 30px ${FONT}`;
+  g.fillText('侧栏 · 工作台', 64, 172);
+  ['文件', 'Git', '任务', '侧聊'].forEach((tab, i) => {
+    const ty = 270 + i * 235;
+    const on = i === active;
+    g.fillStyle = on ? 'rgba(40,224,255,0.18)' : 'rgba(255,255,255,0.05)';
+    g.beginPath();
+    g.roundRect(60, ty, 904, 186, 30);
+    g.fill();
+    g.strokeStyle = on ? 'rgba(40,224,255,0.9)' : 'rgba(255,255,255,0.12)';
+    g.lineWidth = on ? 5 : 4;
+    g.stroke();
+    g.fillStyle = on ? '#b6f8ff' : 'rgba(255,255,255,0.72)';
+    g.font = `600 60px ${FONT}`;
+    g.fillText(tab, 108, ty + 112);
+    g.fillStyle = on ? 'rgba(140,246,255,0.85)' : 'rgba(255,255,255,0.30)';
+    g.font = `400 34px ${FONT}`;
+    g.fillText(['files · editor', 'changes · diff', 'agents · queue', 'chat · context'][i], 108, ty + 158);
+    if (on) {
+      g.fillStyle = 'rgba(40,224,255,0.9)';
+      g.beginPath();
+      g.arc(930, ty + 92, 12, 0, Math.PI * 2);
+      g.fill();
+    }
+  });
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
+}
+
 const Drawer: React.FC<{frame: number}> = ({frame}) => {
-  const open = smooth(seg(frame, 82, 138));
-  const led = Math.max(smooth(seg(frame, 70, 84)), open);
-  const faceTex = useDrawerTex();
+  const open = smooth(seg(frame, 148, 264));
+  const led = Math.max(smooth(seg(frame, 136, 154)), open);
+  const tabFrame = frame < 268 ? 0 : frame < 292 ? 1 : frame < 316 ? 2 : 3;
+  const faceTex = useMemo(() => makeDrawerTexture(tabFrame), [tabFrame]);
   const geo = useMemo(() => new RoundedBoxGeometry(2.35, 3.45, 0.36, 6, 0.08), []);
   const mats = useMemo(() => {
     const dark = new THREE.MeshStandardMaterial({color: '#161b25', roughness: 0.4, metalness: 0.28});
     const face = new THREE.MeshStandardMaterial({map: faceTex, roughness: 0.5, metalness: 0.08});
     return [dark, dark, dark, dark, face, dark];
   }, [faceTex]);
+  const pulse = Math.exp(-Math.pow((frame - (tabFrame * 24 + 268)) / 6, 2));
   return (
     <group position={[3.05, 1.75, -0.7 + open * 1.05]} rotation={[0, -0.32 + open * 0.12, 0]}>
       <mesh geometry={geo} material={mats} castShadow receiveShadow />
@@ -250,15 +307,16 @@ const Drawer: React.FC<{frame: number}> = ({frame}) => {
       </mesh>
       <mesh position={[0, 1.78, 0.12]}>
         <boxGeometry args={[2.28, 0.04, 0.04]} />
-        <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={0.1 + led * 2.2} />
+        <meshStandardMaterial color={CYAN} emissive={CYAN} emissiveIntensity={0.1 + led * 2.2 + pulse * 1.5} />
       </mesh>
-      <pointLight position={[-1.05, 0.2, 0.7]} color={CYAN} intensity={led * 10} distance={4} />
+      <pointLight position={[-1.05, 0.2, 0.7]} color={CYAN} intensity={led * 10 + pulse * 4} distance={4} />
     </group>
   );
 };
 
 const PrinterTicket: React.FC<{frame: number}> = ({frame}) => {
-  const out = smooth(seg(frame, 144, 196));
+  const out = smooth(seg(frame, 316, 360));
+  const rise = smooth(seg(frame, 360, 412));
   const tex = useTicketTex();
   return (
     <group position={[2.65, 0.36, 1.55]}>
@@ -270,14 +328,13 @@ const PrinterTicket: React.FC<{frame: number}> = ({frame}) => {
         <boxGeometry args={[1.32, 0.02, 0.5]} />
         <meshStandardMaterial color="#04060a" emissive="#04060a" />
       </mesh>
-      <group position={[-0.55 - out * 1.15, 0.16, 0.32 - out * 0.35]} rotation={[-0.32, 0.12, -0.03]}>
+      <group
+        position={[-0.55 - out * 0.5, 0.16 + rise * 0.46, 0.32 + rise * 0.34]}
+        rotation={[-1.47 + rise * 1.32, 0.12 - rise * 0.1, -0.03]}
+      >
         <mesh castShadow>
-          <boxGeometry args={[1.3, 0.015, 0.46]} />
-          <meshStandardMaterial color="#f4efe3" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0.009, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[1.24, 0.42]} />
-          <meshStandardMaterial map={tex} roughness={0.8} />
+          <planeGeometry args={[1.05, 0.38]} />
+          <meshStandardMaterial map={tex} roughness={0.85} side={THREE.DoubleSide} />
         </mesh>
       </group>
     </group>
@@ -462,18 +519,52 @@ const Bokeh: React.FC<{frame: number}> = ({frame}) => {
   );
 };
 
+
+const PostFX: React.FC = () => {
+  const {gl, scene, camera, size} = useThree();
+  const composer = useMemo(() => {
+    const c = new EffectComposer(gl);
+    c.setSize(size.width, size.height);
+    c.addPass(new RenderPass(scene, camera));
+    c.addPass(new BokehPass(scene, camera, {focus: 9.2, aperture: 0.00065, maxblur: 0.016}));
+    c.addPass(new UnrealBloomPass(new THREE.Vector2(size.width, size.height), 0.3, 0.5, 0.95));
+    c.addPass(new OutputPass());
+    return c;
+  }, [gl, scene, camera]);
+  useEffect(() => {
+    composer.setSize(size.width, size.height);
+  }, [composer, size]);
+  useFrame(() => {
+    composer.render();
+  }, 1);
+  return null;
+};
+
 /* ── camera ───────────────────────────────────────────────────────────────── */
 
 const CameraRig: React.FC<{frame: number}> = ({frame}) => {
   const {camera} = useThree();
-  const push = smooth(seg(frame, 0, 125));
-  const pull = smooth(seg(frame, 150, 220));
-  const sway = Math.sin(frame / 70) * 0.04;
-  const x = 2.9 + sway - push * 1.1 - pull * 0.2;
-  const y = 2.7 - push * 0.55 + pull * 0.6;
-  const z = 10.4 - push * 2.9 + pull * 2.2;
-  camera.position.set(x, y, z);
-  camera.lookAt(0.15 + push * 0.05, 1.0 + push * 0.02 - pull * 0.1, 0.0);
+  const push = smooth(seg(frame, 0, 140));
+  const tab = smooth(seg(frame, 180, 300)) * (1 - smooth(seg(frame, 340, 390)));
+  const ticket = 0;
+  const pull = smooth(seg(frame, 372, 436));
+  const sway = Math.sin(frame / 70) * 0.035;
+
+  const P0 = new THREE.Vector3(2.9, 2.7, 10.4);
+  const P1 = new THREE.Vector3(1.75, 2.1, 7.4);
+  const P2 = new THREE.Vector3(2.35, 1.95, 5.5);
+  const P3 = new THREE.Vector3(1.55, 1.55, 6.2);
+  const P4 = new THREE.Vector3(2.85, 2.65, 10.1);
+  const L0 = new THREE.Vector3(0.15, 1.0, 0.0);
+  const L1 = new THREE.Vector3(0.35, 0.95, 0.15);
+  const L2 = new THREE.Vector3(2.55, 1.55, -0.4);
+  const L3 = new THREE.Vector3(2.25, 1.05, 2.55);
+  const L4 = new THREE.Vector3(0.45, 0.95, 0.2);
+
+  const pos = P0.clone().lerp(P1, push).lerp(P2, tab).lerp(P3, ticket).lerp(P4, pull);
+  const look = L0.clone().lerp(L1, push).lerp(L2, tab).lerp(L3, ticket).lerp(L4, pull);
+  camera.position.set(pos.x + sway, pos.y, pos.z);
+  camera.lookAt(look);
   camera.updateProjectionMatrix();
   return null;
 };
@@ -515,6 +606,7 @@ const Scene: React.FC<{frame: number}> = ({frame}) => (
     <PrinterTicket frame={frame} />
     <Bokeh frame={frame} />
     <CameraRig frame={frame} />
+    <PostFX />
   </>
 );
 
@@ -524,9 +616,9 @@ export const ProofMini: React.FC = () => {
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
   const fadeIn = interpolate(frame, [0, 14], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const overlayIn = interpolate(frame, [188, 214], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const hookIn = interpolate(frame, [16, 40], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const hookOut = interpolate(frame, [74, 96], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const overlayIn = interpolate(frame, [384, 414], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const hookIn = interpolate(frame, [16, 44], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const hookOut = interpolate(frame, [112, 140], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill
       style={{
