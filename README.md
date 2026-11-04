@@ -168,7 +168,7 @@ dsh plugin --profile scratch add github:Eileenes/dsh-reel
 | 场景 | 需要什么 | 当前状态 |
 | --- | --- | --- |
 | 渲染 2026 campaign | Node.js 22+、Chrome／Chromium | 24 秒片由 `studio/src/v2/entry.tsx` 渲染；海报/封面由 `design/build.sh` 生成；均已实测 |
-| 渲染 v1 案例 | Node.js 22+、pnpm、Chrome／Chromium | 仓库包含旧 MP4、封面与宣传图成品及源码 |
+| 渲染 v1 案例 | Node.js 22+、pnpm、Chrome／Chromium | 用 `scripts/reel.mjs --mode both` 在本地生成，仓库不再内置旧的 Better Sidebar 样片 |
 | 换成其他插件 | 已核实的信息、可使用的截图、JSON 与 TSX 修改 | v1 模板仍含 Better Sidebar 固定内容；v2 尚未参数化 |
 | 调整画幅或时长 | 修改 Composition、布局、镜头时间线和配乐 | v2 目前 24s / 16:9 + 3:4 + 1:1；无通用竖屏预设 |
 | 重新生成音效 | Python 3（纯标准库） | `python3 studio/scripts/make_sfx_v2.py` 重新合成 drone + 15 类音效并铺 24s 混音 |
