@@ -10,6 +10,7 @@ import {Composition, registerRoot} from 'remotion';
 import {ReelPromo} from './compositions/ReelPromo';
 import {ReelCase} from './compositions/ReelCase';
 import {ReelCase30} from './compositions/ReelCase30';
+import {ProofMiniComp} from './compositions/ProofMiniComp';
 import {TOTAL_FRAMES, FPS} from './data/timeline';
 import {VIDEO} from './tokens';
 
@@ -27,6 +28,14 @@ const V2Root: React.FC = () => (
       id="ReelCase"
       component={ReelCase}
       durationInFrames={TOTAL_FRAMES}
+      fps={FPS}
+      width={VIDEO.width}
+      height={VIDEO.height}
+    />
+    <Composition
+      id="ProofMini"
+      component={ProofMiniComp}
+      durationInFrames={240}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
