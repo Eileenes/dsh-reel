@@ -74,13 +74,19 @@ const LayerCanvas: React.FC<{camera: CameraPose; children: React.ReactNode}> = (
 const TERM_W = 860;
 
 const TerminalWindow: React.FC<{
-  /** 已输入的字符数 0..3（dsh） */
+  /** 已输入的字符数 */
   typed: number;
+  /** 要逐字打出的完整命令 */
+  copy: string;
+  /** 标题栏文案 */
+  termTitle: string;
+  /** 右下角 mono 小标（由 termTitle 首段派生，如 DSH-REEL / BETTER-SIDEBAR） */
+  product: string;
   caretOn: boolean;
   /** 结尾蓝光涌出强度 0..1 */
   gather: number;
-}> = ({typed, caretOn, gather}) => {
-  const chars = 'dsh'.slice(0, typed);
+}> = ({typed, copy, termTitle, product, caretOn, gather}) => {
+  const chars = copy.slice(0, typed);
   return (
     <div style={{position: 'relative', width: TERM_W}}>
       {/* 结尾从字符里涌出的蓝光（在终端面板后面，只从边缘透出来） */}
@@ -133,7 +139,7 @@ const TerminalWindow: React.FC<{
               color: COLORS.faint,
             }}
           >
-            dsh-reel — zsh — 120×32
+            {termTitle}
           </div>
           <div style={{width: 96}} />
         </div>
@@ -167,7 +173,7 @@ const TerminalWindow: React.FC<{
           </div>
           <div style={{marginTop: 66, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
             <div style={{fontSize: 14, letterSpacing: 5, color: COLORS.faint}}>DEEPSEEK HARNESS</div>
-            <div style={{fontSize: 13, letterSpacing: 2.6, color: `${COLORS.blue2}99`}}>DSH-REEL · PROMO KIT</div>
+            <div style={{fontSize: 13, letterSpacing: 2.6, color: `${COLORS.blue2}99`}}>{product} · PROMO KIT</div>
           </div>
         </div>
         {/* 聚光时从光标处亮起来的一层蓝光洗（在面板内，压不住文字） */}
@@ -240,8 +246,10 @@ const S1Sweep: React.FC<{f: number}> = ({f}) => {
  * S1 右上角品牌/钩子（f18 后淡入，字号克制，不抢 S9 的片尾主标题）：
  * DSH wordmark 小标 + mono kicker + 一行中文钩子。
  */
-const S1Brand: React.FC<{f: number}> = ({f}) => {
+const S1Brand: React.FC<{f: number; hook: string; eyebrow: string}> = ({f, hook, eyebrow}) => {
   const p = E.cubicOut(seg(f, 18, 34));
+  // 长钩子自动降一档字号（40px），保证右上区域一行放得下；默认 15 字仍用 44px
+  const hookSize = hook.length > 18 ? 40 : 44;
   if (p <= 0.001) return null;
   return (
     <div
@@ -249,7 +257,7 @@ const S1Brand: React.FC<{f: number}> = ({f}) => {
         position: 'absolute',
         right: 120,
         top: 122,
-        width: 780,
+        width: 880,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-end',
@@ -271,29 +279,49 @@ const S1Brand: React.FC<{f: number}> = ({f}) => {
           color: COLORS.mint,
         }}
       >
-        DSH PLUGIN · PROMO KIT
-        <span style={{width: 24, height: 2, background: COLORS.mint}} />
+        {eyebrow}
+        <span style={{width: 24, height: 2, background: COLORS.mint, flexShrink: 0}} />
       </div>
       <div
         style={{
           fontFamily: FONT.zh,
-          fontSize: 44,
+          fontSize: hookSize,
           fontWeight: 500,
           letterSpacing: 0.6,
           lineHeight: 1.25,
           color: COLORS.text,
           textAlign: 'right',
-          whiteSpace: 'nowrap',
+          whiteSpace: 'pre-line',
           textShadow: '0 12px 44px rgba(0,0,0,0.55)',
         }}
       >
-        给每个插件，一条自己的宣传片。
+        {hook}
       </div>
     </div>
   );
 };
 
-export const S1Hook: React.FC = () => {
+/**
+ * S1 开场的可替换文案（供其它插件 case 复用；不传 = dsh-reel 现状）。
+ * 布局/时间轴/聚光节奏全部不变，只换文字。
+ */
+export type S1HookProps = {
+  /** 终端里逐字打出的命令：f12/f21/f30 三拍，更长的命令按 9 帧/字符继续 */
+  typed?: string;
+  /** 终端标题栏 */
+  termTitle?: string;
+  /** 右上中文钩子（放不下自动折到第二行，最多两行） */
+  hook?: string;
+  /** 右上 mono 小标 */
+  eyebrow?: string;
+};
+
+export const S1Hook: React.FC<S1HookProps> = ({
+  typed: typedCopy = 'dsh',
+  termTitle = 'dsh-reel — zsh — 120×32',
+  hook = '给每个插件，一条自己的宣传片。',
+  eyebrow = 'DSH PLUGIN · PROMO KIT',
+}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = f / fps;
@@ -303,8 +331,11 @@ export const S1Hook: React.FC = () => {
   const ring = seg(f, 4, 46);
   const gather = E.cubicInOut(seg(f, 46, 76));
   const cursorOpacity = gather * (0.75 + 0.25 * Math.sin(t * 9));
-  const typed = f >= 30 ? 3 : f >= 21 ? 2 : f >= 12 ? 1 : 0;
-  const caretOn = typed < 3 ? true : Math.floor(f / 7) % 2 === 0;
+  // 打字节奏保持：f12 / f21 / f30 各一个字符（长命令按 9 帧/字符继续）
+  const shown = f < 12 ? 0 : Math.min(typedCopy.length, 1 + Math.floor((f - 12) / 9));
+  const caretOn = shown < typedCopy.length ? true : Math.floor(f / 7) % 2 === 0;
+  // 右下角小标由标题首段派生：'dsh-reel — …' → DSH-REEL（默认输出与改版前一致）
+  const product = termTitle.split('—')[0].trim().toUpperCase();
 
   const push = E.sineInOut(seg(f, 0, 78));
   const cam: CameraPose = {
@@ -339,10 +370,17 @@ export const S1Hook: React.FC = () => {
           transform: `perspective(2000px) rotateY(4deg) rotateX(1.6deg) scale(${S1_TERM_SCALE})`,
         }}
       >
-        <TerminalWindow typed={typed} caretOn={caretOn} gather={gather} />
+        <TerminalWindow
+          typed={shown}
+          copy={typedCopy}
+          termTitle={termTitle}
+          product={product}
+          caretOn={caretOn}
+          gather={gather}
+        />
       </div>
       {/* 右上品牌 + 中文钩子（f18 后淡入） */}
-      <S1Brand f={f} />
+      <S1Brand f={f} hook={hook} eyebrow={eyebrow} />
       {/* 黑场起幅：前 ~8 帧压黑，f0–f8 保持黑场，之后淡入 */}
       <AbsoluteFill
         style={{

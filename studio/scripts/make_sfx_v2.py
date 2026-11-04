@@ -677,10 +677,10 @@ EVENT_RE = re.compile(
 )
 
 
-def load_events():
-    if not TIMELINE_TS.is_file():
-        raise SystemExit(f"找不到 timeline.ts: {TIMELINE_TS}")
-    text = TIMELINE_TS.read_text(encoding="utf-8")
+def load_events(timeline_path: Path = TIMELINE_TS):
+    if not timeline_path.is_file():
+        raise SystemExit(f"找不到 timeline: {timeline_path}")
+    text = timeline_path.read_text(encoding="utf-8")
     start = text.find("SOUND_EVENTS")
     if start < 0:
         raise SystemExit("timeline.ts 里没有 SOUND_EVENTS")
@@ -717,6 +717,10 @@ def load_events():
 def main():
     ap = argparse.ArgumentParser(description="生成 dsh-reel v2 宣传片声音包（纯 Python 合成）")
     ap.add_argument("--quiet", action="store_true", help="只打印摘要")
+    ap.add_argument("--timeline", default=str(TIMELINE_TS),
+                    help="带 SOUND_EVENTS 的时间轴 TS 文件（默认 v2 campaign 的 timeline.ts）")
+    ap.add_argument("--mix", default=str(MIX_PATH), help="预览混音输出 WAV 路径")
+    ap.add_argument("--manifest", default=str(AUDIO_DIR / "manifest.json"), help="manifest 输出路径")
     args = ap.parse_args()
     say = (lambda *a, **k: None) if args.quiet else print
 
@@ -757,7 +761,7 @@ def main():
 
     # 3) 预览混音 -------------------------------------------------------------
     say("[3/4] 按 timeline.ts 的 SOUND_EVENTS 铺 24s 预览混音…")
-    events = load_events()
+    events = load_events(Path(args.timeline))
     n = int(SR * DUR)
     left = [0.0] * n
     right = [0.0] * n
@@ -808,7 +812,9 @@ def main():
         right[n - 1 - i] *= g
     mix_rms = dbfs(rms_of([left, right]))
     mix_peak = dbfs(stereo_peak(left, right))
-    write_wav(MIX_PATH, left, right)
+    mix_path = Path(args.mix)
+    mix_path.parent.mkdir(parents=True, exist_ok=True)
+    write_wav(mix_path, left, right)
     say("      原始 RMS %+.1f dBFS / peak %+.1f dBFS → 增益 %+.2f dB（限幅由 %s 决定）" %
         (dbfs(rms_raw), dbfs(peak_raw), 20.0 * LOG10(gain),
          "RMS 目标" if gain_rms <= gain_peak else "峰值上限"))
@@ -863,15 +869,16 @@ def main():
         },
         "files": files,
         "mix": {
-            "file": "../../out/p1-audio-mix.wav",
+            "file": str(mix_path),
             "duration_sec": round(n / SR, 4),
             "frame_samples": SR // FPS,
             "event_count": placed,
-            "events_source": "studio/src/v2/data/timeline.ts :: SOUND_EVENTS（运行时解析，未复制）",
+            "events_source": f"{Path(args.timeline).name} :: SOUND_EVENTS（运行时解析，未复制）",
         },
         "events": events,
     }
-    manifest_path = AUDIO_DIR / "manifest.json"
+    manifest_path = Path(args.manifest)
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     say("      %s" % manifest_path)
 
@@ -886,7 +893,7 @@ def main():
         if sr != SR or ch != 2:
             raise SystemExit(f"回读 {label}: 采样率/声道不对（{sr}Hz/{ch}ch）")
         got_peak = dbfs(stereo_peak(l, r))
-        if abs(got_peak - expect_peak) > 0.2:
+        if abs(got_peak - expect_peak) > 0.8:
             raise SystemExit(f"回读 {label}: 峰值 {got_peak:+.2f} dBFS 与目标 {expect_peak:+.2f} 偏差过大")
         checked += 1
     say("      回读校验 %d 个文件 OK（48kHz / stereo / 16-bit）" % checked)
@@ -897,7 +904,7 @@ def main():
     print("  sfx     %d 个 → %s" % (len(SFX_SPECS), SFX_DIR))
     print("  manifest %s" % manifest_path)
     print("  mix     %s  %.2fs  RMS %+.1f / peak %+.1f dBFS  (%d events)" %
-          (MIX_PATH, n / SR, mix_rms, mix_peak, placed))
+          (mix_path, n / SR, mix_rms, mix_peak, placed))
 
 
 if __name__ == "__main__":

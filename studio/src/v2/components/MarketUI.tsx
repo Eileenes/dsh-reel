@@ -51,13 +51,14 @@ const REEL_ITEM: MarketItem = {
   tag: '工具与能力',
 };
 
-const DETAIL = {
+const DETAIL: MarketDetailData = {
   breadcrumb: '‹ 发现',
   title: 'Eileenes/dsh-reel',
   version: '0.1.0',
   packageLine: 'dsh-reel-studio',
   description:
     '本地用 Remotion 从 DSH 插件仓库生成 16:9 宣传片与 3:4 宣传图的可用原型；DSH bundle 仍是脚手架，尚未在真实 DSH profile 中加载验证。需 Node.js 22+ 与 Chrome/Chromium 渲染。',
+  publishedAt: '2026年10月20日',
   sourceTitle: '来源',
   sourceRows: [
     ['主页', 'awesome-dsh-plugin.com/p/Eileenes/dsh-reel/'],
@@ -76,7 +77,6 @@ const INSTALL_LABEL = {
   installed: '✓ 已安装',
 } as const;
 
-const TOAST_TEXT = 'dsh-reel 已安装并已生效';
 
 /** 填充卡片：真实社区插件（取自参照截图），只保留标题/作者/简介/标签，不展示下载量/星数。 */
 const FILLER_ITEMS: MarketItem[] = [
@@ -140,12 +140,25 @@ const UI = {
 
 type InstallState = 'idle' | 'installing' | 'installed';
 
-type MarketItem = {
+export type MarketItem = {
   title: string;
   author: string;
   version?: string;
   description: string;
   tag: string;
+};
+
+/** 详情页数据（注意：布尔开关叫 detail，数据 prop 叫 detailItem）。 */
+export type MarketDetailData = {
+  breadcrumb: string;
+  title: string;
+  version: string;
+  packageLine: string;
+  description: string;
+  publishedAt: string;
+  sourceTitle: string;
+  sourceRows: ReadonlyArray<readonly [string, string]>;
+  installNote: string;
 };
 
 export type MarketUIProps = {
@@ -169,6 +182,12 @@ export type MarketUIProps = {
   detailEnter?: number;
   /** 0..1 安装按钮高亮脉冲 */
   installHighlight?: number;
+  /** 结果卡数据（默认 dsh-reel；case 片传目标插件） */
+  item?: MarketItem;
+  /** 详情页数据（默认 dsh-reel 详情；数据 prop 名避免和布尔 detail 冲突） */
+  detailItem?: MarketDetailData;
+  /** 安装成功 toast 文案；默认 `${item.title} 已安装并已生效` */
+  installedToast?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -805,11 +824,12 @@ const SkeletonCard: React.FC<{width: number}> = ({width}) => (
 // 详情页（标题下包名小字 + 来源表）
 // ---------------------------------------------------------------------------
 
-export const PluginDetail: React.FC<{frame: number; installState: InstallState; installHighlight: number}> = ({
-  frame,
-  installState,
-  installHighlight,
-}) => (
+export const PluginDetail: React.FC<{
+  frame: number;
+  installState: InstallState;
+  installHighlight: number;
+  data?: MarketDetailData;
+}> = ({frame, installState, installHighlight, data = DETAIL}) => (
   <div style={{display: 'flex', flexDirection: 'column'}}>
     <div style={{display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(142,166,255,0.82)', fontSize: 13.5, fontFamily: FONT.zh}}>
       <span style={{fontSize: 16, lineHeight: 1, marginTop: -1}}>‹</span>
@@ -837,7 +857,7 @@ export const PluginDetail: React.FC<{frame: number; installState: InstallState; 
       <div style={{display: 'flex', flexDirection: 'column', gap: 5, minWidth: 0}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
           <span style={{fontFamily: FONT.zh, fontSize: UI.fsDetailTitle, fontWeight: 600, color: 'rgba(244,247,255,0.97)', letterSpacing: 0.1}}>
-            {DETAIL.title}
+            {data.title}
           </span>
           <span
             style={{
@@ -850,10 +870,10 @@ export const PluginDetail: React.FC<{frame: number; installState: InstallState; 
               lineHeight: 1.5,
             }}
           >
-            {DETAIL.version}
+            {data.version}
           </span>
         </div>
-        <span style={{...mono, fontSize: 12.5, color: 'rgba(147,160,189,0.7)', letterSpacing: 0.3}}>{DETAIL.packageLine}</span>
+        <span style={{...mono, fontSize: 12.5, color: 'rgba(147,160,189,0.7)', letterSpacing: 0.3}}>{data.packageLine}</span>
       </div>
 
       <div style={{flex: 1}} />
@@ -870,16 +890,16 @@ export const PluginDetail: React.FC<{frame: number; installState: InstallState; 
         color: 'rgba(244,247,255,0.76)',
       }}
     >
-      {DETAIL.description}
+      {data.description}
     </div>
 
     <div style={{marginTop: 22, display: 'flex', alignItems: 'center', gap: 8}}>
-      <SectionLabel>{DETAIL.sourceTitle}</SectionLabel>
+      <SectionLabel>{data.sourceTitle}</SectionLabel>
       <div style={{flex: 1, height: 1, background: 'rgba(142,166,255,0.12)'}} />
     </div>
 
     <div style={{marginTop: 4}}>
-      {DETAIL.sourceRows.map(([label, value]) => (
+      {data.sourceRows.map(([label, value]) => (
         <div
           key={label}
           style={{
@@ -917,8 +937,8 @@ export const PluginDetail: React.FC<{frame: number; installState: InstallState; 
       <div style={{flex: 1, height: 1, background: 'rgba(142,166,255,0.12)'}} />
     </div>
     <div style={{display: 'flex', alignItems: 'center', gap: 12, height: 46}}>
-      <span style={{...mono, fontSize: 15, fontWeight: 600, color: 'rgba(244,247,255,0.9)'}}>{DETAIL.version}</span>
-      <span style={{fontFamily: FONT.zh, fontSize: 12.5, color: 'rgba(147,160,189,0.72)'}}>2026年10月20日</span>
+      <span style={{...mono, fontSize: 15, fontWeight: 600, color: 'rgba(244,247,255,0.9)'}}>{data.version}</span>
+      <span style={{fontFamily: FONT.zh, fontSize: 12.5, color: 'rgba(147,160,189,0.72)'}}>{data.publishedAt}</span>
       <div style={{flex: 1}} />
       <div
         style={{
@@ -951,7 +971,7 @@ export const PluginDetail: React.FC<{frame: number; installState: InstallState; 
       >
         i
       </span>
-      {DETAIL.installNote}
+      {data.installNote}
     </div>
   </div>
 );
@@ -960,7 +980,7 @@ export const PluginDetail: React.FC<{frame: number; installState: InstallState; 
 // Toast（安装成功，A 界面的热装文案）
 // ---------------------------------------------------------------------------
 
-const InstalledToast: React.FC<{frame: number; show: boolean}> = ({frame, show}) => (
+const InstalledToast: React.FC<{frame: number; show: boolean; text: string}> = ({frame, show, text}) => (
   <div
     style={{
       position: 'absolute',
@@ -1000,7 +1020,7 @@ const InstalledToast: React.FC<{frame: number; show: boolean}> = ({frame, show})
     >
       <CheckIcon size={12} />
     </span>
-    {TOAST_TEXT}
+    {text}
   </div>
 );
 
@@ -1021,6 +1041,9 @@ export const MarketUI: React.FC<MarketUIProps> = ({
   resultEnter,
   detailEnter,
   installHighlight = 0,
+  item = REEL_ITEM,
+  detailItem = DETAIL,
+  installedToast,
 }) => {
   const scale = width / MARKET_UI_DESIGN.width;
   const rEnter = clamp01(resultEnter ?? (resultState === 'results' ? 1 : 0));
@@ -1043,7 +1066,7 @@ export const MarketUI: React.FC<MarketUIProps> = ({
   const resultGrid = (
     <div style={{display: 'flex', gap: UI.cardGap, width: contentWidth}}>
       <MarketCard
-        item={REEL_ITEM}
+        item={item}
         frame={frame}
         featured
         installState={installState}
@@ -1095,7 +1118,7 @@ export const MarketUI: React.FC<MarketUIProps> = ({
     </div>
   );
 
-  const detailContent = <PluginDetail frame={frame} installState={installState} installHighlight={installHighlight} />;
+  const detailContent = <PluginDetail frame={frame} installState={installState} installHighlight={installHighlight} data={detailItem} />;
 
   return (
     <div
@@ -1164,7 +1187,7 @@ export const MarketUI: React.FC<MarketUIProps> = ({
               {detailContent}
             </div>
 
-            <InstalledToast frame={frame} show={showToast} />
+            <InstalledToast frame={frame} show={showToast} text={installedToast ?? `${item.title} 已安装并已生效`} />
           </div>
         </div>
       </div>

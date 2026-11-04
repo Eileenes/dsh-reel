@@ -8,6 +8,7 @@
 import React from 'react';
 import {Composition, registerRoot} from 'remotion';
 import {ReelPromo} from './compositions/ReelPromo';
+import {ReelCase} from './compositions/ReelCase';
 import {TOTAL_FRAMES, FPS} from './data/timeline';
 import {VIDEO} from './tokens';
 
@@ -16,6 +17,14 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelPromo"
       component={ReelPromo}
+      durationInFrames={TOTAL_FRAMES}
+      fps={FPS}
+      width={VIDEO.width}
+      height={VIDEO.height}
+    />
+    <Composition
+      id="ReelCase"
+      component={ReelCase}
       durationInFrames={TOTAL_FRAMES}
       fps={FPS}
       width={VIDEO.width}
