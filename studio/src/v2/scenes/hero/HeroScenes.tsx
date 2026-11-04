@@ -533,8 +533,8 @@ export const S2Hatch: React.FC = () => {
           bottom: S1_TERM_BOTTOM,
           width: TERM_W,
           transformOrigin: 'left bottom',
-          transform: `perspective(2000px) rotateY(4deg) rotateX(1.6deg) scale(${S1_TERM_SCALE - 0.5 * E.cubicOut(seg(f, 0, 24))})`,
-          opacity: 0.96,
+          transform: `perspective(2000px) translateY(${E.cubicOut(seg(f, 46, 60)) * 80}px) translateX(${-E.cubicOut(seg(f, 46, 60)) * 50}px) rotateY(4deg) rotateX(1.6deg) scale(${S1_TERM_SCALE - 0.5 * E.cubicOut(seg(f, 0, 24)) - 0.12 * E.cubicOut(seg(f, 46, 60))})`,
+          opacity: 1 - E.cubicOut(seg(f, 46, 60)),
         }}
       >
         <TerminalWindow

@@ -16,8 +16,8 @@ import {C7Outro} from '../scenes/case30/OutroScene';
 
 const CUTS: Array<[number, number]> = [
   [90, 0.15],
-  [178, 0.18],
-  [300, 0.26],
+  [178, 0.0],
+  [300, 0.0],
   [580, 0.24],
   [710, 0.16],
   [780, 0.15],
