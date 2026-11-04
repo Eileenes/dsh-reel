@@ -13,6 +13,7 @@ import {ReelCase30} from './compositions/ReelCase30';
 import {ProofMiniComp} from './compositions/ProofMiniComp';
 import {ProofStory30Comp} from './compositions/ProofStory30Comp';
 import {ReelCaseVoxel30} from './compositions/ReelCaseVoxel30';
+import {ReelCaseVoxelReal30} from './compositions/ReelCaseVoxelReal30';
 import {TOTAL_FRAMES, FPS} from './data/timeline';
 import {VIDEO} from './tokens';
 
@@ -30,6 +31,14 @@ const V2Root: React.FC = () => (
       id="ReelCase"
       component={ReelCase}
       durationInFrames={TOTAL_FRAMES}
+      fps={FPS}
+      width={VIDEO.width}
+      height={VIDEO.height}
+    />
+    <Composition
+      id="ReelCaseVoxelReal30"
+      component={ReelCaseVoxelReal30}
+      durationInFrames={900}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}

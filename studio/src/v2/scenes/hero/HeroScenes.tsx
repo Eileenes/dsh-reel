@@ -439,188 +439,49 @@ const DshWindow: React.FC<{reveal: number; glow: number; zoom: number}> = ({reve
         top: 140,
         width: 1560,
         height: 900,
-        // 结尾朝窗口推进时整块窗口放大 → 读作"镜头进了 DSH"
         transformOrigin: '46% 60%',
         transform: `scale(${zoom})`,
       }}
     >
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        transformOrigin: '50% 100%',
-        // 半躺在桌面上的平面：远端上抬，读作"从桌面长出来的一块屏幕"
-        transform: 'perspective(1600px) rotateX(38deg) rotateZ(-2.2deg)',
-        clipPath: `inset(${(1 - ease) * 100}% 0 0 0)`,
-        opacity: Math.min(1, reveal * 2.8),
-      }}
-    >
-      {/* 窗口从地面长出来时边缘的光 */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: -10,
-          height: 120,
-          background: `radial-gradient(ellipse at 50% 0%, ${COLORS.blue}88 0%, rgba(0,0,0,0) 70%)`,
-          opacity: glow,
-          filter: 'blur(14px)',
-        }}
-      />
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          borderRadius: 22,
-          border: `1px solid ${COLORS.lineStrong}`,
-          background: 'linear-gradient(150deg, rgba(30,44,82,0.97), rgba(11,18,36,0.995))',
-          boxShadow: `0 60px 170px rgba(0,0,0,0.78), 0 0 160px ${COLORS.blue}2e, inset 0 1px 0 rgba(255,255,255,0.09)`,
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
+          transformOrigin: '50% 100%',
+          transform: 'perspective(1600px) rotateX(38deg) rotateZ(-2.2deg)',
+          clipPath: `inset(${(1 - ease) * 100}% 0 0 0)`,
+          opacity: Math.min(1, reveal * 2.8),
         }}
       >
-        {/* 标题栏 */}
         <div
           style={{
-            height: 56,
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 16,
-            padding: '0 24px',
-            borderBottom: `1px solid ${COLORS.line}`,
-            background: 'rgba(255,255,255,0.02)',
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: -10,
+            height: 120,
+            background: `radial-gradient(ellipse at 50% 0%, ${COLORS.blue}88 0%, rgba(0,0,0,0) 70%)`,
+            opacity: glow,
+            filter: 'blur(14px)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 22,
+            border: '1px solid rgba(180,205,255,0.22)',
+            background: '#f6f8fc',
+            boxShadow: `0 60px 170px rgba(0,0,0,0.78), 0 0 160px ${COLORS.blue}2e, inset 0 1px 0 rgba(255,255,255,0.09)`,
+            overflow: 'hidden',
           }}
         >
-          <div style={{display: 'flex', gap: 9}}>
-            {[COLORS.danger, COLORS.amber, COLORS.mint].map((c) => (
-              <span key={c} style={{width: 11, height: 11, borderRadius: 99, background: c, opacity: 0.8}} />
-            ))}
-          </div>
-          <span style={{fontFamily: FONT.latin, fontSize: 20, fontWeight: 600, color: COLORS.text, letterSpacing: -0.3}}>
-            DeepSeek Harness
-          </span>
-          <div style={{marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14}}>
-            <span style={{fontFamily: FONT.mono, fontSize: 13, color: COLORS.faint, letterSpacing: 1.5}}>⌘K</span>
-            <span
-              style={{
-                fontFamily: FONT.mono,
-                fontSize: 12,
-                letterSpacing: 2,
-                color: COLORS.mint,
-                border: `1px solid ${COLORS.mint}44`,
-                background: `${COLORS.mint}12`,
-                borderRadius: 6,
-                padding: '4px 9px',
-              }}
-            >
-              LOCAL
-            </span>
-          </div>
-        </div>
-
-        {/* 主体 */}
-        <div style={{flex: 1, display: 'flex', minHeight: 0}}>
-          {/* 左：会话栏 */}
-          <div
-            style={{
-              width: SIDE_W,
-              flexShrink: 0,
-              borderRight: `1px solid ${COLORS.line}`,
-              background: 'rgba(4,8,16,0.45)',
-              padding: '24px 18px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-            }}
-          >
-            <div style={{fontFamily: FONT.mono, fontSize: 12, letterSpacing: 3, color: COLORS.faint}}>SESSIONS</div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '11px 12px',
-                borderRadius: 10,
-                border: `1px solid ${COLORS.lineStrong}`,
-                background: `${COLORS.blue}1c`,
-                color: COLORS.text,
-                fontFamily: FONT.zh,
-                fontSize: 18,
-              }}
-            >
-              <span style={{color: COLORS.mint, fontFamily: FONT.mono, fontSize: 20, lineHeight: 1}}>+</span>
-              New Session
-            </div>
-            {[0.62, 0.44, 0.5].map((w, i) => (
-              <div key={i} style={{display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px'}}>
-                <span style={{width: 7, height: 7, borderRadius: 99, background: COLORS.faint, opacity: 0.5}} />
-                <span style={{height: 8, width: `${w * 150}px`, borderRadius: 99, background: 'rgba(142,166,255,0.16)'}} />
-              </div>
-            ))}
-            <div style={{marginTop: 'auto', display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px'}}>
-              <span style={{width: 22, height: 22, borderRadius: 7, background: `${COLORS.blue}33`, border: `1px solid ${COLORS.line}`}} />
-              <span style={{fontFamily: FONT.mono, fontSize: 12, letterSpacing: 1.6, color: COLORS.faint}}>SETTINGS</span>
-            </div>
-          </div>
-
-          {/* 右：composer + 输入框 */}
-          <div style={{flex: 1, display: 'flex', flexDirection: 'column', padding: '0 44px 32px'}}>
-            <div style={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20}}>
-              <div
-                style={{
-                  fontFamily: FONT.latin,
-                  fontSize: 84,
-                  fontWeight: 500,
-                  letterSpacing: -2.4,
-                  color: 'rgba(244,247,255,0.46)',
-                }}
-              >
-                Into the Unknown
-              </div>
-              <div style={{fontFamily: FONT.zh, fontSize: 23, color: COLORS.faint, letterSpacing: 0.5}}>
-                DeepSeek Harness · 本地工作区
-              </div>
-            </div>
-            {/* 底部输入框 */}
-            <div
-              style={{
-                height: 104,
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 18,
-                padding: '0 26px',
-                borderRadius: 18,
-                border: `1px solid ${COLORS.lineStrong}`,
-                background: 'rgba(6,10,20,0.92)',
-                boxShadow: `0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)`,
-              }}
-            >
-              <span style={{fontFamily: FONT.mono, fontSize: 20, color: COLORS.blue2}}>›</span>
-              <span style={{fontFamily: FONT.zh, fontSize: 24, color: COLORS.faint}}>Message dsh-reel…</span>
-              <div
-                style={{
-                  marginLeft: 'auto',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 14,
-                  background: `linear-gradient(160deg, ${COLORS.blue}, ${COLORS.blue2})`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: `0 8px 28px ${COLORS.blue}66`,
-                }}
-              >
-                <span style={{color: '#fff', fontSize: 24, lineHeight: 1}}>↑</span>
-              </div>
-            </div>
-          </div>
+          <Img
+            src={staticFile('shots/dsh-main-interface.png')}
+            style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block'}}
+          />
         </div>
       </div>
-    </div>
     </div>
   );
 };
