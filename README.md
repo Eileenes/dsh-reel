@@ -12,7 +12,7 @@
 ![Video](https://img.shields.io/badge/video-16%3A9-F59E0B?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-334155?style=flat-square)
 
-**[下载源码](https://github.com/Eileenes/dsh-reel/archive/refs/heads/main.zip)** · **[快速开始](#quick-start)** · **[观看 24 秒样片](docs/demo.mp4)** · **[查看新版宣传图](docs/promo.png)** · **[编辑案例](#cases)** · **[插件接入](#host-plugin)**
+**[下载源码](https://github.com/Eileenes/dsh-reel/archive/refs/heads/main.zip)** · **[快速开始](#quick-start)** · **[观看 24 秒样片](docs/demo.mp4)** · **[查看安装海报](docs/install-poster.png)** · **[编辑案例](#cases)** · **[插件接入](#host-plugin)**
 
 </div>
 
@@ -35,9 +35,9 @@
 
 ## 样片与素材
 
-[观看 24 秒 campaign 片](docs/demo.mp4) · [3:4 海报](docs/promo.png) · [16:9 封面](docs/poster.png) · [1:1 方图](docs/promo-1x1.png) · [关键帧](docs/stills/)
+[观看 24 秒 campaign 片](docs/demo.mp4) · [3:4 安装海报](docs/install-poster.png) · [campaign 海报](docs/promo.png) · [16:9 封面](docs/poster.png) · [1:1 方图](docs/promo-1x1.png) · [关键帧](docs/stills/)
 
-![dsh-reel-studio campaign 海报](docs/promo.png)
+![dsh-reel-studio 安装使用海报](docs/install-poster.png)
 
 新版 campaign 讲的是 dsh-reel-studio 自己：在 DSH 插件市场里搜到它、安装、让它把一个插件仓库读成一条片子和一张图。片中市场界面按真实 dshmarket / DSH 插件页结构重建，文案逐字取自已核对文案；**不包含伪造的下载量、星数或"官方认证"**。
 
