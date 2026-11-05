@@ -135,9 +135,10 @@ const SceneFade: React.FC<{duration: number; children: React.ReactNode}> = ({dur
 const BrowserFrame: React.FC<{
   src: string;
   width: number;
+  title?: string;
   theme?: 'light' | 'dark';
   style?: React.CSSProperties;
-}> = ({src, width, theme = 'light', style}) => {
+}> = ({src, width, title = 'dsh / plugin', theme = 'light', style}) => {
   const light = theme === 'light';
   return (
     <div
@@ -181,7 +182,7 @@ const BrowserFrame: React.FC<{
             paddingLeft: 12,
           }}
         >
-          dsh / better-sidebar
+          {title}
         </div>
       </div>
       <Img src={staticFile(src)} style={{width: '100%', display: 'block'}} />
@@ -191,70 +192,41 @@ const BrowserFrame: React.FC<{
 
 const SceneHook: React.FC = () => {
   const frame = useCurrentFrame();
-  const {plugin} = useReel();
+  const {plugin, promo, features} = useReel();
+  const hook = promo.hook;
+  const bg = hook?.bg ?? features[0]?.img ?? 'shots/files-tree.png';
+  const kicker = hook?.kicker ?? 'DSH PLUGIN · BETTER SIDEBAR';
   return (
     <AbsoluteFill style={{fontFamily: ZH}}>
       <Img
-        src={staticFile('shots/files-tree.png')}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: 0.09,
-          filter: 'blur(16px)',
-          transform: 'scale(1.12)',
-        }}
+        src={staticFile(bg)}
+        style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.16, filter: 'blur(18px)', transform: 'scale(1.12)'}}
       />
-      <div
-        style={{
-          position: 'absolute',
-          right: -60,
-          bottom: 30,
-          fontFamily: MONO,
-          fontSize: 190,
-          fontWeight: 900,
-          letterSpacing: -8,
-          color: 'rgba(255,255,255,0.035)',
-          whiteSpace: 'nowrap',
-          transform: 'rotate(-90deg)',
-          transformOrigin: 'right bottom',
-        }}
-      >
-        BETTER SIDEBAR
+      <Img
+        src={staticFile(bg)}
+        style={{position: 'absolute', right: 60, top: 120, width: 860, height: 720, objectFit: 'cover', opacity: 0.55, borderRadius: 28, border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 40px 120px rgba(0,0,0,0.5)'}}
+      />
+      <div style={{position: 'absolute', right: -60, bottom: 30, fontFamily: MONO, fontSize: 190, fontWeight: 900, letterSpacing: -8, color: 'rgba(255,255,255,0.035)', whiteSpace: 'nowrap', transform: 'rotate(-90deg)', transformOrigin: 'right bottom'}}>
+        {plugin.name.toUpperCase()}
       </div>
       <div style={{position: 'absolute', left: 110, top: 108}}>
-        <Rise delay={2} distance={24}>
-          <Pill>DSH PLUGIN · BETTER SIDEBAR</Pill>
-        </Rise>
+        <Rise delay={2} distance={24}><Pill>{kicker}</Pill></Rise>
       </div>
-
-      <div style={{position: 'absolute', left: 106, top: 300, width: 1500}}>
+      <div style={{position: 'absolute', left: 106, top: 300, width: 1000}}>
         <Rise delay={8} distance={54}>
-          <div style={{fontSize: 116, lineHeight: 1.12, fontWeight: 800, letterSpacing: -3, color: C.text}}>
-            你的 DSH 侧边栏，
+          <div style={{fontSize: hook ? 102 : 116, lineHeight: 1.12, fontWeight: 800, letterSpacing: -3, color: C.text}}>
+            {hook?.line1 ?? '你的 DSH 侧边栏，'}
           </div>
         </Rise>
         <Rise delay={18} distance={54}>
-          <div style={{fontSize: 116, lineHeight: 1.12, fontWeight: 800, letterSpacing: -3, color: C.dim, marginTop: 6}}>
-            还只是个
-            <span style={{color: C.amber, marginLeft: 18, textDecoration: 'line-through', textDecorationThickness: 8, textDecorationColor: C.amber}}>
-              文件列表
-            </span>
-            ?
+          <div style={{fontSize: hook ? 102 : 116, lineHeight: 1.12, fontWeight: 800, letterSpacing: -3, color: C.dim, marginTop: 6}}>
+            {hook?.line2 ?? '还只是个文件列表？'}
           </div>
         </Rise>
       </div>
-
-      <div style={{position: 'absolute', left: 110, top: 690, width: 1200}}>
-        <Rise delay={34}>
-          <div style={{fontSize: 30, color: C.dim, letterSpacing: 1}}>
-            但一个会话，本来就有五个工作面。
-          </div>
-        </Rise>
+      <div style={{position: 'absolute', left: 110, top: 690, width: 940}}>
+        <Rise delay={34}><div style={{fontSize: 30, color: C.dim, letterSpacing: 1, lineHeight: 1.5}}>{hook?.sub ?? '但一个会话，本来就有五个工作面。'}</div></Rise>
       </div>
-
       <div style={{position: 'absolute', left: 110, bottom: 96}}>
         <Rise delay={44}>
           <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
@@ -265,22 +237,11 @@ const SceneHook: React.FC = () => {
       </div>
       <div style={{position: 'absolute', right: 100, bottom: 120}}>
         <Rise delay={48}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 18,
-              padding: '18px 26px',
-              borderRadius: 18,
-              border: '1px solid rgba(255,255,255,0.14)',
-              background: 'rgba(10,16,32,0.72)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <Img src={staticFile('shots/avatar.png')} style={{width: 52, height: 52, borderRadius: 14}} />
+          <div style={{display: 'flex', alignItems: 'center', gap: 18, padding: '18px 26px', borderRadius: 18, border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(10,16,32,0.72)', backdropFilter: 'blur(10px)'}}>
+            <div style={{width: 52, height: 52, borderRadius: 14, background: 'linear-gradient(135deg,#4d6bfe,#5ef2c2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: MONO, fontWeight: 800, color: '#05070d'}}>{plugin.name.slice(0, 2).toUpperCase()}</div>
             <div>
               <div style={{fontSize: 26, fontWeight: 700, color: C.text}}>{plugin.name}</div>
-              <div style={{fontSize: 15, color: C.dim, fontFamily: MONO, marginTop: 4}}>{plugin.downloads.toLocaleString()} downloads / week</div>
+              {plugin.downloads > 0 ? <div style={{fontSize: 15, color: C.dim, fontFamily: MONO, marginTop: 4}}>{plugin.downloads.toLocaleString()} downloads / week</div> : null}
             </div>
           </div>
         </Rise>
@@ -292,63 +253,31 @@ const SceneHook: React.FC = () => {
 const SceneProblem: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const chips = [
-    {label: '文件', color: C.blue},
-    {label: 'Git', color: C.mint},
-    {label: '终端', color: C.amber},
-    {label: '子代理', color: C.blue2},
-    {label: '侧聊', color: C.red},
-  ];
+  const {promo} = useReel();
+  const ps = promo.problemScene;
+  const palette = [C.blue, C.mint, C.amber, C.blue2, C.red];
+  const labels = ps?.chips ?? ['文件', 'Git', '终端', '子代理', '侧聊'];
+  const chips = labels.map((label, i) => ({label, color: palette[i % palette.length]}));
   return (
     <AbsoluteFill style={{fontFamily: ZH}}>
-      <div style={{position: 'absolute', left: 110, top: 118}}>
-        <Rise delay={2} distance={20}>
-          <Pill color={C.amber}>THE PROBLEM</Pill>
-        </Rise>
-      </div>
+      <div style={{position: 'absolute', left: 110, top: 118}}><Rise delay={2} distance={20}><Pill color={C.amber}>THE PROBLEM</Pill></Rise></div>
       <div style={{position: 'absolute', left: 106, top: 230, width: 1600}}>
-        <Rise delay={10} distance={50}>
-          <div style={{fontSize: 96, fontWeight: 800, color: C.text, letterSpacing: -2}}>来回切窗口，思路全断。</div>
-        </Rise>
-        <Rise delay={22}>
-          <div style={{fontSize: 30, color: C.dim, marginTop: 28, letterSpacing: 1}}>一个会话，五个工作面，却只有半块屏幕。</div>
-        </Rise>
+        <Rise delay={10} distance={50}><div style={{fontSize: 96, fontWeight: 800, color: C.text, letterSpacing: -2}}>{ps?.title ?? '来回切窗口，思路全断。'}</div></Rise>
+        <Rise delay={22}><div style={{fontSize: 30, color: C.dim, marginTop: 28, letterSpacing: 1}}>{ps?.sub ?? '一个会话，五个工作面，却只有半块屏幕。'}</div></Rise>
       </div>
-
       <div style={{position: 'absolute', left: 0, right: 0, top: 520, display: 'flex', justifyContent: 'center', gap: 24}}>
         {chips.map((chip, i) => {
           const p = spring({frame: frame - 32 - i * 7, fps, config: {damping: 180, mass: 0.7}});
           return (
-            <div
-              key={chip.label}
-              style={{
-                opacity: p,
-                transform: 'translateY(' + (1 - p) * 60 + 'px) rotate(' + ((i - 2) * 2.2) * (1 - p) + 'deg)',
-                padding: '26px 34px',
-                borderRadius: 22,
-                border: '1px solid ' + chip.color + '55',
-                background: chip.color + '12',
-                color: C.text,
-                fontSize: 34,
-                fontWeight: 700,
-                minWidth: 168,
-                textAlign: 'center',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
-              }}
-            >
+            <div key={chip.label} style={{opacity: p, transform: 'translateY(' + (1 - p) * 60 + 'px) rotate(' + ((i - 2) * 2.2) * (1 - p) + 'deg)', padding: '26px 34px', borderRadius: 22, border: '1px solid ' + chip.color + '55', background: chip.color + '12', color: C.text, fontSize: 34, fontWeight: 700, minWidth: 168, textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.35)'}}>
               <span style={{display: 'block', width: 10, height: 10, borderRadius: 99, background: chip.color, margin: '0 auto 16px', boxShadow: '0 0 16px ' + chip.color}} />
               {chip.label}
             </div>
           );
         })}
       </div>
-
       <div style={{position: 'absolute', left: 0, right: 0, top: 760, textAlign: 'center'}}>
-        <Rise delay={78}>
-          <div style={{fontSize: 24, color: 'rgba(255,255,255,0.45)', fontFamily: MONO, letterSpacing: 3}}>
-            Ctrl + Tab · Ctrl + Tab · Ctrl + Tab
-          </div>
-        </Rise>
+        <Rise delay={78}><div style={{fontSize: 24, color: 'rgba(255,255,255,0.45)', fontFamily: MONO, letterSpacing: 3}}>{ps?.footnote ?? 'Ctrl + Tab · Ctrl + Tab · Ctrl + Tab'}</div></Rise>
       </div>
     </AbsoluteFill>
   );
@@ -357,74 +286,38 @@ const SceneProblem: React.FC = () => {
 const SceneSolution: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const {plugin} = useReel();
+  const {plugin, promo} = useReel();
+  const sol = promo.solution;
   const enter = spring({frame: frame - 14, fps, config: {damping: 200, mass: 0.8}});
   const float = Math.sin(frame / 26) * 8;
+  const title = sol?.title ?? 'Better\nSidebar';
+  const points = sol?.points ?? ['文件、编辑器、Git、任务、侧聊，一个侧栏全收', '可拖拽分栏 + 多终端，底部工作台与会话绑定', '开放 ctx.betterSidebar，其他插件也能注册页面'];
   return (
     <AbsoluteFill style={{fontFamily: ZH}}>
-      <div style={{position: 'absolute', left: 110, top: 118}}>
-        <Rise delay={2} distance={20}>
-          <Pill color={C.mint}>THE FIX</Pill>
-        </Rise>
-      </div>
-
-      <div style={{position: 'absolute', left: 106, top: 224, width: 760}}>
-        <Rise delay={10} distance={50}>
-          <div style={{fontSize: 104, lineHeight: 1.05, fontWeight: 800, color: C.text, letterSpacing: -3}}>Better<br />Sidebar</div>
-        </Rise>
-        <Rise delay={24}>
-          <div style={{fontSize: 32, color: C.mint, marginTop: 26, fontWeight: 600}}>{plugin.tagline}</div>
-        </Rise>
-        <Rise delay={36}>
-          <div style={{fontSize: 23, color: C.dim, marginTop: 18, lineHeight: 1.7}}>
-            原生右栏 + 自绘底部面板，属于每个会话的独立工作台。
-          </div>
-        </Rise>
-        <div style={{marginTop: 44, display: 'flex', flexDirection: 'column', gap: 18}}>
-          {[
-            ['01', '文件、编辑器、Git、任务、侧聊，一个侧栏全收'],
-            ['02', '可拖拽分栏 + 多终端，底部工作台与会话绑定'],
-            ['03', '开放 ctx.betterSidebar，其他插件也能注册页面'],
-          ].map((row, i) => (
-            <Rise key={row[0]} delay={48 + i * 8}>
+      <div style={{position: 'absolute', left: 110, top: 118}}><Rise delay={2} distance={20}><Pill color={C.mint}>THE FIX</Pill></Rise></div>
+      <div style={{position: 'absolute', left: 106, top: 224, width: 780}}>
+        <Rise delay={10} distance={50}><div style={{fontSize: 84, lineHeight: 1.08, fontWeight: 800, color: C.text, letterSpacing: -3, whiteSpace: 'pre-line'}}>{title}</div></Rise>
+        <Rise delay={24}><div style={{fontSize: 30, color: C.mint, marginTop: 24, fontWeight: 600, lineHeight: 1.45}}>{sol?.sub ?? plugin.tagline}</div></Rise>
+        <div style={{marginTop: 38, display: 'flex', flexDirection: 'column', gap: 18}}>
+          {points.map((row, i) => (
+            <Rise key={row} delay={48 + i * 8}>
               <div style={{display: 'flex', alignItems: 'flex-start', gap: 16}}>
-                <span style={{fontFamily: MONO, fontSize: 15, color: C.blue2, marginTop: 5}}>{row[0]}</span>
-                <span style={{fontSize: 24, color: 'rgba(244,247,255,0.86)', lineHeight: 1.55}}>{row[1]}</span>
+                <span style={{fontFamily: MONO, fontSize: 15, color: C.blue2, marginTop: 5}}>{String(i + 1).padStart(2, '0')}</span>
+                <span style={{fontSize: 23, color: 'rgba(244,247,255,0.86)', lineHeight: 1.55}}>{row}</span>
               </div>
             </Rise>
           ))}
         </div>
       </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          right: 62,
-          top: 168 + float,
-          opacity: enter,
-          transform: 'translateY(' + (1 - enter) * 70 + 'px) scale(' + (0.96 + enter * 0.04) + ')',
-        }}
-      >
+      <div style={{position: 'absolute', right: 62, top: 168 + float, opacity: enter, transform: 'translateY(' + (1 - enter) * 70 + 'px) scale(' + (0.96 + enter * 0.04) + ')'}}>
         <div style={{position: 'absolute', inset: -60, background: 'radial-gradient(circle, rgba(77,107,254,0.28), transparent 66%)', filter: 'blur(30px)'}} />
-        <BrowserFrame src='shots/files-tree.png' width={1010} theme='light' />
-        <div
-          style={{
-            position: 'absolute',
-            left: -70,
-            bottom: -54,
-            padding: '18px 24px',
-            borderRadius: 18,
-            background: 'rgba(8,13,26,0.92)',
-            border: '1px solid rgba(94,242,194,0.35)',
-            boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
-          }}
-        >
-          <span style={{width: 10, height: 10, borderRadius: 99, background: C.mint, boxShadow: '0 0 18px ' + C.mint}} />
-          <span style={{fontFamily: MONO, fontSize: 18, color: C.text}}>{plugin.downloads.toLocaleString()} / WEEK</span>
-        </div>
+        <BrowserFrame src={sol?.img ?? 'shots/files-tree.png'} width={1010} title={'dsh / ' + plugin.handle} />
+        {plugin.downloads > 0 ? (
+          <div style={{position: 'absolute', left: -70, bottom: -54, padding: '18px 24px', borderRadius: 18, background: 'rgba(8,13,26,0.92)', border: '1px solid rgba(94,242,194,0.35)', boxShadow: '0 30px 80px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', gap: 14}}>
+            <span style={{width: 10, height: 10, borderRadius: 99, background: C.mint, boxShadow: '0 0 18px ' + C.mint}} />
+            <span style={{fontFamily: MONO, fontSize: 18, color: C.text}}>{plugin.downloads.toLocaleString()} / WEEK</span>
+          </div>
+        ) : null}
       </div>
     </AbsoluteFill>
   );
@@ -475,7 +368,7 @@ const FeatureCard: React.FC<{
 };
 
 const SceneFeatures: React.FC = () => {
-  const {features} = useReel();
+  const {features, promo} = useReel();
   return (
     <AbsoluteFill style={{fontFamily: ZH}}>
       <div style={{position: 'absolute', left: 110, top: 92}}>
@@ -485,10 +378,10 @@ const SceneFeatures: React.FC = () => {
       </div>
       <div style={{position: 'absolute', left: 106, top: 170, width: 1700, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between'}}>
         <Rise delay={10} distance={44}>
-          <div style={{fontSize: 70, fontWeight: 800, color: C.text, letterSpacing: -2}}>一个侧边栏，四张王牌。</div>
+          <div style={{fontSize: 70, fontWeight: 800, color: C.text, letterSpacing: -2}}>{promo.featuresScene?.title ?? '一个侧边栏，四张王牌。'}</div>
         </Rise>
         <Rise delay={18}>
-          <div style={{fontFamily: MONO, fontSize: 17, color: C.dim, letterSpacing: 2}}>04 / 05 PAGES</div>
+          <div style={{fontFamily: MONO, fontSize: 17, color: C.dim, letterSpacing: 2}}>{promo.featuresScene?.note ?? '04 / 05 PAGES'}</div>
         </Rise>
       </div>
 
@@ -501,7 +394,7 @@ const SceneFeatures: React.FC = () => {
       <div style={{position: 'absolute', left: 0, right: 0, bottom: 66, textAlign: 'center'}}>
         <Rise delay={64}>
           <div style={{fontFamily: MONO, fontSize: 17, color: 'rgba(255,255,255,0.42)', letterSpacing: 2}}>
-            + 底部终端 · Markdown / Mermaid · 多仓库 Git · 开放插件 API
+            {promo.featuresScene?.footnote ?? '+ 底部终端 · Markdown / Mermaid · 多仓库 Git · 开放插件 API'}
           </div>
         </Rise>
       </div>
@@ -513,7 +406,8 @@ const SceneHowTo: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const {plugin, promo} = useReel();
-  const steps = [
+  const palette = [C.blue, C.mint, C.amber];
+  const steps = promo.howto?.steps ? promo.howto.steps.map((st, i) => ({no: String(i + 1).padStart(2, '0'), ...st, color: palette[i % palette.length]})) : [
     {no: '01', title: '安装插件', desc: '一行命令装进你的 DSH profile', cmd: plugin.install, color: C.blue},
     {no: '02', title: '打开右侧栏', desc: '每个会话独立布局，不打断主对话', cmd: 'right sidebar · per session', color: C.mint},
     {no: '03', title: '按 tab 使用', desc: '文件 / Git / 任务 / 侧聊 / 终端', cmd: 'files · git · tasks · chat', color: C.amber},
@@ -527,7 +421,7 @@ const SceneHowTo: React.FC = () => {
       </div>
       <div style={{position: 'absolute', left: 106, top: 196, width: 1700}}>
         <Rise delay={10} distance={44}>
-          <div style={{fontSize: 72, fontWeight: 800, color: C.text, letterSpacing: -2}}>三步，把侧栏变成工作台。</div>
+          <div style={{fontSize: 72, fontWeight: 800, color: C.text, letterSpacing: -2}}>{promo.howto?.title ?? '三步，把侧栏变成工作台。'}</div>
         </Rise>
         <Rise delay={20}>
           <div style={{fontSize: 26, color: C.dim, marginTop: 16}}>{promo.what}</div>
@@ -574,7 +468,7 @@ const SceneHowTo: React.FC = () => {
 
 const SceneProof: React.FC = () => {
   const frame = useCurrentFrame();
-  const {plugin} = useReel();
+  const {plugin, promo} = useReel();
   const count = (target: number, start: number) =>
     Math.round(interpolate(frame, [start, start + 34], [0, target], clamp));
   const downloads = count(plugin.downloads, 26);
@@ -593,19 +487,19 @@ const SceneProof: React.FC = () => {
       </div>
       <div style={{position: 'absolute', left: 106, top: 176, width: 1600}}>
         <Rise delay={10} distance={44}>
-          <div style={{fontSize: 72, fontWeight: 800, color: C.text, letterSpacing: -2}}>数字不会说谎。</div>
+          <div style={{fontSize: 72, fontWeight: 800, color: C.text, letterSpacing: -2}}>{promo.proof?.title ?? '数字不会说谎。'}</div>
         </Rise>
       </div>
 
       <div style={{position: 'absolute', left: 110, right: 110, top: 300, display: 'flex', justifyContent: 'space-between'}}>
-        {[
+        {(promo.proof?.stats ?? [
           {num: downloads.toLocaleString(), label: 'WEEKLY DOWNLOADS', color: C.blue},
           {num: stars.toLocaleString(), label: 'GitHub Stars', color: C.mint},
           {num: 'MIT', label: 'License', color: C.amber},
-        ].map((s, i) => (
+        ]).map((s, i) => (
           <Rise key={s.label} delay={20 + i * 8} style={{flex: 1}}>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <div style={{fontSize: 132, fontWeight: 850, color: s.color, letterSpacing: -4, lineHeight: 1}}>{s.num}</div>
+              <div style={{fontSize: 132, fontWeight: 850, color: (s as any).color ?? [C.blue, C.mint, C.amber][i], letterSpacing: -4, lineHeight: 1}}>{s.num}</div>
               <div style={{fontFamily: MONO, fontSize: 17, color: C.dim, letterSpacing: 3, marginTop: 16, textTransform: 'uppercase'}}>{s.label}</div>
             </div>
           </Rise>
@@ -640,7 +534,7 @@ const SceneProof: React.FC = () => {
 
       <div style={{position: 'absolute', left: 0, right: 0, top: 790, textAlign: 'center'}}>
         <Rise delay={92}>
-          <div style={{fontSize: 26, color: 'rgba(244,247,255,0.72)'}}>装上它，把侧栏变成工作台。</div>
+          <div style={{fontSize: 26, color: 'rgba(244,247,255,0.72)'}}>{promo.proof?.note ?? '装上它，把侧栏变成工作台。'}</div>
           <div style={{fontFamily: MONO, fontSize: 16, color: C.dim, marginTop: 12}}>{plugin.repo} · DSH 0.2.1-rc.1+ · v{plugin.version}</div>
         </Rise>
       </div>
@@ -651,24 +545,19 @@ const SceneProof: React.FC = () => {
 const SceneOutro: React.FC = () => {
   const frame = useCurrentFrame();
   const {durationInFrames} = useVideoConfig();
-  const {plugin} = useReel();
+  const {plugin, promo} = useReel();
   return (
     <AbsoluteFill style={{fontFamily: ZH, justifyContent: 'center', alignItems: 'center'}}>
       <Rise delay={4} style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <div
-          style={{
-            width: 168,
-            height: 168,
-            borderRadius: 40,
-            background: 'linear-gradient(135deg, #4d6bfe 0%, #5ef2c2 100%)',
-            position: 'relative',
-            boxShadow: '0 30px 90px rgba(77,107,254,0.45)',
-          }}
-        >
-          <div style={{position: 'absolute', left: 26, top: 26, width: 40, height: 116, borderRadius: 12, background: 'rgba(5,7,13,0.82)'}} />
-          <div style={{position: 'absolute', right: 26, top: 26, width: 70, height: 76, borderRadius: 12, background: 'rgba(5,7,13,0.5)'}} />
-          <div style={{position: 'absolute', left: 26, right: 26, bottom: 26, height: 24, borderRadius: 9, background: 'rgba(5,7,13,0.34)'}} />
-        </div>
+        {promo.outroLogo ? (
+          <Img src={staticFile(promo.outroLogo)} style={{width: 168, height: 168, objectFit: 'contain', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.5))'}} />
+        ) : (
+          <div style={{width: 168, height: 168, borderRadius: 40, background: 'linear-gradient(135deg, #4d6bfe 0%, #5ef2c2 100%)', position: 'relative', boxShadow: '0 30px 90px rgba(77,107,254,0.45)'}}>
+            <div style={{position: 'absolute', left: 26, top: 26, width: 40, height: 116, borderRadius: 12, background: 'rgba(5,7,13,0.82)'}} />
+            <div style={{position: 'absolute', right: 26, top: 26, width: 70, height: 76, borderRadius: 12, background: 'rgba(5,7,13,0.5)'}} />
+            <div style={{position: 'absolute', left: 26, right: 26, bottom: 26, height: 24, borderRadius: 9, background: 'rgba(5,7,13,0.34)'}} />
+          </div>
+        )}
         <div style={{fontSize: 88, fontWeight: 850, color: C.text, letterSpacing: -2, marginTop: 42}}>{plugin.name}</div>
         <div style={{fontSize: 32, color: C.mint, marginTop: 18}}>{plugin.tagline}</div>
         <div style={{fontFamily: MONO, fontSize: 19, color: C.dim, marginTop: 40, letterSpacing: 1}}>{plugin.repo}</div>
@@ -676,7 +565,7 @@ const SceneOutro: React.FC = () => {
       </Rise>
       <div style={{position: 'absolute', right: 132, top: 196, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.95}}>
         <div style={{padding: '10px 16px', borderRadius: 14, background: 'rgba(8,14,28,0.92)', border: '1px solid rgba(94,242,194,0.35)', fontSize: 18, color: C.text, marginBottom: 10}}>装上它</div>
-        <WhaleMascot size={168} />
+        {promo.outroLogo ? null : <WhaleMascot size={168} />}
       </div>
       <div
         style={{
@@ -713,7 +602,7 @@ const HUD: React.FC = () => {
         DSH REEL / 001
       </div>
       <div style={{position: 'absolute', top: 34, right: 64, fontFamily: MONO, fontSize: 14, letterSpacing: 3, color: 'rgba(255,255,255,0.32)'}}>
-        BETTER SIDEBAR · {plugin.version}
+        {plugin.name.toUpperCase()} · {plugin.version}
       </div>
       <div style={{position: 'absolute', bottom: 28, right: 64, fontFamily: MONO, fontSize: 13, letterSpacing: 2, color: 'rgba(255,255,255,0.3)'}}>
         00:{String(seconds).padStart(2, '0')} / 00:32

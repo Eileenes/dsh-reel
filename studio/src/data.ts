@@ -54,6 +54,41 @@ export type ReelPromo = {
   what: string;
   how: string[];
   address: string;
+  hook?: {
+    kicker?: string;
+    line1: string;
+    line2: string;
+    sub?: string;
+    footnote?: string;
+    bg?: string;
+  };
+  problemScene?: {
+    title: string;
+    sub: string;
+    chips: string[];
+    footnote?: string;
+  };
+  solution?: {
+    title: string;
+    sub?: string;
+    points: string[];
+    img?: string;
+  };
+  featuresScene?: {
+    title: string;
+    note?: string;
+    footnote?: string;
+  };
+  howto?: {
+    title: string;
+    steps: {title: string; desc: string; cmd: string}[];
+  };
+  proof?: {
+    title: string;
+    stats: {num: string; label: string}[];
+    note?: string;
+  };
+  outroLogo?: string;
 };
 
 export const promo: ReelPromo = {

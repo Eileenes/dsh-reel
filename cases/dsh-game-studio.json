@@ -1,0 +1,126 @@
+{
+  "plugin": {
+    "name": "DSH Game Studio",
+    "handle": "dsh-game-studio",
+    "version": "0.1.0-rc.1",
+    "repo": "github.com/ZSeven-W/dsh-game-studio",
+    "install": "dsh plugin --profile web add @zseven-w/dsh-game-studio@latest",
+    "downloads": 0,
+    "stars": 5,
+    "tagline": "一句话，把游戏放进 DSH 侧栏"
+  },
+  "features": [
+    {
+      "no": "01",
+      "title": "一句话生成游戏",
+      "desc": "2D / 3D 体素模板；角色、规则、关卡按描述重写",
+      "img": "shots/game-studio/banner.png",
+      "accent": "#4d6bfe"
+    },
+    {
+      "no": "02",
+      "title": "侧栏直接玩",
+      "desc": "沙盒预览，改完自动重建；横屏游戏自动加宽",
+      "img": "shots/game-studio/overview.png",
+      "accent": "#5ef2c2"
+    },
+    {
+      "no": "03",
+      "title": "AI 美术候选",
+      "desc": "每个 slot 生成 2–4 张候选，先确认成本再生成",
+      "img": "shots/game-studio/overview.png",
+      "accent": "#ffb86b"
+    },
+    {
+      "no": "04",
+      "title": "一键导出 HTML",
+      "desc": "单文件、离线、无网络请求；手机扫码也能试玩",
+      "img": "shots/game-studio/social.png",
+      "accent": "#8ea6ff"
+    }
+  ],
+  "promo": {
+    "problem": "想做个游戏，先学引擎？",
+    "what": "一句话生成可玩小游戏：2D / 3D 模板、侧栏预览、AI 美术、试玩、导出。",
+    "how": [
+      "安装插件",
+      "说一句话",
+      "在侧栏开玩"
+    ],
+    "address": "github.com/ZSeven-W/dsh-game-studio",
+    "hook": {
+      "kicker": "DSH PLUGIN · GAME STUDIO",
+      "line1": "一句话，",
+      "line2": "在侧栏里玩到游戏。",
+      "sub": "描述一个小游戏，AI 在右栏把它做出来。",
+      "bg": "shots/game-studio/overview.png"
+    },
+    "problemScene": {
+      "title": "想做个游戏，先学引擎？",
+      "sub": "其实你只差一句话。",
+      "chips": [
+        "2D",
+        "3D 体素",
+        "侧栏预览",
+        "AI 美术",
+        "自玩试玩"
+      ],
+      "footnote": "NO ENGINE · NO BUILD STEP"
+    },
+    "solution": {
+      "title": "DSH Game\nStudio",
+      "sub": "一句话，把游戏放进 DSH 侧栏。",
+      "points": [
+        "一句话生成可玩小游戏",
+        "2D / 3D 体素模板 + 侧栏预览",
+        "AI 美术候选，选中即换",
+        "一键导出离线 HTML"
+      ],
+      "img": "shots/game-studio/overview.png"
+    },
+    "featuresScene": {
+      "title": "一句话，四件事。",
+      "note": "04 / 05 PAGES",
+      "footnote": "+ 10 个 agent 工具 · 自玩试玩 · 版本历史 · 手机扫码"
+    },
+    "howto": {
+      "title": "三步，把游戏放进侧栏。",
+      "steps": [
+        {
+          "title": "安装插件",
+          "desc": "装进 DSH profile",
+          "cmd": "dsh plugin --profile web add @zseven-w/dsh-game-studio@latest"
+        },
+        {
+          "title": "说一句话",
+          "desc": "描述你的小游戏",
+          "cmd": "kitten · bamboo · 3D"
+        },
+        {
+          "title": "在侧栏开玩",
+          "desc": "生成 → 试玩 → 换美术 → 导出",
+          "cmd": "play · swap art · export"
+        }
+      ]
+    },
+    "proof": {
+      "title": "一个人，也能做出游戏。",
+      "stats": [
+        {
+          "num": "10",
+          "label": "AGENT TOOLS"
+        },
+        {
+          "num": "2D+3D",
+          "label": "TEMPLATES"
+        },
+        {
+          "num": "1",
+          "label": "HTML FILE"
+        }
+      ],
+      "note": "装上它，一句话开玩。"
+    },
+    "outroLogo": "shots/game-studio/logo.png"
+  }
+}
