@@ -35,7 +35,7 @@
 
 ## 样片与素材
 
-[观看 24 秒 campaign 片](docs/demo.mp4) · [3:4 安装海报](docs/install-poster.png) · [campaign 海报](docs/promo.png) · [16:9 封面](docs/poster.png) · [1:1 方图](docs/promo-1x1.png) · [关键帧](docs/stills/)
+[观看 24 秒 campaign 片](docs/demo.mp4) · [3:4 安装海报](docs/install-poster.png) · [16:9 封面](docs/poster.png) · [1:1 方图](docs/promo-1x1.png) · [关键帧](docs/stills/)
 
 ![dsh-reel-studio 安装使用海报](docs/install-poster.png)
 
