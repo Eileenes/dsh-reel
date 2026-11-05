@@ -16,11 +16,20 @@ import {ReelCaseVoxel30} from './compositions/ReelCaseVoxel30';
 import {ReelCaseVoxelReal30} from './compositions/ReelCaseVoxelReal30';
 import {ReelCaseStory30} from './compositions/ReelCaseStory30';
 import {WhaleSpriteComp} from './scenes/casevoxel/WhaleSpriteComp';
+import {Boot550C} from '../boot550c/Boot550C';
 import {TOTAL_FRAMES, FPS} from './data/timeline';
 import {VIDEO} from './tokens';
 
 const V2Root: React.FC = () => (
   <>
+    <Composition
+      id="Boot550C"
+      component={Boot550C}
+      durationInFrames={720}
+      fps={30}
+      width={1920}
+      height={1080}
+    />
     <Composition
       id="ReelPromo"
       component={ReelPromo}

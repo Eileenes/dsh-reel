@@ -18,3 +18,7 @@ studio/public/audio/v2/music-bed-30.wav
 studio/public/audio/v2/music-bed-proof.wav
 studio/public/audio/v2/music-bed-proof15.wav
 studio/public/audio/v2/music-bed-proof30.wav
+
+# local research / captured case assets
+.research/
+studio/public/shots/better-sidebar/
