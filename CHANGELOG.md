@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- 新增 **V0.1 按插件名出片流水线**：`tools/v01-film/make-v01-film.mjs` + 通用模板 `tools/v01-film/comp-template.html` + `cases/v01/` + `docs/v01-film-sop.md`；一条命令从案例 JSON 生成 comp、四张功能图、config 和 61 事件音效时间轴，随后按固定步骤用 Onetake 渲染 28s / 1080p 成片；
+- 新增 dsh-guizang-design 的 V0.1 案例：`cases/v01/dsh-guizang-design.json` → `studio/out/promo-guizang-intro-1080.mp4`（结构：终端 → 鲸鱼 → Dock 三跳 → 插件页搜索/安装（蓝色进度）→ 四个功能页 → 片尾 AGPL-3.0 · 仓库）；案例说明见 `docs/case-guizang-v0.1.md`；
+- 新增 dsh-guizang-design 案例：`cases/dsh-guizang-design.json`（v1 模板）与规范版 30s 影片 `ReelGuizang`（严格按 `docs/promo-method-v0.1.md` 五段式 + `.research/dsh-reel-promo/better-sidebar-storyboard-v4.md` 分镜表）：
+  - 0–5s 终端 `dsh` → 鲸鱼拼合 → 喷水；
+  - 5–9s Dock 文件 → Git → DSH 三跳 → DSH 窗口展开 → 鲸鱼跳窗口；
+  - 9–12s DSH 主界面 → 鲸鱼跳到「插件」文字上按下（只给波纹/按压，不新增高亮框）→ 插件页在同一个 DSH 窗口壳内展开；
+  - 12–15s 搜索 `guizang-design` → 结果卡 → 鲸鱼跳「安装」→ 结果卡下方蓝色进度条 → 已安装；
+  - 15–27.5s 四个 skill 各四拍（聚焦 tab 高亮 / 点击鲸鱼落下+波纹 / 结果面板切换 / 停留）；
+  - 27.5–30s 黑底片尾：名称 + 安装命令 + 鲸鱼右上角；
+  - 全片共用同一个 DSH 窗口壳（左侧栏常驻），点击波纹按方法文档的 40px 规范；
+- 官方插件页参数化（供后续案例复用）：`OfficialPluginsUI` 新增 `targetEntry`，`C4Install` 支持 `query` / `entries` / `targetEntry` / 字幕；
+- 市场场景参数化：`S4Search` 支持 `query` / `item` / 包名注记 / 字幕，`S5Install` 支持 `detailItem` / `item` / 字幕；
+- 新配乐 `studio/public/audio/v2/preview-mix-guizang.mp3`：由 `make_sfx_v2.py` 按 `data/guizang-timeline.ts` 的 61 个 `SOUND_EVENTS` 生成（30s，music-bed-30.wav）；
+- 修复：proof 场景第 4 个数字没有配色（数组越界显示为黑色）；片尾说明行的 DSH 版本改为读取 `plugin.dshRange`；
 - 修复：`studio/src/v2/data/case-timeline.ts` 缺逗号导致 `tsc` 失败；删除 `CaseFeatureScenes` 对不存在导出的引用；
 - 工程：新增 `npm run typecheck` / `npm run check`、GitHub Actions CI（语法检查 + tsc + `npm pack --dry-run`）、`studio/pnpm-lock.yaml`；`.gitignore` 补 Python 缓存等；
 - 影片：`ReelCase` / `ReelCase30` 的场景时间与转场改为从 `data/case-timeline.ts`、`data/case30-timeline.ts` 读取；`S2Hatch` 支持 `termTitle`，修复 dsh-reel 品牌片 S2 误显示 Better Sidebar 的问题；

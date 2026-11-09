@@ -499,7 +499,7 @@ const SceneProof: React.FC = () => {
         ]).map((s, i) => (
           <Rise key={s.label} delay={20 + i * 8} style={{flex: 1}}>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <div style={{fontSize: 132, fontWeight: 850, color: (s as any).color ?? [C.blue, C.mint, C.amber][i], letterSpacing: -4, lineHeight: 1}}>{s.num}</div>
+              <div style={{fontSize: 132, fontWeight: 850, color: (s as any).color ?? [C.blue, C.mint, C.amber, C.blue2][i % 4], letterSpacing: -4, lineHeight: 1}}>{s.num}</div>
               <div style={{fontFamily: MONO, fontSize: 17, color: C.dim, letterSpacing: 3, marginTop: 16, textTransform: 'uppercase'}}>{s.label}</div>
             </div>
           </Rise>
@@ -535,7 +535,7 @@ const SceneProof: React.FC = () => {
       <div style={{position: 'absolute', left: 0, right: 0, top: 790, textAlign: 'center'}}>
         <Rise delay={92}>
           <div style={{fontSize: 26, color: 'rgba(244,247,255,0.72)'}}>{promo.proof?.note ?? '装上它，把侧栏变成工作台。'}</div>
-          <div style={{fontFamily: MONO, fontSize: 16, color: C.dim, marginTop: 12}}>{plugin.repo} · DSH 0.2.1-rc.1+ · v{plugin.version}</div>
+          <div style={{fontFamily: MONO, fontSize: 16, color: C.dim, marginTop: 12}}>{plugin.repo} · DSH {plugin.dshRange} · v{plugin.version}</div>
         </Rise>
       </div>
     </AbsoluteFill>

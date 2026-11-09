@@ -1,0 +1,39 @@
+{
+  "slug": "guizang-design",
+  "plugin": {
+    "query": "dsh-guizang-design",
+    "cardTitle": "dsh-guizang-design",
+    "cardMeta": "op7418 · 0.1.4 · 主题与外观",
+    "cardDesc": "把歸藏的内容生产 skill 装进 dsh：网页 PPT、图文卡片、网页排版、去 AI 味。",
+    "kicker": "DSH PLUGIN · GUIZANG DESIGN",
+    "name": "歸藏设计",
+    "handle": "op7418/dsh-guizang-design",
+    "tagline": "把歸藏的内容生产 skill 装进 dsh：网页 PPT、图文卡片、网页排版、去 AI 味。",
+    "install": "dsh plugin --profile web add dsh-guizang-design",
+    "licenseLine": "AGPL-3.0 · github.com/op7418/dsh-guizang-design",
+    "termTitle": "guizang-design — zsh — 120×32",
+    "termFooter": "🐋  dsh-guizang-design · promo"
+  },
+  "features": [
+    {
+      "tab": "网页 PPT",
+      "caption": "网页 PPT：横向翻页，杂志风 / 瑞士风",
+      "image": "studio/public/shots/guizang/ppt-magazine.jpg"
+    },
+    {
+      "tab": "图文卡片",
+      "caption": "图文卡片：3:4 / 21:9 / 1:1，一套主题",
+      "image": "studio/public/shots/guizang/feature-cards.png"
+    },
+    {
+      "tab": "网页排版",
+      "caption": "网页排版：文章排成精排单页，可导 PDF",
+      "image": "studio/public/shots/guizang/page-magazine.jpg"
+    },
+    {
+      "tab": "去 AI 味",
+      "caption": "去 AI 味：删空话套话，学你的语气",
+      "image": "studio/public/shots/guizang/feature-voice.png"
+    }
+  ]
+}

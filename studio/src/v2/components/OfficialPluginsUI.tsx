@@ -176,6 +176,8 @@ export type OfficialPluginsUIProps = {
   rowsAppear?: number;
   /** Which row gets the "found it" highlight (defaults to the Better Sidebar row). */
   highlightTitle?: string;
+  /** Entry used by the detail view, confirm dialog and index label (defaults to Better Sidebar). */
+  targetEntry?: OfficialPluginEntry;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -462,15 +464,16 @@ const SearchField: React.FC<{typed: string; focused: boolean; frame: number}> = 
   );
 };
 
-const DiscoverToolbar: React.FC<{typed: string; searchFocused: boolean; frame: number}> = ({
+const DiscoverToolbar: React.FC<{typed: string; searchFocused: boolean; frame: number; indexLabel: string}> = ({
   typed,
   searchFocused,
   frame,
+  indexLabel,
 }) => (
   <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
     <GhostButton style={{maxWidth: 240, marginLeft: -8, padding: '0 8px'}}>
       <span style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
-        {BETTER_SIDEBAR_ENTRY.indexLabel}
+        {indexLabel}
       </span>
       <ChevronDownIcon />
     </GhostButton>
@@ -929,7 +932,8 @@ export const OfficialPluginsUI: React.FC<OfficialPluginsUIProps> = ({
   searchFocused = true,
   entries = OFFICIAL_DISCOVER_ENTRIES,
   rowsAppear = 1,
-  highlightTitle = BETTER_SIDEBAR_ENTRY.title,
+  highlightTitle,
+  targetEntry = BETTER_SIDEBAR_ENTRY,
 }) => {
   const scale = width / OFFICIAL_UI_DESIGN.width;
   const hl = clamp01(rowHighlight);
@@ -998,10 +1002,15 @@ export const OfficialPluginsUI: React.FC<OfficialPluginsUIProps> = ({
             {showRestart ? <RestartNotice /> : null}
 
             {view === 'detail' ? (
-              <DetailView entry={BETTER_SIDEBAR_ENTRY} frame={frame} />
+              <DetailView entry={targetEntry} frame={frame} />
             ) : (
               <div style={{display: 'flex', flexDirection: 'column', gap: 16}}>
-                <DiscoverToolbar typed={typed} searchFocused={searchFocused} frame={frame} />
+                <DiscoverToolbar
+                  typed={typed}
+                  searchFocused={searchFocused}
+                  frame={frame}
+                  indexLabel={targetEntry.indexLabel}
+                />
                 <CategoryPills />
                 {listState === 'skeleton' ? (
                   <div style={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 2}}>
@@ -1028,7 +1037,7 @@ export const OfficialPluginsUI: React.FC<OfficialPluginsUIProps> = ({
           </div>
         </div>
 
-        {confirmOpen ? <ConfirmDialog entry={BETTER_SIDEBAR_ENTRY} enter={confirmEnter} frame={frame} /> : null}
+        {confirmOpen ? <ConfirmDialog entry={targetEntry} enter={confirmEnter} frame={frame} /> : null}
       </div>
     </div>
   );

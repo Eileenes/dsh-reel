@@ -18,6 +18,7 @@ import {ProofStory30Comp} from './compositions/ProofStory30Comp';
 import {ReelCaseVoxel30} from './compositions/ReelCaseVoxel30';
 import {ReelCaseVoxelReal30} from './compositions/ReelCaseVoxelReal30';
 import {ReelCaseStory30} from './compositions/ReelCaseStory30';
+import {ReelGuizang} from './compositions/ReelGuizang';
 import {WhaleSpriteComp} from './scenes/casevoxel/WhaleSpriteComp';
 import {Boot550C} from '../boot550c/Boot550C';
 import {FPS, TOTAL_FRAMES as PROMO_FRAMES} from './data/timeline';
@@ -26,6 +27,7 @@ import {TOTAL_FRAMES as CASE30_FRAMES} from './data/case30-timeline';
 import {TOTAL_FRAMES as VOXEL30_FRAMES} from './data/casevoxel30-timeline';
 import {TOTAL_FRAMES as VOXELREAL30_FRAMES} from './data/casevoxelreal30-timeline';
 import {TOTAL_FRAMES as STORY30_FRAMES} from './data/story30-timeline';
+import {TOTAL_FRAMES as GUIZANG_FRAMES} from './data/guizang-timeline';
 import {PROOF_FRAMES as PROOF15_FRAMES} from './scenes/proof/proof-timeline';
 import {PROOF_FRAMES as PROOF30_FRAMES} from './scenes/proof/proof30-timeline';
 import {VIDEO} from './tokens';
@@ -52,6 +54,14 @@ const V2Root: React.FC = () => (
       id="ReelCase"
       component={ReelCase}
       durationInFrames={CASE_FRAMES}
+      fps={FPS}
+      width={VIDEO.width}
+      height={VIDEO.height}
+    />
+    <Composition
+      id="ReelGuizang"
+      component={ReelGuizang}
+      durationInFrames={GUIZANG_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}

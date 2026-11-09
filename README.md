@@ -33,6 +33,8 @@
 
 **当前是可运行的示例项目，不是"给个仓库地址就自动出片"的成品。** 宿主工具（`reel_scan` / `reel_plan` / `reel_render`）仍是脚手架能力；v2 campaign 目前是 dsh-reel 自己的品牌物料，参数化到任意插件是下一步路线。
 
+**新增案例（2026-11-08）：Sorenyeah home film · 38 秒。** 第一条以**网站**为对象的片子，开场把用户自己的鲸鱼参考片（`Soren_DeepSeek_whale.mp4`）用本仓库的体素鲸鱼重做成 3D 1080p：终端打字 → 278 个体素拼出鲸鱼 → 跳到站点 App 图标上（图标下压、发光）→ 真实主页窗口从图标后面升起，镜头推进页面；之后接二进制名字 → 首页 / 音乐 / 作品的真实页面 → 四个项目 → 七首歌与三篇文章 → 联系方式 → 片尾。代码在 `studio/src/sorenyeah/`，素材在 `studio/public/sorenyeah/`，音乐是 `make_music_v2.py` 的 `38` 档（120 BPM、19 小节），音效由 `studio/scripts/make_home_audio.py` 生成（64 个事件）。方法、时间线与限制见 [案例拆解](docs/case-sorenyeah-home.md)；运行 `npm run home:audio && npm run home:render` 出片。
+
 ## 样片与素材
 
 [观看 24 秒 campaign 片](docs/demo.mp4) · [3:4 安装海报](docs/install-poster.png) · [16:9 封面](docs/poster.png) · [1:1 方图](docs/promo-1x1.png) · [关键帧](docs/stills/)
@@ -51,6 +53,14 @@ v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://g
 - [方法总结](docs/promo-method-v0.1.md)：读插件 → 定分镜 → 收干净素材 → 侧栏壳 → 鲸鱼运动 → 声音 → QA
 - [案例拆解](docs/case-better-sidebar-v0.1.md)：功能表、28s 时间线、素材来源、已知限制
 - [Onetake comp 参考](promo/comp-better-sidebar.html)：实际分镜/动画代码（依赖 Onetake 运行时，不随仓库分发）
+
+### 按插件名出片（标准流程）
+
+以后只给插件名/仓库，就按同一套流程出片（28s / 1080p / 30fps，结构和参考片一致）：
+
+- [标准流程 SOP](docs/v01-film-sop.md)：收数据 → 写案例 JSON → 一条命令生成 comp/素材/音效 → Onetake 渲染 → 混流 → QA
+- 生成器：[tools/v01-film/make-v01-film.mjs](tools/v01-film/make-v01-film.mjs)（模板 [comp-template.html](tools/v01-film/comp-template.html)）
+- 案例：[cases/v01/dsh-guizang-design.json](cases/v01/dsh-guizang-design.json)；成片按 SOP 在本地生成（`studio/out/promo-<slug>-intro-1080.mp4`，不随仓库分发）
 
 ### 安装 / 使用海报
 

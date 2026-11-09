@@ -25,7 +25,7 @@ import React from 'react';
 import {AbsoluteFill, Easing, interpolate, useCurrentFrame} from 'remotion';
 import {COLORS, FONT} from '../../tokens';
 import {Caption, Grain} from '../../components/Chrome';
-import {MarketUI} from '../../components/MarketUI';
+import {MarketUI, type MarketDetailData, type MarketItem} from '../../components/MarketUI';
 import {DshBackdrop} from '../../stage/DshStage';
 
 const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const};
@@ -158,7 +158,7 @@ const CardGlowRing: React.FC<{opacity: number; pulse?: number}> = ({opacity, pul
  * S4 右侧的"包名映射"标注：卡片标题是 dsh-reel，但 npm 包名是 dsh-reel-studio。
  * 一条细引导线 + 两行小字，只是视频注记（不是 UI 字段），不抢卡片主信息。
  */
-const PackageAnnotation: React.FC<{opacity: number}> = ({opacity}) => (
+const PackageAnnotation: React.FC<{opacity: number; text?: string}> = ({opacity, text = 'dsh-reel-studio'}) => (
   <>
     <div
       style={{
@@ -214,7 +214,7 @@ const PackageAnnotation: React.FC<{opacity: number}> = ({opacity}) => (
           textShadow: '0 0 18px rgba(77,107,254,0.35)',
         }}
       >
-        dsh-reel-studio
+        {text}
       </div>
     </div>
   </>
@@ -277,12 +277,30 @@ export const S3MarketOpen: React.FC = () => {
 };
 
 // ───────────────────────── S4：搜索 → 结果 → 推近 ─────────────────────────
-export const S4Search: React.FC = () => {
+export type S4SearchProps = {
+  /** 要搜索的插件名，默认 dsh-reel */
+  query?: string;
+  /** 结果卡数据，默认 dsh-reel 市场条目 */
+  item?: MarketItem;
+  /** 卡片右侧的包名注记，默认 dsh-reel-studio */
+  packageAnnotation?: string;
+  captionTitle?: string;
+  captionSub?: string;
+};
+
+export const S4Search: React.FC<S4SearchProps> = ({
+  query = QUERY,
+  item,
+  packageAnnotation = 'dsh-reel-studio',
+  captionTitle = '搜到了：dsh-reel-studio',
+  captionSub = '插件市场 · 一键安装',
+}) => {
   const frame = useCurrentFrame();
 
-  // 逐字输入：8→58 帧打完 11 个字符；0.25s 防抖后（≈66 帧）结果落地。
-  const typedLen = Math.max(0, Math.min(QUERY.length, Math.floor((frame - 8) / 4.6) + 1));
-  const typed = QUERY.slice(0, typedLen);
+  // 逐字输入：8→58 帧打完整个查询词（速度按词长自适应）；0.25s 防抖后（≈66 帧）结果落地。
+  const perChar = (58 - 8) / Math.max(1, query.length);
+  const typedLen = Math.max(0, Math.min(query.length, Math.floor((frame - 8) / perChar) + 1));
+  const typed = query.slice(0, typedLen);
   const committed = frame >= 64;
   // 关键：resultEnter 用步进而不是 crossfade —— MarketUI 内旧列表(opacity 1-r)
   // 与新结果卡(opacity r) 永远不会同时可见，杜绝 64–76f 的双层重影。
@@ -326,28 +344,41 @@ export const S4Search: React.FC = () => {
         <MarketUI
           width={PANEL_W}
           typed={typed}
-          query={committed ? QUERY : ''}
+          query={committed ? query : ''}
           resultState={resultState}
           installState='idle'
           detail={false}
           frame={uiFrame}
           resultEnter={resultEnter}
           detailEnter={0}
+          item={item}
         />
         <CardGlowRing opacity={resultEnter * (0.55 + 0.45 * push) * (1 - dip)} pulse={ringPulse} />
-        <PackageAnnotation opacity={annotationOpacity} />
+        <PackageAnnotation opacity={annotationOpacity} text={packageAnnotation} />
         <ResultSwapBlank opacity={dip} />
       </div>
       {/* 推近时渐入字幕压暗带：字幕落在暗带上，不压可读 UI */}
       <CaptionScrim opacity={push} />
-      <Caption title='搜到了：dsh-reel-studio' sub='插件市场 · 一键安装' delay={72} />
+      <Caption title={captionTitle} sub={captionSub} delay={72} />
       <Grain />
     </AbsoluteFill>
   );
 };
 
 // ───────────────────────── S5：详情 + 安装 ─────────────────────────
-export const S5Install: React.FC = () => {
+export type S5InstallProps = {
+  /** 详情页数据，默认 dsh-reel 详情 */
+  detailItem?: MarketDetailData;
+  /** 卡片数据（决定安装成功 toast 里的插件名），默认 dsh-reel */
+  item?: MarketItem;
+  captionTitle?: string;
+};
+
+export const S5Install: React.FC<S5InstallProps> = ({
+  detailItem,
+  item,
+  captionTitle = '装上，就开拍',
+}) => {
   const frame = useCurrentFrame();
 
   // 从 S4 的推近构图接续：前 5 帧 1.06→1.0，配合 0.6→1 的淡入。
@@ -386,9 +417,11 @@ export const S5Install: React.FC = () => {
           resultEnter={1}
           detailEnter={1}
           installHighlight={highlight}
+          detailItem={detailItem}
+          item={item}
         />
       </div>
-      <Caption title='装上，就开拍' delay={18} />
+      <Caption title={captionTitle} delay={18} />
       <Grain />
     </AbsoluteFill>
   );
