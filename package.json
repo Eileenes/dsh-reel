@@ -60,6 +60,8 @@
     "@deepseek-ai/dsh-tools": "*"
   },
   "scripts": {
+    "typecheck": "cd studio && npm run typecheck",
+    "check": "npm run typecheck && node --check lib/index.js && node --check scripts/reel.mjs && node --check design/build.mjs",
     "reel": "node scripts/reel.mjs",
     "campaign:design": "node design/build.mjs && bash design/build.sh",
     "campaign:render": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --concurrency=1",

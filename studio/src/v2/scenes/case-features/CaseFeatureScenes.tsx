@@ -23,7 +23,7 @@ import {
   useVideoConfig,
 } from 'remotion';
 import {COLORS, FONT, MOTION, RADIUS, VIDEO} from '../../tokens';
-import {Caption, GlassPanel, Grain, Pill, Step, Wordmark} from '../../components/Chrome';
+import {Caption, GlassPanel, Grain, Wordmark} from '../../components/Chrome';
 import {DshBackdrop, DshVignette} from '../../stage/DshStage';
 
 // ───────────────────────── helpers ─────────────────────────

@@ -567,7 +567,14 @@ const S2_CAM_C: CameraPose = {p: [1.5, 1.5, 3.6], l: [0.38, 0.24, -0.3], fov: 40
 /** 最后 8 帧：镜头朝窗口里推（压低看点、向前） */
 const S2_CAM_D: CameraPose = {p: [1.4, 1.24, 2.9], l: [0.5, 0.02, -0.72], fov: 41};
 
-export const S2Hatch: React.FC = () => {
+/** S2 可替换的终端文案（不传 = dsh-reel 品牌片现状）。 */
+export type S2HatchProps = {
+  /** 终端标题栏；产品小标由首段派生，规则与 S1 一致 */
+  termTitle?: string;
+};
+
+export const S2Hatch: React.FC<S2HatchProps> = ({termTitle = 'dsh-reel — zsh — 120×32'}) => {
+  const product = termTitle.split('—')[0].trim().toUpperCase();
   const f = useCurrentFrame();
 
   const k1 = E.sineInOut(seg(f, 10, 44));
@@ -613,8 +620,8 @@ export const S2Hatch: React.FC = () => {
         <TerminalWindow
           typed={3}
           copy="dsh"
-          termTitle="better-sidebar — zsh — 120×32"
-          product="BETTER-SIDEBAR"
+          termTitle={termTitle}
+          product={product}
           caretOn={false}
           gather={0}
         />
