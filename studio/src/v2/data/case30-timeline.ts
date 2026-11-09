@@ -27,6 +27,16 @@ export const CASE30_SCENES: Case30Scene[] = [
   {id: 'C7', title: 'outro', from: 720, duration: 180},
 ];
 
+/** Edit-point flashes: [absolute frame, amplitude]. */
+export const CASE30_CUTS: Array<[number, number]> = [
+  [90, 0.16],
+  [210, 0.2],
+  [300, 0.12],
+  [450, 0.18],
+  [570, 0.16],
+  [720, 0.15],
+];
+
 export type SfxKind =
   | 'key' | 'riser' | 'whoosh' | 'landBig' | 'landSmall' | 'tile' | 'window'
   | 'enter' | 'result' | 'click' | 'chime' | 'toolPop' | 'spout' | 'hum' | 'title';

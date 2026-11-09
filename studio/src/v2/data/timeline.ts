@@ -40,6 +40,16 @@ export const STILLS: Array<[number, number]> = [
   [696, 718], // end card (S9)
 ];
 
+/** Edit-point flashes: [absolute frame, amplitude]. */
+export const CUTS: Array<[number, number]> = [
+  [156, 0.2], // S2 -> S3 (enter the DSH window)
+  [348, 0.14], // S4 -> S5 (result -> detail)
+  [426, 0.11], // S5 -> S6 (installed -> hand-off)
+  [462, 0.09], // S6 -> S7 (hand-off -> pipeline)
+  [588, 0.17], // S7 -> S8 (render -> world with outputs)
+  [660, 0.15], // S8 -> S9 (outputs -> end card)
+];
+
 export type SfxKind =
   | 'key'
   | 'riser'

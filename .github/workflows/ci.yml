@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    name: static checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: JavaScript syntax
+        run: |
+          node --check lib/index.js
+          node --check scripts/reel.mjs
+          node --check design/build.mjs
+
+      - name: npm package dry-run
+        run: npm pack --dry-run
+
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: studio/pnpm-lock.yaml
+
+      - name: Install studio dependencies
+        working-directory: studio
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck studio
+        working-directory: studio
+        run: pnpm typecheck

@@ -179,18 +179,3 @@ export const Grain: React.FC = () => (
     />
   </AbsoluteFill>
 );
-
-/** Scene entry helper: fade in over N frames at the start of a Sequence. */
-export const SceneFade: React.FC<{children: React.ReactNode; duration?: number; out?: boolean}> = ({
-  children,
-  duration = 8,
-  out = false,
-}) => {
-  const frame = useCurrentFrame();
-  const {durationInFrames} = useVideoConfig();
-  const opacity = Math.min(
-    interpolate(frame, [0, duration], [0, 1], clamp),
-    out ? interpolate(durationInFrames - duration, [durationInFrames - duration, durationInFrames], [1, 0], clamp) : 1
-  );
-  return <AbsoluteFill style={{opacity}}>{children}</AbsoluteFill>;
-};

@@ -31,6 +31,16 @@ export const CASE_SCENES: CaseScene[] = [
   {id: 'S9', title: 'outro', from: 660, duration: 60, seconds: 2.0},
 ];
 
+/** Edit-point flashes: [absolute frame, amplitude]. Same edit grammar as the dsh-reel film. */
+export const CASE_CUTS: Array<[number, number]> = [
+  [156, 0.2],
+  [348, 0.14],
+  [426, 0.11],
+  [462, 0.09],
+  [588, 0.17],
+  [660, 0.15],
+];
+
 export type SfxKind =
   | 'key'
   | 'riser'
@@ -100,7 +110,7 @@ export const SOUND_EVENTS: SoundEvent[] = [
   // C8 · workbench
   {frame: 594, kind: 'whoosh', gain: 0.5, note: 'workbench drops (C8 f6)'},
   {frame: 604, kind: 'landSmall', gain: 0.65, note: 'left shot lands (C8 f16)'},
-  {frame: 610, kind: 'landSmall', gain: 0.6, note: 'right shot lands (C8 f22)'}
+  {frame: 610, kind: 'landSmall', gain: 0.6, note: 'right shot lands (C8 f22)'},
   {frame: 618, kind: 'chime', gain: 0.4},
   // C9 · outro
   {frame: 666, kind: 'title', gain: 0.7, note: 'Better Sidebar title'},

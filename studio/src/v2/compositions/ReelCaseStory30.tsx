@@ -7,27 +7,20 @@
  *   16–21s plugin features
  *   21–25s real sidebar/workbench
  *   25–30s end card
+ *
+ * The edit shell lives in kit/film.tsx; this film keeps its own animated progress line.
  */
 
 import React from 'react';
-import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
-import {COLORS} from '../tokens';
+import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {TOTAL_FRAMES} from '../data/story30-timeline';
+import {Film, type FilmScene, type FilmSceneMap} from '../kit/film';
 import {S1Hook} from '../scenes/hero/HeroScenes';
 import {StoryDock, StoryWhaleButton, StorySearch} from '../scenes/story/StoryScenes';
 import {C7Features, C8Workbench} from '../scenes/case-features/CaseFeatureScenes';
 import {C7Outro} from '../scenes/case30/OutroScene';
 
 const OVERLAP = 10;
-
-const SCENES = [
-  {from: 0, duration: 150, name: 'c1-terminal-whale', Comp: () => <S1Hook whale {...CASE_HOOK} />},
-  {from: 150, duration: 120, name: 'c2-dock-dsh', Comp: () => <StoryDock />},
-  {from: 270, duration: 90, name: 'c3-whale-button', Comp: () => <StoryWhaleButton />},
-  {from: 360, duration: 120, name: 'c4-search', Comp: () => <StorySearch />},
-  {from: 480, duration: 150, name: 'c5-features', Comp: () => <C7Features />},
-  {from: 630, duration: 120, name: 'c6-workbench', Comp: () => <C8Workbench />},
-  {from: 750, duration: 150, name: 'c7-outro', Comp: () => <C7Outro />},
-];
 
 const CASE_HOOK = {
   typed: 'dsh',
@@ -36,31 +29,63 @@ const CASE_HOOK = {
   eyebrow: 'DSH PLUGIN · BETTER SIDEBAR',
 };
 
-const SceneFadeIn: React.FC<{children: React.ReactNode; fade: boolean}> = ({children, fade}) => {
-  const frame = useCurrentFrame();
-  const o = fade ? Math.min(1, frame / OVERLAP) : 1;
-  return <AbsoluteFill style={{opacity: o}}>{children}</AbsoluteFill>;
+const SCENES: FilmScene[] = [
+  {id: 'c1-terminal-whale', from: 0, duration: 150, title: 'terminal-whale'},
+  {id: 'c2-dock-dsh', from: 150, duration: 120, title: 'dock-dsh'},
+  {id: 'c3-whale-button', from: 270, duration: 90, title: 'whale-button'},
+  {id: 'c4-search', from: 360, duration: 120, title: 'search'},
+  {id: 'c5-features', from: 480, duration: 150, title: 'features'},
+  {id: 'c6-workbench', from: 630, duration: 120, title: 'workbench'},
+  {id: 'c7-outro', from: 750, duration: 150, title: 'outro'},
+];
+
+const SCENE_MAP: FilmSceneMap = {
+  'c1-terminal-whale': () => <S1Hook whale {...CASE_HOOK} />,
+  'c2-dock-dsh': StoryDock,
+  'c3-whale-button': StoryWhaleButton,
+  'c4-search': StorySearch,
+  'c5-features': C7Features,
+  'c6-workbench': C8Workbench,
+  'c7-outro': C7Outro,
 };
 
-const TopLine: React.FC = () => {
-  const f = useCurrentFrame();
+/** Progress hairline unique to this story cut. */
+const StoryProgressLine: React.FC = () => {
+  const frame = useCurrentFrame();
   return (
-    <div style={{position: 'absolute', left: 96, right: 96, top: 54, height: 1, background: 'rgba(150,190,255,0.16)'}}>
-      <div style={{width: `${(f / 900) * 100}%`, height: '100%', background: 'rgba(120,246,255,0.55)', boxShadow: '0 0 12px rgba(120,246,255,0.6)'}} />
-    </div>
+    <AbsoluteFill style={{pointerEvents: 'none'}}>
+      <div
+        style={{
+          position: 'absolute',
+          left: 96,
+          right: 96,
+          top: 54,
+          height: 1,
+          background: 'rgba(150,190,255,0.16)',
+        }}
+      >
+        <div
+          style={{
+            width: `${(frame / TOTAL_FRAMES) * 100}%`,
+            height: '100%',
+            background: 'rgba(120,246,255,0.55)',
+            boxShadow: '0 0 12px rgba(120,246,255,0.6)',
+          }}
+        />
+      </div>
+    </AbsoluteFill>
   );
 };
 
 export const ReelCaseStory30: React.FC = () => (
-  <AbsoluteFill style={{backgroundColor: COLORS.bg0}}>
-    <Audio src={staticFile('audio/v2/preview-mix-story30.mp3')} />
-    {SCENES.map(({from, duration, name, Comp}, i) => (
-      <Sequence key={name} from={from} durationInFrames={duration + (i < SCENES.length - 1 ? OVERLAP : 0)} name={name}>
-        <SceneFadeIn fade={i > 0}>
-          <Comp />
-        </SceneFadeIn>
-      </Sequence>
-    ))}
-    <TopLine />
-  </AbsoluteFill>
+  <>
+    <Film
+      scenes={SCENES}
+      sceneMap={SCENE_MAP}
+      audio="audio/v2/preview-mix-story30.mp3"
+      overlap={OVERLAP}
+      showTopLine={false}
+    />
+    <StoryProgressLine />
+  </>
 );

@@ -162,6 +162,8 @@ node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode image
 
 使用 `--poster-frame 825` 可指定封面帧；当前视频的有效帧为 `0–974`。同一文件名前缀再次渲染会覆盖已有结果，请先保存需要保留的版本。发布前逐帧检查文案、截图、数字、安装命令与授权信息。
 
+CLI 其他参数：`--out <dir>` 指定输出目录（默认 `studio/out`，相对路径按当前目录解析），`--help` 查看全部参数。`plugin.handle`/`plugin.name` 只含非 ASCII 字符时会生成 `plugin-<hash>` 前缀，避免空文件名；坏 JSON 或缺失文件会打印可读错误并以非零码退出。
+
 <a id="cases"></a>
 
 ## 编辑案例与模板

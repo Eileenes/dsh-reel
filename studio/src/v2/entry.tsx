@@ -1,8 +1,11 @@
 /**
- * v2 Remotion entry — the film + (later) poster/cover compositions.
+ * v2 Remotion entry — the film + poster/cover compositions.
  * Render:
- *   node_modules/.bin/remotion render src/v2/entry.ts ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --gl=angle
- *   node_modules/.bin/remotion still  src/v2/entry.ts ReelPromo out/reel-frame.png --frame=300 --gl=angle
+ *   node_modules/.bin/remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --gl=angle
+ *   node_modules/.bin/remotion still  src/v2/entry.tsx ReelPromo out/reel-frame.png --frame=300 --gl=angle
+ *
+ * Composition durations come from the timeline data so timing changes only happen
+ * in one place (data/*-timeline.ts), not here.
  */
 
 import React from 'react';
@@ -17,7 +20,14 @@ import {ReelCaseVoxelReal30} from './compositions/ReelCaseVoxelReal30';
 import {ReelCaseStory30} from './compositions/ReelCaseStory30';
 import {WhaleSpriteComp} from './scenes/casevoxel/WhaleSpriteComp';
 import {Boot550C} from '../boot550c/Boot550C';
-import {TOTAL_FRAMES, FPS} from './data/timeline';
+import {FPS, TOTAL_FRAMES as PROMO_FRAMES} from './data/timeline';
+import {TOTAL_FRAMES as CASE_FRAMES} from './data/case-timeline';
+import {TOTAL_FRAMES as CASE30_FRAMES} from './data/case30-timeline';
+import {TOTAL_FRAMES as VOXEL30_FRAMES} from './data/casevoxel30-timeline';
+import {TOTAL_FRAMES as VOXELREAL30_FRAMES} from './data/casevoxelreal30-timeline';
+import {TOTAL_FRAMES as STORY30_FRAMES} from './data/story30-timeline';
+import {PROOF_FRAMES as PROOF15_FRAMES} from './scenes/proof/proof-timeline';
+import {PROOF_FRAMES as PROOF30_FRAMES} from './scenes/proof/proof30-timeline';
 import {VIDEO} from './tokens';
 
 const V2Root: React.FC = () => (
@@ -33,7 +43,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelPromo"
       component={ReelPromo}
-      durationInFrames={TOTAL_FRAMES}
+      durationInFrames={PROMO_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
@@ -41,7 +51,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelCase"
       component={ReelCase}
-      durationInFrames={TOTAL_FRAMES}
+      durationInFrames={CASE_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
@@ -57,7 +67,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelCaseStory30"
       component={ReelCaseStory30}
-      durationInFrames={900}
+      durationInFrames={STORY30_FRAMES}
       fps={FPS}
       width={1920}
       height={1080}
@@ -65,7 +75,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelCaseVoxelReal30"
       component={ReelCaseVoxelReal30}
-      durationInFrames={900}
+      durationInFrames={VOXELREAL30_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
@@ -73,7 +83,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelCaseVoxel30"
       component={ReelCaseVoxel30}
-      durationInFrames={900}
+      durationInFrames={VOXEL30_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
@@ -81,7 +91,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ProofStory30"
       component={ProofStory30Comp}
-      durationInFrames={900}
+      durationInFrames={PROOF30_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
@@ -89,7 +99,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ProofMini"
       component={ProofMiniComp}
-      durationInFrames={450}
+      durationInFrames={PROOF15_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
@@ -97,7 +107,7 @@ const V2Root: React.FC = () => (
     <Composition
       id="ReelCase30"
       component={ReelCase30}
-      durationInFrames={900}
+      durationInFrames={CASE30_FRAMES}
       fps={FPS}
       width={VIDEO.width}
       height={VIDEO.height}
