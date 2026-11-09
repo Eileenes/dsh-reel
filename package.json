@@ -61,12 +61,16 @@
   },
   "scripts": {
     "typecheck": "cd studio && npm run typecheck",
-    "check": "npm run typecheck && node --check lib/index.js && node --check scripts/reel.mjs && node --check design/build.mjs",
+    "check": "npm run typecheck && node --check lib/index.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
     "reel": "node scripts/reel.mjs",
+    "v01:film": "node tools/v01-film/make-v01-film.mjs",
     "campaign:design": "node design/build.mjs && bash design/build.sh",
     "campaign:render": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelPromo out/reel-promo.mp4 --codec h264 --crf 16 --concurrency=1",
     "campaign:still": "cd studio && node_modules/.bin/remotion still src/v2/entry.tsx ReelPromo out/reel-frame.png --frame=300",
     "campaign:render:case": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelCase out/case-better-sidebar.mp4 --codec h264 --crf 16 --concurrency=1",
-    "campaign:render:case30": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelCase30 out/case-better-sidebar-30s.mp4 --codec h264 --crf 16 --concurrency=1"
+    "campaign:render:case30": "cd studio && node_modules/.bin/remotion render src/v2/entry.tsx ReelCase30 out/case-better-sidebar-30s.mp4 --codec h264 --crf 16 --concurrency=1",
+    "home:audio": "python3 studio/scripts/make_home_audio.py && ffmpeg -y -i studio/public/sorenyeah/audio/mix.wav -b:a 192k studio/public/sorenyeah/audio/preview-mix.mp3",
+    "home:render": "cd studio && node_modules/.bin/remotion render src/sorenyeah/entry.tsx SorenyeahHome out/sorenyeah-home.mp4 --codec h264 --crf 16",
+    "home:poster": "cd studio && node_modules/.bin/remotion still src/sorenyeah/entry.tsx SorenyeahPoster out/sorenyeah-poster.png --frame=0"
   }
 }

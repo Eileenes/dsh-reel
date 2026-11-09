@@ -7,6 +7,8 @@ export const plugin = {
   downloads: 46445,
   stars: 4297,
   tagline: '一个侧边栏，装下整个开发工作台',
+  /** 兼容的 DSH 版本范围，显示在 proof 场景的说明行；不带 "DSH " 前缀 */
+  dshRange: '0.2.1-rc.1+',
 };
 
 export type ReelFeature = {

@@ -1,0 +1,130 @@
+{
+  "plugin": {
+    "name": "歸藏设计",
+    "handle": "dsh-guizang-design",
+    "version": "0.1.4",
+    "repo": "github.com/op7418/dsh-guizang-design",
+    "install": "dsh plugin --profile web add dsh-guizang-design",
+    "downloads": 0,
+    "stars": 0,
+    "tagline": "把歸藏的内容生产 skill 装进 dsh",
+    "dshRange": "0.2.1-rc.2 – 0.3.0"
+  },
+  "features": [
+    {
+      "no": "01",
+      "title": "网页 PPT",
+      "desc": "杂志风 / 瑞士风 · 横向翻页、演讲者视图、WebGL 背景、数据大字报",
+      "img": "shots/guizang/feature-ppt.png",
+      "accent": "#002fa7"
+    },
+    {
+      "no": "02",
+      "title": "图文卡片",
+      "desc": "小红书 3:4 组图、公众号 21:9 头图、1:1 分享卡，一条命令出图",
+      "img": "shots/guizang/feature-cards.png",
+      "accent": "#ff6b35"
+    },
+    {
+      "no": "03",
+      "title": "网页排版",
+      "desc": "文章、笔记排成精排单页，可导出 PDF 和长图；中英双版本",
+      "img": "shots/guizang/feature-page.png",
+      "accent": "#c5e803"
+    },
+    {
+      "no": "04",
+      "title": "去 AI 味",
+      "desc": "删掉空话和模板表达；配合语气档案，保留你自己的写法",
+      "img": "shots/guizang/feature-voice.png",
+      "accent": "#ffd500"
+    }
+  ],
+  "promo": {
+    "problem": "同一篇内容，做 PPT、做卡片、排网页，每次都要重新配一遍主题。",
+    "what": "PPT、卡片、网页共用一套 token：主题、字体、版式是一家人。",
+    "how": [
+      "装上插件",
+      "在对话里说要做的东西",
+      "拿到 HTML / PNG / PDF"
+    ],
+    "address": "github.com/op7418/dsh-guizang-design",
+    "hook": {
+      "kicker": "DSH PLUGIN · GUIZANG DESIGN",
+      "line1": "一套设计系统，",
+      "line2": "做所有内容。",
+      "sub": "网页 PPT、图文卡片、网页排版、去 AI 味 —— 同一篇文章，三种出口。",
+      "bg": "shots/guizang/hook-card.png"
+    },
+    "problemScene": {
+      "title": "内容有了，形式还得一件件做。",
+      "sub": "同一篇文章，PPT、卡片、网页各做一遍，主题和字体每次重新对。",
+      "chips": [
+        "网页 PPT",
+        "图文卡片",
+        "网页排版",
+        "去 AI 味",
+        "语气档案"
+      ],
+      "footnote": "一套内容 · 四种出口 · 一套设计系统"
+    },
+    "solution": {
+      "title": "一套系统。\n五个 skill。",
+      "sub": "把歸藏的内容生产 skill 装进 dsh",
+      "points": [
+        "PPT / 卡片 / 网页共用一套 token：杂志风 6 套、瑞士风 4 套",
+        "品牌色按 OKLCH 收进受约束区间，对比度按 WCAG + APCA",
+        "语气档案从你的对话和文章学写法，文案照你的语气"
+      ],
+      "img": "shots/guizang/examples.png"
+    },
+    "featuresScene": {
+      "title": "四个 skill，一套设计系统。",
+      "note": "05 SKILLS / 10 THEMES",
+      "footnote": "+ 内容生产工作流 · 官方示例 · 作品库 · 一键做同款"
+    },
+    "howto": {
+      "title": "三步，把内容做成作品。",
+      "steps": [
+        {
+          "title": "装进 DSH",
+          "desc": "插件市场搜 dsh-guizang-design，装完点「立即启用」",
+          "cmd": "dsh plugin --profile web add dsh-guizang-design"
+        },
+        {
+          "title": "说一句要做的东西",
+          "desc": "在对话里打 / 选 skill，或直接说「把这篇文章排成网页」",
+          "cmd": "/guizang-page-skill"
+        },
+        {
+          "title": "拿到成品",
+          "desc": "PPT 和网页是单文件 HTML；卡片出 PNG；网页可导 PDF 和长图",
+          "cmd": "html · png · pdf"
+        }
+      ]
+    },
+    "proof": {
+      "title": "一套系统，五个 skill。",
+      "stats": [
+        {
+          "num": "5",
+          "label": "SKILLS"
+        },
+        {
+          "num": "10",
+          "label": "THEMES"
+        },
+        {
+          "num": "3",
+          "label": "OUTPUTS"
+        },
+        {
+          "num": "0.1.4",
+          "label": "VERSION"
+        }
+      ],
+      "note": "装上它，把内容做成作品。"
+    },
+    "outroLogo": "brand/guizang-icon.png"
+  }
+}
