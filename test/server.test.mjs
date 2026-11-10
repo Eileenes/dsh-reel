@@ -13,6 +13,8 @@ function makeRoot() {
   const root = mkdtempSync(join(tmpdir(), 'dsh-reel-test-'));
   mkdirSync(join(root, 'cases', 'v01'), {recursive: true});
   mkdirSync(join(root, 'studio', 'out'), {recursive: true});
+  mkdirSync(join(root, 'studio', 'public', 'shots'), {recursive: true});
+  writeFileSync(join(root, 'studio', 'public', 'shots', 'demo.png'), Buffer.from('PNG'));
   mkdirSync(join(root, 'scripts'), {recursive: true});
   writeFileSync(join(root, 'package.json'), JSON.stringify({name: 'dsh-reel-studio', version: '9.9.9'}));
   writeFileSync(
@@ -158,6 +160,19 @@ test('HTTP API serves state, jobs, outputs with Range and blocks traversal', asy
     assert.equal(state.version, '9.9.9');
     assert.equal(state.cases.length, 2);
     assert.equal(state.env.renderer.found, false);
+    assert.equal(state.defaultCase.id, 'cases/demo.json');
+
+    const caseJson = await fetch(base + '/dsh-reel/api/case?path=' + encodeURIComponent('cases/demo.json')).then((res) => res.json());
+    assert.equal(caseJson.case.plugin.name, 'Demo');
+    const outsideCases = await fetch(base + '/dsh-reel/api/case?path=' + encodeURIComponent('package.json'));
+    assert.equal(outsideCases.status, 403);
+
+    const asset = await fetch(base + '/dsh-reel/api/asset/shots/demo.png');
+    assert.equal(asset.status, 200);
+    assert.equal(asset.headers.get('content-type'), 'image/png');
+    assert.equal(await asset.text(), 'PNG');
+    const badAsset = await fetch(base + '/dsh-reel/api/asset/..%2Fpackage.json');
+    assert.equal(badAsset.status, 404);
 
     const created = await fetch(base + '/dsh-reel/api/jobs', {
       method: 'POST',
@@ -173,6 +188,16 @@ test('HTTP API serves state, jobs, outputs with Range and blocks traversal', asy
 
     const finished = await studio.wait(job.id);
     assert.equal(finished.state, 'done');
+
+    const defaultJob = await fetch(base + '/dsh-reel/api/jobs', {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({mode: 'image'}),
+    });
+    assert.equal(defaultJob.status, 201);
+    const defaultView = await defaultJob.json();
+    assert.equal(defaultView.job.title, join('cases', 'demo.json'));
+    assert.equal((await studio.wait(defaultView.job.id)).state, 'done');
 
     const detail = await fetch(base + '/dsh-reel/api/jobs/' + job.id).then((res) => res.json());
     assert.equal(detail.job.state, 'done');

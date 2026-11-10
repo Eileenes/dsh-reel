@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: turn a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp + storyboard method) and a Reel Studio panel. Onetake is PolyForm Noncommercial, not a commercial license.",
+  "description": "dsh-reel-studio: a 插件介绍宣传台 panel that turns a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline and a single-case storyboard-to-reel workspace. Onetake is PolyForm Noncommercial, not a commercial license.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -84,7 +84,7 @@
   },
   "scripts": {
     "typecheck": "cd studio && npm run typecheck",
-    "check": "npm run typecheck && node --check lib/index.js && node --check lib/server.js && node --check lib/client.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
+    "check": "npm run typecheck && node --check lib/index.js && node --check lib/server.js && node --check lib/plan.js && node --check lib/client.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
     "test": "node --test test/*.test.mjs",
     "reel": "node scripts/reel.mjs",
     "v01:film": "node tools/v01-film/make-v01-film.mjs",

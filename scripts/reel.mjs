@@ -202,32 +202,15 @@ const runRemotion = (argv) => {
 
 const outputs = {};
 
+/** Print one artifact the moment it exists, so a UI can show it before the render ends. */
+const emitArtifact = (kind, path) => {
+  outputs[kind] = path;
+  console.log('[reel] ' + kind.padEnd(6) + ' ->', displayPath(path));
+};
+
 try {
-  if (mode !== 'image') {
-    const videoName = slug + '-demo.mp4';
-    console.log('[reel] rendering video', videoName);
-    emitProgress('render:video', {progress: 0});
-    await runRemotion([
-      'render', 'src/index.ts', 'PluginDemo', remotionOutput(videoName),
-      '--codec', 'h264', '--crf', '18',
-      propsArg, ...browserArgs,
-      '--concurrency=4', '--overwrite',
-    ]);
-    emitProgress('render:video', {progress: 1, done: 1, total: 1});
-    outputs.video = join(outDir, videoName);
-
-    const posterName = slug + '-poster.png';
-    console.log('[reel] rendering poster', posterName);
-    emitProgress('render:poster', {progress: 0});
-    await runRemotion([
-      'still', 'src/index.ts', 'PluginDemo', remotionOutput(posterName),
-      '--frame=' + posterFrame, propsArg,
-      ...browserArgs, '--overwrite',
-    ]);
-    emitProgress('render:poster', {progress: 1, done: 1, total: 1});
-    outputs.poster = join(outDir, posterName);
-  }
-
+  // Stills first: the 3:4 promo card and the poster are quick, so a viewer sees
+  // a finished image long before the video finishes rendering.
   if (mode !== 'video') {
     const imageName = slug + '-promo.png';
     console.log('[reel] rendering promo image', imageName);
@@ -238,14 +221,36 @@ try {
       ...browserArgs, '--overwrite',
     ]);
     emitProgress('render:image', {progress: 1, done: 1, total: 1});
-    outputs.image = join(outDir, imageName);
+    emitArtifact('image', join(outDir, imageName));
+  }
+
+  if (mode !== 'image') {
+    const posterName = slug + '-poster.png';
+    console.log('[reel] rendering poster', posterName);
+    emitProgress('render:poster', {progress: 0});
+    await runRemotion([
+      'still', 'src/index.ts', 'PluginDemo', remotionOutput(posterName),
+      '--frame=' + posterFrame, propsArg,
+      ...browserArgs, '--overwrite',
+    ]);
+    emitProgress('render:poster', {progress: 1, done: 1, total: 1});
+    emitArtifact('poster', join(outDir, posterName));
+
+    const videoName = slug + '-demo.mp4';
+    console.log('[reel] rendering video', videoName);
+    emitProgress('render:video', {progress: 0});
+    await runRemotion([
+      'render', 'src/index.ts', 'PluginDemo', remotionOutput(videoName),
+      '--codec', 'h264', '--crf', '18',
+      propsArg, ...browserArgs,
+      '--concurrency=4', '--overwrite',
+    ]);
+    emitProgress('render:video', {progress: 1, done: 1, total: 1});
+    emitArtifact('video', join(outDir, videoName));
   }
 } catch (err) {
   console.error('[reel] render failed:', err?.message ?? err);
   process.exit(1);
 }
 
-for (const [kind, path] of Object.entries(outputs)) {
-  console.log('[reel] ' + kind.padEnd(6) + ' ->', displayPath(path));
-}
 emitProgress('done', {progress: 1});

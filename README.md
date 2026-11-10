@@ -204,7 +204,8 @@ CLI 其他参数：`--out <dir>` 指定输出目录（默认 `studio/out`，相�
 | --- | --- |
 | `reel_scan` | 读取本地 `package.json`，检测部分 README 文件名是否存在，列出 `docs/screenshots`、`assets`、`preview` 中的顶层图片 |
 | `reel_plan` | 将名称、简介和数据点填入固定的七段分镜对象；引入、问题与用法仍是侧栏示例文案 |
-| `reel_render` | 调用本地 CLI，根据案例文件渲染视频、图片或全部产物；与 Reel Studio 面板共用同一个渲染队列，面板里能看到进度 |
+| `reel_storyboard` | 从案例 JSON 推导六段分镜，与面板显示的是同一份数据 |
+| `reel_render` | 调用本地 CLI，根据案例文件渲染视频、图片或全部产物；与宣传台面板共用同一个渲染队列 |
 
 `reel_scan` **不会解析 README 正文或自动提取卖点**；`reel_plan` 的分镜结果也未自动转换为渲染案例。这些工具尚未构成“给一个仓库地址就自动出片”的完整流程。
 
@@ -216,22 +217,21 @@ dsh plugin --profile scratch add github:Eileenes/dsh-reel
 
 宿主运行还依赖兼容的 `@deepseek-ai/dsh-tools`、Remotion 和浏览器。**真实 DSH profile 的安装、加载、工具返回值、热更新与卸载仍待验证**，不据包声明推断已经兼容所有 DSH 版本或已经发布到 npm。
 
-### Reel Studio 面板（Web UI）
+### 插件介绍宣传台面板（Web UI）
 
-0.3.0 起插件带浏览器半边：安装后在 DSH 左侧栏多一个 Reel Studio 图标，主区域是工作台页面（`lib/client.js`，React 直接渲染进 `main` slot，跟随 DSH 主题与语言）。
+0.3.0 起插件带浏览器半边：安装后在 DSH 左侧栏多一个「插件介绍宣传台」图标，主区域是一页式工作台（`lib/client.js`，React 直接渲染进 `main` slot，跟随 DSH 主题与语言）。
 
-- **案例**：读取 `cases/*.json` 与 `cases/v01/*.json`，点选要渲染的案例；
-- **生成**：选「视频 + 图 / 只出视频 / 只出图」和封面帧，点「生成物料」；任务与 `reel_render` 走同一个队列（一次只渲染一个，其余排队），可取消；
-- **进度**：页面轮询 `/dsh-reel/api/state`，显示阶段、百分比和实时日志；
-- **产物**：直接预览 `studio/out` 里的 mp4 / png，可复制路径；
-- **降级**：没装 Remotion 时页面提示安装命令，并提供「交给 agent 生成」按钮。
+页面把一次生成收成四步，且全部在同一页完成，没有单独的任务页：
 
-启用条件：插件按 `dsh.bundle` 正常安装；渲染需要 Node.js 22+、Remotion 依赖（`pnpm install`）和 Chrome / Chromium（先探测系统 Chrome，找不到时 Remotion 会下载 headless shell）。浏览器半边只影响 Web GUI，无头环境仍可只用工具。
+1. **看一眼案例**：当前内置一个案例（DSH Game Studio）收在右上角「?」里，展开可看 4 个功能点和截图；
+2. **写一句需求**：默认填案例简介，可改成这次想强调的文案；
+3. **点开始生成**：页面立刻展示分镜（开场 / 问题 / 一句话方案 / 功能 / 怎么用 / 数据与片尾），随后按「宣传图 → 封面 → 成片」的顺序渲染，每完成一个就出现在产物区；
+4. **看结果**：视频/图片直接预览；历史产物在「最近产物」里。
 
-接口在 [`lib/server.js`](lib/server.js)：`GET /dsh-reel/api/state`、`POST /dsh-reel/api/jobs`、`POST /dsh-reel/api/jobs/:id/cancel`、`GET /dsh-reel/api/out/*`（支持 Range，视频可拖动）、`POST /dsh-reel/api/scan`。面板自测：
+宿主接口在 [`lib/server.js`](lib/server.js)：`GET /dsh-reel/api/state`、`GET /dsh-reel/api/case?path=…`、`GET /dsh-reel/api/asset/*`（分镜截图）、`POST /dsh-reel/api/jobs`、`POST /dsh-reel/api/jobs/:id/cancel`、`GET /dsh-reel/api/out/*`（支持 Range）。分镜数据由 [`lib/plan.js`](lib/plan.js) 从案例 JSON 推导，agent 也可以用 `reel_storyboard` 工具拿到同一份分镜。面板自测：
 
 ```sh
-npm test                                        # 任务队列 / 进度解析 / Range / 路径越权 / 面板注册 / 渲染烟测
+npm test                                        # 13 个用例：分镜推导 / 任务队列 / 进度解析 / Range / 路径越权 / 面板注册 / 渲染烟测
 node --check lib/client.js
 DSH_REEL_DEPS=/path/to/node_modules npm test    # 未安装依赖时，借用现成 React 跑渲染烟测
 ```
