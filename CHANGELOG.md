@@ -1,7 +1,19 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — 2026-11-10
 
+- 面板重构为「**安利墙 + 生成台**」两视图（参考自媒体工作台的设计语言：图标轨、玻璃胶囊导航、衬线大标题、mono 数字、封面/分镜叠图、真实阶段 dockbar）；顶部输入框录入插件名并实时提示是否已有案例，`?` 打开四步「怎么用」说明，没有案例时把插件名交给 agent 准备（截图见 `docs/panel/`）；
+- 新增 **dsh-pet** 的 V0.1 真机片案例：`cases/v01/dsh-pet.json` + `studio/public/shots/dsh-pet/`（4 张插件真实界面截图，来自仓库 `assets/screenshots/`）→ `studio/out/promo-dsh-pet-intro-1080.mp4`（28s / 1080p / 840 帧；随机动作、余额气泡、多开同屏、桌宠配置四页）；面板输入 `dsh-pet` 即可直接生成；
+- 面板深色主题：主按钮文字改用 `--dsw-alias-label-primary-inverted`（深色下自动变深色字），终止任务按钮在深色下改用 red-600 + 白字，随系统深色/浅色切换都可见；
+- 面板帮助浮层：改为显示 V0.1 案例的真实分镜图（剧本 4 个功能页截图）与最终海报，生成过程说明也换成真机片工作流（素材/音效 → 渲染 840 帧 → 混流 → 封面）；
+- 面板文案：输入框下不再列出可用案例；操作说明改为「录入插件名称 + 点击后系统按工作流依次做什么」，说清 V0.1 出片步骤；
+- 面板改为走 **V0.1 真机管线**出片：输入插件名 → 匹配 `cases/v01/<slug>.json` → `scripts/film.mjs` 依次执行 make-v01-film（comp/素材/音效时间轴）→ 本地合成混音 → Onetake 渲染 840 帧（约 10 分钟）→ ffmpeg 混流 + 封面，面板显示两个阶段的进度；没有案例时提示并一键把需求交给 agent 按 SOP 准备真实界面截图与文案，不再渲染内置 Game Studio 案例；宿主新增 `type:"film"` 任务、`state.film` 运行时探测与 `startFilm()`，ffmpeg / python3 会同时探测 `/opt/homebrew/bin`、`/usr/local/bin` 等绝对路径，避免 GUI 最小 PATH 下误判环境缺失；
+- 面板帮助浮层：「这次介绍」改为「案例」；海报/分镜缩略图不再裁切，统一 130px 图块 + `object-fit:contain` 完整显示，浮层加宽到 440px 并在内容超高时内部滚动；
+- 面板：任务进行中时「开始生成」主按钮变为「终止任务」，点击即可停止当前任务；
+- 面板分镜阶段改为随任务进度逐张出现真实分镜图：`reel.mjs` 新增 `--storyboard`，按 PluginDemo 分镜时间轴逐张渲染 `studio/out/storyboard/`，服务端解析 `[reel] shot` 产物并通过 `shots` 返回，面板在图片出来前显示占位骨架、不再直接复用案例截图；
+- 面板生成框文案：去掉示例需求的自动预填，输入框为空并显示灰色提示「输入插件名称，AI 会自动生成这个插件的宣传视频」，字段标签改为「插件名称」，相关引导文案同步调整；
+- 面板帮助浮层：「这次介绍」改为「案例」；海报/分镜缩略图不再裁切，统一 130px 图块 + `object-fit:contain` 完整显示，浮层加宽到 440px 并在内容超高时内部滚动；
+- 新增 **dsh-whale-widget** 的 V0.1 案例：`cases/v01/dsh-whale-widget.json` → `studio/out/promo-whale-widget-intro-1080.mp4`（28s / 1080p；余额泡泡、自定义泡泡、音效提示、用量记录四页）；插件仓库缺功能截图，新增 `tools/v01-film/widget-shots/`（mock DSH 页面 + 宿主接口桩 + puppeteer 截图）来截取插件自己的真实 UI，见 `docs/case-dsh-whale-widget-v0.1.md`；
 - 新增 **V0.1 按插件名出片流水线**：`tools/v01-film/make-v01-film.mjs` + 通用模板 `tools/v01-film/comp-template.html` + `cases/v01/` + `docs/v01-film-sop.md`；一条命令从案例 JSON 生成 comp、四张功能图、config 和 61 事件音效时间轴，随后按固定步骤用 Onetake 渲染 28s / 1080p 成片；
 - 新增 dsh-guizang-design 的 V0.1 案例：`cases/v01/dsh-guizang-design.json` → `studio/out/promo-guizang-intro-1080.mp4`（结构：终端 → 鲸鱼 → Dock 三跳 → 插件页搜索/安装（蓝色进度）→ 四个功能页 → 片尾 AGPL-3.0 · 仓库）；案例说明见 `docs/case-guizang-v0.1.md`；
 - 新增 dsh-guizang-design 案例：`cases/dsh-guizang-design.json`（v1 模板）与规范版 30s 影片 `ReelGuizang`（严格按 `docs/promo-method-v0.1.md` 五段式 + `.research/dsh-reel-promo/better-sidebar-storyboard-v4.md` 分镜表）：

@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>DSH</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#f7f8fa;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif}
+  #bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+  #root{position:fixed;inset:0}
+  /* 挂件只在主聊天界面初始化：保留一个带 data-composer-input 的输入框（视觉上隐藏） */
+  #composer{position:absolute;left:30%;top:78%;width:640px;height:98px;opacity:0;pointer-events:none}
+</style></head><body>
+<img id="bg" src="/bg.png" alt="">
+<div id="root">
+  <div id="composer"><div id="composer-input" data-composer-input="true" contenteditable="false"
+    role="textbox" aria-multiline="true">描述你想要构建的内容，/ 调用指令，@ 文件或对话</div></div>
+</div>
+<script src="/widget.js"></script>
+</body></html>

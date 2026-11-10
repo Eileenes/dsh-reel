@@ -1,9 +1,9 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: a 插件宣传台 panel that turns a DSH plugin repo into promo videos/images locally; storyboard to promo image, poster and video in one page. Onetake is PolyForm Noncommercial, not a commercial license.",
+  "description": "dsh-reel-studio · 插件宣传台：输入插件名称，用 V0.1 真机管线（真实界面截图 + Onetake）生成 28s 宣传片 + 封面；安利墙 / 生成台 / 840 帧渲染 / 一键终止。Onetake is PolyForm Noncommercial.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,7 +19,8 @@
     "deepseek-harness",
     "remotion",
     "video",
-    "promo"
+    "promo",
+    "promo-video"
   ],
   "icon": "./icon.svg",
   "engines": {
@@ -38,16 +39,26 @@
     "README.zh-CN.md",
     "PUBLISHING.md",
     "LICENSE",
+    "CHANGELOG.md",
     "docs/promo-method-v0.1.md",
     "docs/case-better-sidebar-v0.1.md",
+    "docs/v01-film-sop.md",
     "docs/wechat-group.png",
+    "docs/panel",
     "studio/src",
     "studio/public/audio/bgm.wav",
     "studio/public/brand",
-    "studio/public/shots",
     "studio/package.json",
     "studio/remotion.config.ts",
-    "studio/tsconfig.json"
+    "studio/tsconfig.json",
+    "tools/v01-film",
+    "studio/scripts",
+    "studio/public/audio/v2/music-bed-30.wav",
+    "studio/public/shots/*.png",
+    "studio/public/shots/game-studio",
+    "studio/public/shots/dsh-pet",
+    "studio/public/shots/whale-widget",
+    "studio/public/shots/guizang"
   ],
   "exports": {
     ".": "./lib/index.js",
@@ -84,7 +95,7 @@
   },
   "scripts": {
     "typecheck": "cd studio && npm run typecheck",
-    "check": "npm run typecheck && node --check lib/index.js && node --check lib/server.js && node --check lib/plan.js && node --check lib/client.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
+    "check": "npm run typecheck && node --check lib/index.js && node --check lib/server.js && node --check lib/plan.js && node --check lib/client.js && node --check scripts/reel.mjs && node --check scripts/film.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
     "test": "node --test test/*.test.mjs",
     "reel": "node scripts/reel.mjs",
     "v01:film": "node tools/v01-film/make-v01-film.mjs",

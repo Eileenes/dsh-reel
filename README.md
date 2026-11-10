@@ -147,6 +147,8 @@ node scripts/reel.mjs --case cases/dsh-better-sidebar.json --dry-run
 
 # 生成视频、视频封面和宣传图
 node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode both
+# 面板同款：额外逐张渲染分镜图（studio/out/storyboard/）
+node scripts/reel.mjs --case cases/dsh-better-sidebar.json --mode both --storyboard
 ```
 
 也可以分别生成：
@@ -219,20 +221,25 @@ dsh plugin --profile scratch add github:Eileenes/dsh-reel
 
 ### 插件宣传台面板（Web UI）
 
-0.3.0 起插件带浏览器半边：安装后在 DSH 左侧栏多一个「插件宣传台」图标，主区域是一页式工作台（`lib/client.js`，React 直接渲染进 `main` slot，跟随 DSH 主题与语言）。
+0.4.0 起面板重构成「**安利墙 + 生成台**」两视图（`lib/client.js`，React 直接渲染进 `main` slot，跟随 DSH 主题与语言；颜色全部走 `--dsw-alias-*` 语义令牌，浅色/深色都可用）：
 
-页面把一次生成收成四步，且全部在同一页完成，没有单独的任务页：
+![安利墙](https://unpkg.com/dsh-reel-studio/docs/panel/panel-wall.jpg)
+![生成台](https://unpkg.com/dsh-reel-studio/docs/panel/panel-studio.jpg)
+![怎么用](https://unpkg.com/dsh-reel-studio/docs/panel/panel-guide.jpg)
 
-1. **看一眼案例**：当前内置一个案例（DSH Game Studio）收在右上角「?」里，鼠标悬停可以看案例信息和生成过程说明；
-2. **写一句需求**：在带引导的生成框里写一句需求、选择要产出什么；
-3. **点开始生成**：页面立刻展示分镜（开场 / 问题 / 方案 / 功能 / 用法 / 片尾），随后按步骤展示「宣传图 → 封面 → 成片」，每一步生成什么就显示什么；
-4. **看结果**：每一步的产物都在对应步骤里直接预览，不需要切换页面。
+- **安利墙**：每个 V0.1 案例一张卡（成片封面 + 两张功能页叠图 + 已出片状态 + 时间）；顶部输入框**录入插件名**，实时提示是否已有案例。
+- **生成台**：左「目标插件 + 说一句就改 + 最近出片」、中「衬线大标题 + 参数胶囊 + 封面叠图 + 四个功能页 + 主按钮 + 成片播放器」、右「6 格分镜 + 本片时间线 + 输出规格」；底部 dockbar 显示真实阶段（素材与音效 → 渲染 840 帧 → 混流 → 封面），任务进行中主按钮变「终止任务」。
+- **两条路径**：已有案例（如 `dsh-pet`、`dsh-whale-widget`、`dsh-guizang-design`）→ 输入名字或点卡片直接进生成台出片；没有案例 → 弹出「下一步」说明，把插件名交给 agent 按 SOP 收真实界面截图、写 `cases/v01/<slug>.json`，准备好后再回来出片。右上角 `?` / 输入框下「怎么用？完整说明」打开同一份四步说明。
 
-宿主接口在 [`lib/server.js`](lib/server.js)：`GET /dsh-reel/api/state`、`GET /dsh-reel/api/case?path=…`、`GET /dsh-reel/api/asset/*`（分镜截图）、`POST /dsh-reel/api/jobs`、`POST /dsh-reel/api/jobs/:id/cancel`、`GET /dsh-reel/api/out/*`（支持 Range）。分镜数据由 [`lib/plan.js`](lib/plan.js) 从案例 JSON 推导，agent 也可以用 `reel_storyboard` 工具拿到同一份分镜。面板自测：
+> **从 npm 安装的差异**：V0.1 真机片还依赖本机 Onetake 运行时和仓库内 `.research/onetake-promo` 工作目录，这两样不在 npm 包里；干净环境下面板会提示「环境未就绪」，此时仍可用 agent 工具 `reel_render` 走 v1 Remotion 模板出图/视频。完整真机片流程请用 GitHub 仓库安装。
+
+V0.1 真机片由 [`scripts/film.mjs`](scripts/film.mjs) 编排：make-v01-film（comp / 功能素材 / 音效时间轴）→ `studio/scripts/make_sfx_v2.py` 混音 → Onetake `render.py` 渲染 840 帧（本机约 10 分钟）→ ffmpeg 混流 + 截封面。需要本机 Onetake 运行时（`ONETAKE_PY`，默认 `~/Downloads/travel-capsule/…/.venv/bin/python`）和 ffmpeg（找不到 PATH 里的命令时会探测 `/opt/homebrew/bin`、`/usr/local/bin`；也可用 `FFMPEG_PATH` / `PYTHON3_PATH` 指定）；面板顶部会在缺失时提示。
+
+宿主接口在 [`lib/server.js`](lib/server.js)：`GET /dsh-reel/api/state`（含 `film` 运行时探测与 `cases` 列表）、`GET /dsh-reel/api/case?path=…`、`POST /dsh-reel/api/jobs`（`type:"film"` 走 V0.1 真机片，默认走 v1 模板任务）、`POST /dsh-reel/api/jobs/:id/cancel`、`GET /dsh-reel/api/out/*`（支持 Range）。分镜数据由 [`lib/plan.js`](lib/plan.js) 从案例 JSON 推导，agent 也可以用 `reel_storyboard` 工具拿到同一份分镜。面板自测：
 
 ```sh
-npm test                                        # 13 个用例：分镜推导 / 任务队列 / 进度解析 / Range / 路径越权 / 面板注册 / 渲染烟测
-node --check lib/client.js
+npm test                                        # 16 个用例：分镜推导 / 任务队列 / 进度解析 / 真机片任务 / Range / 路径越权 / 面板注册 / 渲染烟测
+npm run check                                   # tsc + 所有运行时脚本的 node --check
 DSH_REEL_DEPS=/path/to/node_modules npm test    # 未安装依赖时，借用现成 React 跑渲染烟测
 ```
 

@@ -1,18 +1,13 @@
 # Publishing to npm & the DSH plugin market
 
-This repo is **GitHub-install friendly**; `dsh-reel-studio@0.2.0` was published to npm on 2026-11-04 with a slim runtime-only package. The full studio/renderer remains GitHub-only. Read this before publishing again.
+This repo is **GitHub-install friendly**; `dsh-reel-studio` has been on npm since 2026-11-04 (`0.2.x` line), and `0.4.0` (2026-11-10) ships the 「安利墙 + 生成台」 panel plus the V0.1 film tooling. Read this before publishing again.
 
-## 1. Current state
+## 1. Current state (0.4.0)
 
-- `package.json` has `"private": false`; npm 0.2.0 is published.
-- The repo includes the full Remotion studio + demo media for development.
-- `reel_render` shells out to `scripts/reel.mjs` and needs `studio/` + Chrome.
-- The host package has **not been validated in a real DSH profile** yet.
-
-Do **not** publish this exact package to npm yet. Either:
-
-- keep it GitHub-only for now, or
-- split it into a small host package (`dsh-reel-studio`) + optional renderer/templates package.
+- `package.json` has `"private": false`, `version` 0.4.0.
+- npm package now ships `lib`, `scripts` (incl. `film.mjs`), `tools/v01-film`, `studio/scripts`, `cases` (both v1 + `cases/v01`), the four film-case screenshot sets, the audio bed the film pipeline needs, `studio/src` and `docs/panel` screenshots.
+- **Still GitHub-only at runtime**: the V0.1 real-UI film pipeline needs the local Onetake runtime (`.research/onetake-promo`, usually `ONETAKE_PY`) — it is not redistributable and not in the tarball. On a clean npm install the panel shows 「环境未就绪」; `reel_render` (Remotion v1) still works if Chrome is available.
+- The host package loads in a real DSH profile (panel + sidebar verified in the local desktop profile).
 
 ## 2. Make it npm-publishable
 
@@ -61,8 +56,12 @@ Checklist:
 
 ### DSH built-in market
 
-- The in-app market indexes npm bundles that declare `dsh.bundle`; there is no guaranteed public “submit” form.
-- Users can also add a custom index source in **Plugins → Discover**.
+- There is **no official index** inside DSH: `@deepseek-ai/dsh-plugin-market` only reads the index sources the user configures. The local profile uses `https://dshmarket.com/index.json`.
+- The real “market” is third-party maintained. `dsh-reel-studio` is already listed in both big indexes at `0.2.1`:
+  - `https://awesome-dsh-plugin.com/index.json` (= `https://dshmarket.com/index.json`), entry `data/plugins/Eileenes__dsh-reel.yml`;
+  - `https://cdn.dsh.so/market/index.json` (install-verified / risk-low).
+- Both indexes refresh versions automatically (awesome-dsh-plugin runs a daily probe ~02:23 UTC; dsh.so rebuilds on its own). Publishing to npm is therefore enough for the version bump to land — no submit command exists (`dsh plugin` has no market/publish subcommand, the market service is read-only).
+- To update the listing copy/description, open a PR against `awesome-dsh-plugin/awesome-dsh-plugin` editing `data/plugins/Eileenes__dsh-reel.yml`; dsh.so has a `/zh/submit/` form that opens an audit issue.
 - To maximize the chance of being indexed: publish to npm, keep `dsh.bundle` valid, use the `dsh-plugin` topic, and make the README self-contained.
 
 ## 4. Before publishing, answer these
@@ -76,7 +75,8 @@ Checklist:
 
 ## 5. 中文速览
 
-- 当前仓库适合 `github:` 安装，不适合直接 `npm publish`（`private: true`，且包含整个 studio/媒体）。
-- 上市场前：拆出轻量 host 包 → 去掉 private → 补 description/license/repository/keywords/engines → `npm pack --dry-run` 检查敏感内容 → scratch profile 验证 → `npm publish --access public`。
+- 0.4.0 已按精简 `files` 发布（不含 `studio/out`、`.research`、`node_modules`、旧活动素材；只保留模板需要的截图与音频）。
+- 上市场：npm publish 后等第三方索引的每日探针（≤1 天）自动更新版本；描述过时用 awesome-dsh-plugin 的 PR 或 dsh.so 的提交表单改。
+- 发布前仍要：`npm pack --dry-run` 检查敏感内容 → scratch profile 验证 → `npm publish --access public`。
 - 可发现性：公开仓库 + `dsh-plugin` 等 topics + README 首段写清解决什么问题；moc-chen 生态图按 npm/GitHub 每小时抓取；awesome 列表可提 PR；DSH 内置市场按 npm `dsh.bundle` 索引，没有保证的公开提交入口。
 - 不要把带个人路径、私有截图、密钥、`node_modules`、`out/` 的内容发上去。

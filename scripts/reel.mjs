@@ -43,6 +43,7 @@ if (args.includes('--help') || args.includes('-h')) {
       '  --browser-executable <p>  Chrome/Chromium binary handed to Remotion',
       '  --progress-json           print machine-readable "[reel] progress {...}" lines',
       '  --dry-run                 validate the case and write props; do not render',
+      '  --storyboard             also render one still per storyboard card (for the studio panel)',
       '  --help                    show this help',
     ].join('\n'),
   );
@@ -51,6 +52,7 @@ if (args.includes('--help') || args.includes('-h')) {
 
 const casePath = resolve(get('--case', join(root, 'cases', 'dsh-better-sidebar.json')));
 const dryRun = args.includes('--dry-run');
+const wantStoryboard = args.includes('--storyboard');
 const mode = get('--mode', 'both');
 const posterFrame = String(get('--poster-frame', '825'));
 if (!['video', 'image', 'both'].includes(mode)) {
@@ -158,7 +160,7 @@ console.log('[reel] browser ->', chrome || 'auto (Remotion default)');
  * output is captured, progress-looking lines are turned into progress events, and the
  * remaining lines are forwarded so the studio log shows the real render output.
  */
-const runRemotion = (argv) => {
+const runRemotion = (argv, {trackProgress = true} = {}) => {
   if (!progressJson) {
     const result = spawnSync(remotion, argv, {cwd: studio, stdio: 'inherit'});
     if (result.status !== 0) process.exit(result.status ?? 1);
@@ -176,12 +178,12 @@ const runRemotion = (argv) => {
         if (exact) {
           const done = Number(exact[1]);
           const total = Number(exact[2]);
-          if (total > 0) emitProgress(currentPhase, {done, total, progress: Math.min(1, done / total)});
+          if (trackProgress && total > 0) emitProgress(currentPhase, {done, total, progress: Math.min(1, done / total)});
           continue;
         }
         if (percent) {
           const value = Number(percent[1]);
-          if (value >= 0 && value <= 100 && value !== lastPercent) {
+          if (trackProgress && value >= 0 && value <= 100 && value !== lastPercent) {
             lastPercent = value;
             emitProgress(currentPhase, {progress: value / 100});
           }
@@ -208,7 +210,58 @@ const emitArtifact = (kind, path) => {
   console.log('[reel] ' + kind.padEnd(6) + ' ->', displayPath(path));
 };
 
+/**
+ * Storyboard cards in the same order the studio panel draws them (hook / problem /
+ * solution / features / how-to / proof), each paired with the reel frame that shows
+ * it. The frames follow the PluginDemo sequence layout (0-105-225-375-555-705-855).
+ */
+const storyboardPlan = () => {
+  const features = Array.isArray(caseData.features) ? caseData.features : [];
+  const shots = [
+    {id: 'hook', frame: 70},
+    {id: 'problem', frame: 205},
+    {id: 'solution', frame: 325},
+  ];
+  // Each feature card appears on its own beat inside the features scene (375-555).
+  const span = features.length > 1 ? Math.min(18, Math.floor(100 / (features.length - 1))) : 0;
+  features.forEach((feature, index) => {
+    shots.push({id: 'feature-' + String(feature?.no ?? index + 1), frame: 375 + 40 + index * span});
+  });
+  shots.push({id: 'howto', frame: 655});
+  shots.push({id: 'proof', frame: 815});
+  return shots;
+};
+
+const shotDir = join(outDir, 'storyboard');
+
+/** Render one still per storyboard card so the panel can show them appear while the job runs. */
+const renderStoryboard = async () => {
+  const shots = storyboardPlan();
+  mkdirSync(shotDir, {recursive: true});
+  console.log('[reel] rendering storyboard shots', shots.length);
+  emitProgress('render:storyboard', {progress: 0, done: 0, total: shots.length});
+  for (let index = 0; index < shots.length; index += 1) {
+    const shot = shots[index];
+    const name = slug + '-shot-' + String(index + 1).padStart(2, '0') + '-' + shot.id.replace(/[^a-z0-9]+/g, '-') + '.png';
+    const relFile = 'storyboard/' + name;
+    const file = join(shotDir, name);
+    try {
+      await runRemotion(
+        ['still', 'src/index.ts', 'PluginDemo', remotionOutput(relFile), '--frame=' + shot.frame, '--scale=0.5', propsArg, ...browserArgs, '--overwrite'],
+        {trackProgress: false},
+      );
+      console.log('[reel] shot ' + index + ' ->', displayPath(file));
+    } catch (err) {
+      // A missing storyboard tile must not block the real outputs.
+      console.warn('[reel] storyboard shot ' + index + ' failed:', err?.message ?? err);
+    }
+    emitProgress('render:storyboard', {progress: (index + 1) / shots.length, done: index + 1, total: shots.length});
+  }
+};
+
 try {
+  if (wantStoryboard) await renderStoryboard();
+
   // Stills first: the 3:4 promo card and the poster are quick, so a viewer sees
   // a finished image long before the video finishes rendering.
   if (mode !== 'video') {

@@ -31,6 +31,10 @@ function makeRoot() {
     join(root, 'cases', 'v01', 'v1.json'),
     JSON.stringify({slug: 'v1', plugin: {cardTitle: 'V1 case', cardDesc: 'v01 card', handle: 'h', version: '2.0.0'}, features: []}),
   );
+  writeFileSync(
+    join(root, 'cases', 'v01', 'film-demo.json'),
+    JSON.stringify({slug: 'film-demo', plugin: {query: 'film-demo', name: 'Film Demo', cardTitle: 'Film Demo'}, features: []}),
+  );
   return root;
 }
 
@@ -53,10 +57,13 @@ function makeFakeSpawn(script) {
 
 const successScript = (root) => (child) => {
   setTimeout(() => {
+    mkdirSync(join(root, 'studio', 'out', 'storyboard'), {recursive: true});
+    writeFileSync(join(root, 'studio', 'out', 'storyboard', 'demo-shot-01-hook.png'), Buffer.from('PNG'));
     child.stdout.emit(
       'data',
       [
         '[reel] props -> studio/out/props-demo.json',
+        '[reel] shot 0 -> studio/out/storyboard/demo-shot-01-hook.png',
         '[reel] progress {"phase":"render:video","progress":0.5,"done":50,"total":100}',
       ].join('\n') + '\n',
     );
@@ -69,7 +76,7 @@ const successScript = (root) => (child) => {
 
 test('render job streams progress, parses outputs and settles', async () => {
   const root = makeRoot();
-  const {spawnProcess} = makeFakeSpawn(successScript(root));
+  const {spawnProcess, calls} = makeFakeSpawn(successScript(root));
   const studio = createStudio({root, spawnProcess});
   try {
     const job = studio.startRender({casePath: join(root, 'cases', 'demo.json'), mode: 'video'});
@@ -80,10 +87,19 @@ test('render job streams progress, parses outputs and settles', async () => {
     assert.equal(finished.outputs.video, join(root, 'studio', 'out', 'demo-demo.mp4'));
     assert.equal(finished.outputs.poster, join(root, 'studio', 'out', 'demo-poster.png'));
     assert.ok(finished.log.some((line) => line.includes('props-demo.json')));
+    assert.equal(finished.shots[0], join(root, 'studio', 'out', 'storyboard', 'demo-shot-01-hook.png'));
 
     const view = studio.jobView(finished, {logTail: 10});
     assert.equal(view.outputs.video.url, '/dsh-reel/api/out/demo-demo.mp4');
+    assert.equal(view.shots.length, 1);
+    assert.equal(view.shots[0].index, 0);
+    assert.equal(view.shots[0].url, '/dsh-reel/api/out/storyboard/demo-shot-01-hook.png');
     assert.equal(studio.displayPath(finished.outputs.video), join('studio', 'out', 'demo-demo.mp4'));
+
+    // The studio asks the renderer for storyboard stills as well as the real artifacts.
+    const spawnCalls = calls.map((call) => call.args);
+    assert.ok(spawnCalls.length === 1);
+    assert.ok(spawnCalls[0].includes('--storyboard'));
   } finally {
     studio.dispose();
     rmSync(root, {recursive: true, force: true});
@@ -96,11 +112,12 @@ test('cases are listed with both plain and v01 kinds', async () => {
   const studio = createStudio({root, spawnProcess});
   try {
     const cases = studio.listCases();
-    assert.equal(cases.length, 2);
-    assert.equal(cases.find((item) => item.kind === 'case').title, 'Demo');
-    assert.equal(cases.find((item) => item.kind === 'case').renderable, true);
-    assert.equal(cases.find((item) => item.kind === 'v01').title, 'V1 case');
-    assert.equal(cases.find((item) => item.kind === 'v01').renderable, false);
+    assert.equal(cases.length, 3);
+    assert.equal(cases.find((item) => item.id === 'cases/demo.json').title, 'Demo');
+    assert.equal(cases.find((item) => item.id === 'cases/demo.json').renderable, true);
+    assert.equal(cases.find((item) => item.id === 'cases/v01/v1.json').title, 'V1 case');
+    assert.equal(cases.find((item) => item.id === 'cases/v01/v1.json').renderable, false);
+    assert.equal(cases.filter((item) => item.kind === 'v01').length, 2);
   } finally {
     rmSync(root, {recursive: true, force: true});
   }
@@ -118,6 +135,97 @@ test('validation rejects unknown cases and bad modes', () => {
       /posterFrame/,
     );
   } finally {
+    rmSync(root, {recursive: true, force: true});
+  }
+});
+
+test('film jobs run the V0.1 pipeline and expose video/poster artifacts', async () => {
+  const root = makeRoot();
+  const spawnCalls = [];
+  const spawnProcess = (command, args, options) => {
+    spawnCalls.push({command, args, options});
+    const child = new EventEmitter();
+    child.stdout = new EventEmitter();
+    child.stderr = new EventEmitter();
+    child.killed = null;
+    child.kill = (signal) => {
+      child.killed = signal ?? 'SIGTERM';
+    };
+    setTimeout(() => {
+      mkdirSync(join(root, 'studio', 'out'), {recursive: true});
+      writeFileSync(join(root, 'studio', 'out', 'promo-film-demo-intro-1080.mp4'), Buffer.from('MP4'));
+      writeFileSync(join(root, 'studio', 'out', 'promo-film-demo-intro-poster.png'), Buffer.from('PNG'));
+      child.stdout.emit(
+        'data',
+        [
+          '[reel] progress {"phase":"render:video","progress":0.5,"done":420,"total":840}',
+          '[reel] video  -> studio/out/promo-film-demo-intro-1080.mp4',
+          '[reel] poster -> studio/out/promo-film-demo-intro-poster.png',
+        ].join('\n') + '\n',
+      );
+      child.emit('close', 0, null);
+    }, 5);
+    return child;
+  };
+  const filmRuntime = {
+    available: true,
+    workdir: join(root, '.research', 'onetake-promo'),
+    python: join(root, 'fake-onetake-python'),
+    ffmpeg: true,
+    workdirReady: true,
+  };
+  const studio = createStudio({root, spawnProcess, filmRuntime});
+  try {
+    assert.equal(studio.state().film.available, true);
+    const job = studio.startFilm({casePath: 'cases/v01/film-demo.json'});
+    assert.equal(job.type, 'film');
+    assert.equal(spawnCalls.length, 1);
+    assert.match(spawnCalls[0].args[0], /scripts[\\/]film\.mjs$/);
+    assert.ok(spawnCalls[0].args.includes('--case'));
+    assert.ok(spawnCalls[0].args.includes(join(root, 'cases', 'v01', 'film-demo.json')));
+
+    const finished = await studio.wait(job.id);
+    assert.equal(finished.state, 'done');
+    assert.equal(finished.type, 'film');
+    const view = studio.jobView(finished, {logTail: 10});
+    assert.equal(view.outputs.video.url, '/dsh-reel/api/out/promo-film-demo-intro-1080.mp4');
+    assert.equal(view.outputs.poster.url, '/dsh-reel/api/out/promo-film-demo-intro-poster.png');
+    assert.equal(finished.phase, 'done');
+  } finally {
+    studio.dispose();
+    rmSync(root, {recursive: true, force: true});
+  }
+});
+
+test('film validation only accepts cases/v01 cases', () => {
+  const root = makeRoot();
+  const filmRuntime = {available: true, workdir: root, python: 'python', ffmpeg: true, workdirReady: true};
+  const studio = createStudio({root, spawnProcess: () => {
+    throw new Error('should not spawn');
+  }, filmRuntime});
+  try {
+    assert.throws(() => studio.startFilm({}), /film case path is required/);
+    assert.throws(() => studio.startFilm({casePath: 'cases/missing.json'}), /film case not found/);
+    assert.throws(() => studio.startFilm({casePath: 'cases/demo.json'}), /cases\/v01/);
+  } finally {
+    studio.dispose();
+    rmSync(root, {recursive: true, force: true});
+  }
+});
+
+test('film jobs are rejected when the Onetake runtime is missing', () => {
+  const root = makeRoot();
+  const studio = createStudio({
+    root,
+    spawnProcess: () => {
+      throw new Error('should not spawn');
+    },
+    filmRuntime: {available: false, workdir: root, python: null, ffmpeg: false, workdirReady: false},
+  });
+  try {
+    assert.throws(() => studio.startFilm({casePath: 'cases/v01/film-demo.json'}), /V0\.1 film environment is not ready/);
+  } finally {
+    studio.dispose();
     rmSync(root, {recursive: true, force: true});
   }
 });
@@ -160,10 +268,11 @@ test('HTTP API serves state, jobs, outputs with Range and blocks traversal', asy
   try {
     const state = await fetch(base + '/dsh-reel/api/state').then((res) => res.json());
     assert.equal(state.version, '9.9.9');
-    assert.equal(state.cases.length, 2);
+    assert.equal(state.cases.length, 3);
     assert.equal(state.env.renderer.found, false);
     assert.equal(state.defaultCase.id, 'cases/demo.json');
     assert.equal(typeof state.clientRev, 'string');
+    assert.equal(typeof state.film.available, 'boolean');
 
     const caseJson = await fetch(base + '/dsh-reel/api/case?path=' + encodeURIComponent('cases/demo.json')).then((res) => res.json());
     assert.equal(caseJson.case.plugin.name, 'Demo');
@@ -176,6 +285,13 @@ test('HTTP API serves state, jobs, outputs with Range and blocks traversal', asy
     assert.equal(await asset.text(), 'PNG');
     const badAsset = await fetch(base + '/dsh-reel/api/asset/..%2Fpackage.json');
     assert.equal(badAsset.status, 404);
+
+    const filmWithoutRuntime = await fetch(base + '/dsh-reel/api/jobs', {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({type: 'film', casePath: 'cases/v01/film-demo.json'}),
+    });
+    assert.equal(filmWithoutRuntime.status, 400);
 
     const created = await fetch(base + '/dsh-reel/api/jobs', {
       method: 'POST',
