@@ -17,6 +17,8 @@ function makeRoot() {
   writeFileSync(join(root, 'studio', 'public', 'shots', 'demo.png'), Buffer.from('PNG'));
   mkdirSync(join(root, 'scripts'), {recursive: true});
   writeFileSync(join(root, 'package.json'), JSON.stringify({name: 'dsh-reel-studio', version: '9.9.9'}));
+  mkdirSync(join(root, 'lib'), {recursive: true});
+  writeFileSync(join(root, 'lib', 'client.js'), '// test bundle');
   writeFileSync(
     join(root, 'cases', 'demo.json'),
     JSON.stringify({
@@ -161,6 +163,7 @@ test('HTTP API serves state, jobs, outputs with Range and blocks traversal', asy
     assert.equal(state.cases.length, 2);
     assert.equal(state.env.renderer.found, false);
     assert.equal(state.defaultCase.id, 'cases/demo.json');
+    assert.equal(typeof state.clientRev, 'string');
 
     const caseJson = await fetch(base + '/dsh-reel/api/case?path=' + encodeURIComponent('cases/demo.json')).then((res) => res.json());
     assert.equal(caseJson.case.plugin.name, 'Demo');
