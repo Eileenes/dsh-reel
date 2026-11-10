@@ -1,9 +1,9 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: turn a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp + storyboard method). Onetake is PolyForm Noncommercial, not a commercial license.",
+  "description": "dsh-reel-studio: turn a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp + storyboard method) and a Reel Studio panel. Onetake is PolyForm Noncommercial, not a commercial license.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,47 +21,71 @@
     "video",
     "promo"
   ],
+  "icon": "./icon.svg",
   "engines": {
-    "node": ">=22"
+    "node": ">=22",
+    "dsh": ">=0.2.0-rc.2 <0.3.0"
   },
   "main": "lib/index.js",
   "files": [
     "lib",
     "scripts",
+    "cases",
     "cordis.patch.yml",
+    "locale",
+    "icon.svg",
     "README.md",
     "README.zh-CN.md",
     "PUBLISHING.md",
     "LICENSE",
     "docs/promo-method-v0.1.md",
     "docs/case-better-sidebar-v0.1.md",
-    "docs/wechat-group.png"
+    "docs/wechat-group.png",
+    "studio/src",
+    "studio/public/audio/bgm.wav",
+    "studio/public/brand",
+    "studio/public/shots",
+    "studio/package.json",
+    "studio/remotion.config.ts",
+    "studio/tsconfig.json"
   ],
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./lib/client.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
     "./package.json": "./package.json"
   },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
     }
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@react-three/fiber": "8.17.10",
     "@remotion/cli": "4.0.409",
-    "remotion": "4.0.409",
+    "@remotion/three": "4.0.409",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "remotion": "4.0.409",
+    "three": "0.169.0"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": "*"
   },
   "scripts": {
     "typecheck": "cd studio && npm run typecheck",
-    "check": "npm run typecheck && node --check lib/index.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
+    "check": "npm run typecheck && node --check lib/index.js && node --check lib/server.js && node --check lib/client.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
+    "test": "node --test test/*.test.mjs",
     "reel": "node scripts/reel.mjs",
     "v01:film": "node tools/v01-film/make-v01-film.mjs",
     "campaign:design": "node design/build.mjs && bash design/build.sh",
