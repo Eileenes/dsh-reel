@@ -1,6 +1,6 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": false,
   "type": "module",
   "description": "dsh-reel-studio · 插件宣传台：输入插件名称，用 V0.1 真机管线（真实界面截图 + Onetake）生成 28s 宣传片 + 封面；安利墙 / 生成台 / 840 帧渲染 / 一键终止。Onetake is PolyForm Noncommercial.",
@@ -39,7 +39,7 @@
     "locale",
     "icon.svg",
     "README.md",
-    "README.zh-CN.md",
+    "docs/README.zh-CN.md",
     "PUBLISHING.md",
     "LICENSE",
     "CHANGELOG.md",

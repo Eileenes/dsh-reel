@@ -282,7 +282,7 @@ campaign 片为 H.264 / yuv420p / AAC 48kHz 双声道，24.0s（720 帧 @30fps�
 | [渲染 CLI](https://github.com/Eileenes/dsh-reel/blob/main/scripts/reel.mjs) | v1 参数、浏览器查找与输出路径 |
 | [Composition 定义](https://github.com/Eileenes/dsh-reel/blob/main/studio/src/Root.tsx) | v1 视频时长、帧率与两种画幅 |
 | [发布检查清单](https://github.com/Eileenes/dsh-reel/blob/main/PUBLISHING.md) | npm 打包与 DSH 市场发布的规划 |
-| [原中文说明](https://github.com/Eileenes/dsh-reel/blob/main/README.zh-CN.md) | 原型制作与初版使用记录 |
+| [原中文说明](https://github.com/Eileenes/dsh-reel/blob/main/docs/README.zh-CN.md) | 原型制作与初版使用记录 |
 
 发布清单中关于根目录 `package.json` 的 `private: true` 描述已过时：当前根包是 `private: false`，`studio` 子包仍是私有包。原中文说明中的“扫描／规划自动化”应结合上面的实际实现理解。打包状态以当前配置为准，发布和兼容性仍需要单独验证。
 

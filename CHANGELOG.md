@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 — 2026-11-11
+
+- docs: move the historical Chinese README out of the package root (`docs/README.zh-CN.md`), so npm renders the current `README.md` as the package readme instead of the stale "历史中文说明" file.
+
 ## 0.4.0 — 2026-11-10
 
 - 面板重构为「**安利墙 + 生成台**」两视图（参考自媒体工作台的设计语言：图标轨、玻璃胶囊导航、衬线大标题、mono 数字、封面/分镜叠图、真实阶段 dockbar）；顶部输入框录入插件名并实时提示是否已有案例，`?` 打开四步「怎么用」说明，没有案例时把插件名交给 agent 准备（截图见 `docs/panel/`）；
