@@ -217,16 +217,16 @@ dsh plugin --profile scratch add github:Eileenes/dsh-reel
 
 宿主运行还依赖兼容的 `@deepseek-ai/dsh-tools`、Remotion 和浏览器。**真实 DSH profile 的安装、加载、工具返回值、热更新与卸载仍待验证**，不据包声明推断已经兼容所有 DSH 版本或已经发布到 npm。
 
-### 插件介绍宣传台面板（Web UI）
+### 插件宣传台面板（Web UI）
 
-0.3.0 起插件带浏览器半边：安装后在 DSH 左侧栏多一个「插件介绍宣传台」图标，主区域是一页式工作台（`lib/client.js`，React 直接渲染进 `main` slot，跟随 DSH 主题与语言）。
+0.3.0 起插件带浏览器半边：安装后在 DSH 左侧栏多一个「插件宣传台」图标，主区域是一页式工作台（`lib/client.js`，React 直接渲染进 `main` slot，跟随 DSH 主题与语言）。
 
 页面把一次生成收成四步，且全部在同一页完成，没有单独的任务页：
 
-1. **看一眼案例**：当前内置一个案例（DSH Game Studio）收在右上角「?」里，展开可看 4 个功能点和截图；
-2. **写一句需求**：默认填案例简介，可改成这次想强调的文案；
-3. **点开始生成**：页面立刻展示分镜（开场 / 问题 / 一句话方案 / 功能 / 怎么用 / 数据与片尾），随后按「宣传图 → 封面 → 成片」的顺序渲染，每完成一个就出现在产物区；
-4. **看结果**：视频/图片直接预览；历史产物在「最近产物」里。
+1. **看一眼案例**：当前内置一个案例（DSH Game Studio）收在右上角「?」里，鼠标悬停可以看案例信息和生成过程说明；
+2. **写一句需求**：在带引导的生成框里写一句需求、选择要产出什么；
+3. **点开始生成**：页面立刻展示分镜（开场 / 问题 / 方案 / 功能 / 用法 / 片尾），随后按步骤展示「宣传图 → 封面 → 成片」，每一步生成什么就显示什么；
+4. **看结果**：每一步的产物都在对应步骤里直接预览，不需要切换页面。
 
 宿主接口在 [`lib/server.js`](lib/server.js)：`GET /dsh-reel/api/state`、`GET /dsh-reel/api/case?path=…`、`GET /dsh-reel/api/asset/*`（分镜截图）、`POST /dsh-reel/api/jobs`、`POST /dsh-reel/api/jobs/:id/cancel`、`GET /dsh-reel/api/out/*`（支持 Range）。分镜数据由 [`lib/plan.js`](lib/plan.js) 从案例 JSON 推导，agent 也可以用 `reel_storyboard` 工具拿到同一份分镜。面板自测：
 

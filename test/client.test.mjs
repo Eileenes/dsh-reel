@@ -41,5 +41,5 @@ test('client registers the Reel Studio sidebar panel and main page', async () =>
   assert.equal(panel.id, 'dsh-reel');
   assert.equal(main.key, 'dsh-reel');
   assert.equal(panel.order, 30);
-  assert.equal(panel.label(), '插件介绍宣传台');
+  assert.equal(panel.label(), '插件宣传台');
 });

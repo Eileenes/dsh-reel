@@ -62,7 +62,7 @@ test('the Reel Studio page renders real markup with React', async (t) => {
   assert.ok(main, 'main page is registered');
   const html = renderToStaticMarkup(React.createElement(main.component));
   assert.ok(html.length > 1000, 'page renders a real tree');
-  assert.match(html, /插件介绍宣传台/);
+  assert.match(html, /插件宣传台/);
   assert.match(html, /reel-page/);
   assert.match(html, /--dsw-alias-bg-base/, 'styles use host theme tokens');
 });

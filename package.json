@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: a 插件介绍宣传台 panel that turns a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline and a single-case storyboard-to-reel workspace. Onetake is PolyForm Noncommercial, not a commercial license.",
+  "description": "dsh-reel-studio: a 插件宣传台 panel that turns a DSH plugin repo into promo videos/images locally; storyboard to promo image, poster and video in one page. Onetake is PolyForm Noncommercial, not a commercial license.",
   "license": "MIT",
   "repository": {
     "type": "git",

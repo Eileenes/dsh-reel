@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Plugin Intro Studio",
-    "description": "Turn a plugin intro into a promo: write one line, then storyboard, promo image, poster and video are generated in the panel, in order."
+    "title": "Plugin Promo Studio",
+    "description": "Write one requirement, pick the outputs, and the panel generates the storyboard, promo image, poster and video in order."
   }
 }
