@@ -1,4 +1,21 @@
-export const plugin = {
+export type ReelPlugin = {
+  name: string;
+  handle: string;
+  version: string;
+  repo: string;
+  install: string;
+  downloads: number;
+  stars: number;
+  tagline: string;
+  /** 兼容的 DSH 版本范围，显示在 proof 场景的说明行；不带 "DSH " 前缀 */
+  dshRange: string;
+  /** 'none' 隐藏 hook 场景左下角的 DSH 品牌字标（给非 DSH 插件的产品用） */
+  houseBrand?: 'dsh' | 'none';
+  /** proof 场景说明行里 repo 与版本之间的短语；默认 "DSH " + dshRange */
+  footer?: string;
+};
+
+export const plugin: ReelPlugin = {
   name: 'Better Sidebar',
   handle: 'dsh-better-sidebar',
   version: '0.28.0',
@@ -75,9 +92,13 @@ export type ReelPromo = {
     sub?: string;
     points: string[];
     img?: string;
+    frameTitle?: string;
+    /** 浏览器外壳配色；默认浅色。深色页面配 dark 更协调 */
+    frameTheme?: 'light' | 'dark';
   };
   featuresScene?: {
     title: string;
+    kicker?: string;
     note?: string;
     footnote?: string;
   };
@@ -87,6 +108,7 @@ export type ReelPromo = {
   };
   proof?: {
     title: string;
+    kicker?: string;
     stats: {num: string; label: string}[];
     note?: string;
   };
@@ -101,7 +123,7 @@ export const promo: ReelPromo = {
 };
 
 export type ReelData = {
-  plugin: typeof plugin;
+  plugin: ReelPlugin;
   features: ReelFeature[];
   promo: ReelPromo;
 };

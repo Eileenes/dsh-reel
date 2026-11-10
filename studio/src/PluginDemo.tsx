@@ -230,8 +230,14 @@ const SceneHook: React.FC = () => {
       <div style={{position: 'absolute', left: 110, bottom: 96}}>
         <Rise delay={44}>
           <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
-            <DshWordmark scale={0.9} />
-            <span style={{fontFamily: MONO, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 2}}>PLUGIN</span>
+            {plugin.houseBrand === 'none' ? (
+              <span style={{fontFamily: MONO, fontSize: 14, color: 'rgba(255,255,255,0.4)', letterSpacing: 3}}>MADE WITH DSH-REEL</span>
+            ) : (
+              <>
+                <DshWordmark scale={0.9} />
+                <span style={{fontFamily: MONO, fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: 2}}>PLUGIN</span>
+              </>
+            )}
           </div>
         </Rise>
       </div>
@@ -311,7 +317,7 @@ const SceneSolution: React.FC = () => {
       </div>
       <div style={{position: 'absolute', right: 62, top: 168 + float, opacity: enter, transform: 'translateY(' + (1 - enter) * 70 + 'px) scale(' + (0.96 + enter * 0.04) + ')'}}>
         <div style={{position: 'absolute', inset: -60, background: 'radial-gradient(circle, rgba(77,107,254,0.28), transparent 66%)', filter: 'blur(30px)'}} />
-        <BrowserFrame src={sol?.img ?? 'shots/files-tree.png'} width={1010} title={'dsh / ' + plugin.handle} />
+        <BrowserFrame src={sol?.img ?? 'shots/files-tree.png'} width={1010} theme={sol?.frameTheme ?? 'light'} title={sol?.frameTitle ?? 'dsh / ' + plugin.handle} />
         {plugin.downloads > 0 ? (
           <div style={{position: 'absolute', left: -70, bottom: -54, padding: '18px 24px', borderRadius: 18, background: 'rgba(8,13,26,0.92)', border: '1px solid rgba(94,242,194,0.35)', boxShadow: '0 30px 80px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', gap: 14}}>
             <span style={{width: 10, height: 10, borderRadius: 99, background: C.mint, boxShadow: '0 0 18px ' + C.mint}} />
@@ -373,7 +379,7 @@ const SceneFeatures: React.FC = () => {
     <AbsoluteFill style={{fontFamily: ZH}}>
       <div style={{position: 'absolute', left: 110, top: 92}}>
         <Rise delay={2} distance={20}>
-          <Pill color={C.blue}>THE WORKBENCH</Pill>
+          <Pill color={C.blue}>{promo.featuresScene?.kicker ?? 'THE WORKBENCH'}</Pill>
         </Rise>
       </div>
       <div style={{position: 'absolute', left: 106, top: 170, width: 1700, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between'}}>
@@ -482,7 +488,7 @@ const SceneProof: React.FC = () => {
     <AbsoluteFill style={{fontFamily: ZH}}>
       <div style={{position: 'absolute', left: 110, top: 96}}>
         <Rise delay={2} distance={20}>
-          <Pill color={C.mint}>TRACTION</Pill>
+          <Pill color={C.mint}>{promo.proof?.kicker ?? 'TRACTION'}</Pill>
         </Rise>
       </div>
       <div style={{position: 'absolute', left: 106, top: 176, width: 1600}}>
@@ -535,7 +541,9 @@ const SceneProof: React.FC = () => {
       <div style={{position: 'absolute', left: 0, right: 0, top: 790, textAlign: 'center'}}>
         <Rise delay={92}>
           <div style={{fontSize: 26, color: 'rgba(244,247,255,0.72)'}}>{promo.proof?.note ?? '装上它，把侧栏变成工作台。'}</div>
-          <div style={{fontFamily: MONO, fontSize: 16, color: C.dim, marginTop: 12}}>{plugin.repo} · DSH {plugin.dshRange} · v{plugin.version}</div>
+          <div style={{fontFamily: MONO, fontSize: 16, color: C.dim, marginTop: 12}}>
+            {plugin.repo} · {plugin.footer ?? 'DSH ' + plugin.dshRange} · v{plugin.version}
+          </div>
         </Rise>
       </div>
     </AbsoluteFill>

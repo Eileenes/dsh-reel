@@ -1,0 +1,39 @@
+{
+  "slug": "dsh-pet",
+  "plugin": {
+    "query": "dsh-pet",
+    "cardTitle": "dsh-pet",
+    "cardMeta": "PC2005-cloud · 0.3.8 · 桌面宠物",
+    "cardDesc": "吃白饭的蓝毛小女仆，赖在 DSH 里不走了。",
+    "kicker": "DSH PLUGIN · DESKTOP PET",
+    "name": "蓝毛小女仆",
+    "handle": "PC2005-cloud/dsh-pet",
+    "tagline": "一只住在 DSH 里的蓝毛小女仆：会动、会记账、会陪你唠两句。",
+    "install": "dsh plugin --profile web add dsh-pet",
+    "licenseLine": "MIT · github.com/PC2005-cloud/dsh-pet",
+    "termTitle": "dsh-pet — zsh — 120×32",
+    "termFooter": "🐾  dsh-pet · promo"
+  },
+  "features": [
+    {
+      "tab": "随机动作",
+      "caption": "待机呼吸、打瞌睡、玩魔方，97 个透明动画无缝随机播放",
+      "image": "studio/public/shots/dsh-pet/pet-animations.jpg"
+    },
+    {
+      "tab": "余额气泡",
+      "caption": "点一下宠物：余额与 5h 额度用到哪了，一屏看完",
+      "image": "studio/public/shots/dsh-pet/pet-balance.jpg"
+    },
+    {
+      "tab": "多开同屏",
+      "caption": "想要几只养几只，每只独立大小、位置和动作",
+      "image": "studio/public/shots/dsh-pet/pet-multi.jpg"
+    },
+    {
+      "tab": "桌宠配置",
+      "caption": "大小、位置、余额、系统通知都能调，右键还能点播动作",
+      "image": "studio/public/shots/dsh-pet/pet-settings.jpg"
+    }
+  ]
+}

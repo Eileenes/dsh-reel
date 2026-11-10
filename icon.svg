@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Reel Studio">
+  <defs>
+    <linearGradient id="reel-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f2a44"/>
+      <stop offset="1" stop-color="#0c1220"/>
+    </linearGradient>
+    <linearGradient id="reel-accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5ef2c2"/>
+      <stop offset="1" stop-color="#4d6bfe"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#reel-bg)"/>
+  <rect x="10" y="18" width="44" height="28" rx="5" fill="none" stroke="#5ef2c2" stroke-width="2.4"/>
+  <path d="M10 26h44" stroke="#5ef2c2" stroke-width="2" opacity=".7"/>
+  <path d="M18 18l4-6M28 18l4-6M38 18l4-6" stroke="#4d6bfe" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="20" cy="34" r="2" fill="#5ef2c2"/>
+  <circle cx="20" cy="40" r="2" fill="#5ef2c2" opacity=".6"/>
+  <path d="M32 30.5l9 5-9 5z" fill="url(#reel-accent)"/>
+  <rect x="16" y="50" width="32" height="3" rx="1.5" fill="#5ef2c2" opacity=".35"/>
+</svg>

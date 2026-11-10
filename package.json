@@ -1,9 +1,9 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "private": false,
   "type": "module",
-  "description": "dsh-reel-studio: turn a DSH plugin repo into promo videos/images locally; includes the V0.1 real-UI promo pipeline (Onetake reference comp + storyboard method). Onetake is PolyForm Noncommercial, not a commercial license.",
+  "description": "dsh-reel-studio · 插件宣传台：输入插件名称，用 V0.1 真机管线（真实界面截图 + Onetake）生成 28s 宣传片 + 封面；安利墙 / 生成台 / 840 帧渲染 / 一键终止。Onetake is PolyForm Noncommercial.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,49 +19,87 @@
     "deepseek-harness",
     "remotion",
     "video",
-    "promo"
+    "promo",
+    "promo-video"
   ],
+  "icon": "./icon.svg",
   "engines": {
-    "node": ">=22"
+    "node": ">=22",
+    "dsh": ">=0.2.0-rc.2 <0.3.0"
   },
   "main": "lib/index.js",
   "files": [
     "lib",
     "scripts",
+    "cases/dsh-better-sidebar.json",
+    "cases/dsh-game-studio.json",
+    "cases/dsh-guizang-design.json",
+    "cases/v01",
     "cordis.patch.yml",
+    "locale",
+    "icon.svg",
     "README.md",
     "README.zh-CN.md",
     "PUBLISHING.md",
     "LICENSE",
+    "CHANGELOG.md",
     "docs/promo-method-v0.1.md",
     "docs/case-better-sidebar-v0.1.md",
-    "docs/wechat-group.png"
+    "docs/v01-film-sop.md",
+    "docs/wechat-group.png",
+    "docs/panel",
+    "studio/src",
+    "studio/scripts/*.py",
+    "studio/public/audio/bgm.wav",
+    "studio/public/brand",
+    "studio/package.json",
+    "studio/remotion.config.ts",
+    "studio/tsconfig.json",
+    "tools/v01-film",
+    "studio/public/audio/v2/music-bed-30.wav",
+    "studio/public/shots/*.png",
+    "studio/public/shots/game-studio",
+    "studio/public/shots/dsh-pet",
+    "studio/public/shots/whale-widget",
+    "studio/public/shots/guizang"
   ],
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./lib/client.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
     "./package.json": "./package.json"
   },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
     }
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@react-three/fiber": "8.17.10",
     "@remotion/cli": "4.0.409",
-    "remotion": "4.0.409",
+    "@remotion/three": "4.0.409",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "remotion": "4.0.409",
+    "three": "0.169.0"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": "*"
   },
   "scripts": {
     "typecheck": "cd studio && npm run typecheck",
-    "check": "npm run typecheck && node --check lib/index.js && node --check scripts/reel.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
+    "check": "npm run typecheck && node --check lib/index.js && node --check lib/server.js && node --check lib/plan.js && node --check lib/client.js && node --check scripts/reel.mjs && node --check scripts/film.mjs && node --check design/build.mjs && node --check tools/v01-film/make-v01-film.mjs",
+    "test": "node --test test/*.test.mjs",
     "reel": "node scripts/reel.mjs",
     "v01:film": "node tools/v01-film/make-v01-film.mjs",
     "campaign:design": "node design/build.mjs && bash design/build.sh",
@@ -72,5 +110,10 @@
     "home:audio": "python3 studio/scripts/make_home_audio.py && ffmpeg -y -i studio/public/sorenyeah/audio/mix.wav -b:a 192k studio/public/sorenyeah/audio/preview-mix.mp3",
     "home:render": "cd studio && node_modules/.bin/remotion render src/sorenyeah/entry.tsx SorenyeahHome out/sorenyeah-home.mp4 --codec h264 --crf 16",
     "home:poster": "cd studio && node_modules/.bin/remotion still src/sorenyeah/entry.tsx SorenyeahPoster out/sorenyeah-poster.png --frame=0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
   }
 }

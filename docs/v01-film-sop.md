@@ -39,6 +39,19 @@ mkdir -p /tmp/<slug>-pkg && tar -xzf /tmp/<slug>-pkg/<包名>-*.tgz -C /tmp/<slu
 
 功能截图要求：16:10 或宽幅，宽 ≥ 1440px；优先插件真实输出/页面截图。宽幅图会被 comp 上下留边（参考片也这样），可接受。
 
+### 没有现成截图怎么办（界面类 / 挂件类插件）
+
+如果插件仓库里只有一张 hero 图，不要拿无关图片凑数；用 `tools/v01-film/widget-shots/` 把插件自己的客户端 UI 跑起来再截：
+
+1. `npm pack` 解包，找到 `assets/` 里的客户端 bundle、图片、音频；
+2. 按插件接口改 `tools/v01-film/widget-shots/server.py` 的 `MAP` / `DATA`（宿主接口桩），
+   `index.html` 保留一个 `[data-composer-input]` 输入框让挂件通过挂载检测；
+3. `WHALE_PKG=/tmp/<pkg>/package python3 tools/v01-film/widget-shots/server.py 8767`；
+4. `NODE_PATH=~/.dsh/profiles/desktop/node_modules OUT=/tmp/whale-shots3 node tools/v01-film/widget-shots/capture.cjs`；
+5. 裁剪 `raw-*.png` 到相关区域，作为 4 张功能图（保留一点页面上下文）。
+
+示例：`docs/case-dsh-whale-widget-v0.1.md`。
+
 ## 2. 写案例 JSON：`cases/v01/<slug>.json`
 
 字段见已跑通示例 [cases/v01/dsh-guizang-design.json](../cases/v01/dsh-guizang-design.json)：

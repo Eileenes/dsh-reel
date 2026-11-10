@@ -1,0 +1,39 @@
+{
+  "slug": "whale-widget",
+  "plugin": {
+    "query": "dsh-whale-widget",
+    "cardTitle": "dsh-whale-widget",
+    "cardMeta": "MeteorNOX · 0.4.2 · UI 增强",
+    "cardDesc": "桌面右下角的余额小鲸鱼：余额、今日已用、峰谷时段、自定义泡泡与音效。",
+    "kicker": "DSH PLUGIN · WHALE WIDGET",
+    "name": "小鲸鱼记账挂件",
+    "handle": "MeteorNOX/DeepSeek-Balance-Whale-Widget",
+    "tagline": "常驻 DSH 右下角的小鲸鱼：余额、今日已用、峰谷与自定义泡泡。",
+    "install": "dsh plugin --profile web add dsh-whale-widget",
+    "licenseLine": "MIT · github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget",
+    "termTitle": "dsh-whale-widget — zsh — 120×32",
+    "termFooter": "🐋  dsh-whale-widget · promo"
+  },
+  "features": [
+    {
+      "tab": "余额记账",
+      "caption": "点一下小鲸鱼：余额、今日已用、峰谷一屏看完",
+      "image": "studio/public/shots/whale-widget/feature-balance.png"
+    },
+    {
+      "tab": "自定义泡泡",
+      "caption": "点击序列、A/B 加权、模块排版与逐行样式都能改",
+      "image": "studio/public/shots/whale-widget/feature-bubble-editor.png"
+    },
+    {
+      "tab": "音效提示",
+      "caption": "按压音、每轮消耗、提问与授权提示分开设置",
+      "image": "studio/public/shots/whale-widget/feature-sound.png"
+    },
+    {
+      "tab": "用量记录",
+      "caption": "不用令牌：余额观测记账，近 7 天与逐条明细",
+      "image": "studio/public/shots/whale-widget/feature-usage.png"
+    }
+  ]
+}
