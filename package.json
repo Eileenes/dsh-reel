@@ -31,7 +31,10 @@
   "files": [
     "lib",
     "scripts",
-    "cases",
+    "cases/dsh-better-sidebar.json",
+    "cases/dsh-game-studio.json",
+    "cases/dsh-guizang-design.json",
+    "cases/v01",
     "cordis.patch.yml",
     "locale",
     "icon.svg",
@@ -46,13 +49,13 @@
     "docs/wechat-group.png",
     "docs/panel",
     "studio/src",
+    "studio/scripts/*.py",
     "studio/public/audio/bgm.wav",
     "studio/public/brand",
     "studio/package.json",
     "studio/remotion.config.ts",
     "studio/tsconfig.json",
     "tools/v01-film",
-    "studio/scripts",
     "studio/public/audio/v2/music-bed-30.wav",
     "studio/public/shots/*.png",
     "studio/public/shots/game-studio",
@@ -107,5 +110,10 @@
     "home:audio": "python3 studio/scripts/make_home_audio.py && ffmpeg -y -i studio/public/sorenyeah/audio/mix.wav -b:a 192k studio/public/sorenyeah/audio/preview-mix.mp3",
     "home:render": "cd studio && node_modules/.bin/remotion render src/sorenyeah/entry.tsx SorenyeahHome out/sorenyeah-home.mp4 --codec h264 --crf 16",
     "home:poster": "cd studio && node_modules/.bin/remotion still src/sorenyeah/entry.tsx SorenyeahPoster out/sorenyeah-poster.png --frame=0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
   }
 }
