@@ -21,9 +21,16 @@ test('bundle manifest wires the client half and display resources', () => {
   assert.ok(existsSync(join(root, pkg.exports['./client'])), 'client bundle file exists');
   assert.ok(existsSync(join(root, pkg.exports['./cordis.patch.yml'])), 'patch file exists');
 
-  for (const entry of ['lib', 'scripts', 'cases', 'tools/v01-film', 'locale', 'icon.svg', 'studio/src', 'studio/scripts', 'studio/public/audio/bgm.wav', 'studio/public/audio/v2/music-bed-30.wav']) {
+  for (const entry of ['lib', 'scripts', 'tools/v01-film', 'locale', 'icon.svg', 'studio/src', 'studio/public/audio/bgm.wav', 'studio/public/audio/v2/music-bed-30.wav', 'studio/scripts/*.py']) {
     assert.ok(pkg.files.includes(entry), 'files must ship ' + entry);
   }
+  for (const entry of ['cases/v01', 'cases/dsh-better-sidebar.json', 'cases/dsh-game-studio.json', 'cases/dsh-guizang-design.json']) {
+    assert.ok(pkg.files.includes(entry), 'files must ship ' + entry);
+  }
+  // Never whitelist the whole directory: `cases` would drag the local meteor WIP
+  // into the tarball and `studio/scripts` would drag __pycache__ in.
+  assert.ok(!pkg.files.includes('cases'), 'do not ship the whole cases directory');
+  assert.ok(!pkg.files.includes('studio/scripts'), 'do not ship the whole studio/scripts directory');
   // Screenshots ship per case (the wall and the 6-shot storyboard need them) but
   // the package must not drag in every campaign asset under studio/public/shots.
   assert.ok(
