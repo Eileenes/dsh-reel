@@ -21,7 +21,16 @@ test('bundle manifest wires the client half and display resources', () => {
   assert.ok(existsSync(join(root, pkg.exports['./client'])), 'client bundle file exists');
   assert.ok(existsSync(join(root, pkg.exports['./cordis.patch.yml'])), 'patch file exists');
 
-  for (const entry of ['lib', 'scripts', 'cases', 'locale', 'icon.svg', 'studio/src', 'studio/public/audio/bgm.wav', 'studio/public/shots']) {
+  for (const entry of ['lib', 'scripts', 'cases', 'tools/v01-film', 'locale', 'icon.svg', 'studio/src', 'studio/scripts', 'studio/public/audio/bgm.wav', 'studio/public/audio/v2/music-bed-30.wav']) {
+    assert.ok(pkg.files.includes(entry), 'files must ship ' + entry);
+  }
+  // Screenshots ship per case (the wall and the 6-shot storyboard need them) but
+  // the package must not drag in every campaign asset under studio/public/shots.
+  assert.ok(
+    pkg.files.some((entry) => entry.startsWith('studio/public/shots')),
+    'files must ship case screenshots',
+  );
+  for (const entry of ['studio/public/shots/game-studio', 'studio/public/shots/dsh-pet', 'studio/public/shots/whale-widget', 'studio/public/shots/guizang']) {
     assert.ok(pkg.files.includes(entry), 'files must ship ' + entry);
   }
   assert.ok(pkg.icon && existsSync(join(root, pkg.icon)), 'icon exists');

@@ -238,7 +238,7 @@ V0.1 真机片由 [`scripts/film.mjs`](scripts/film.mjs) 编排：make-v01-film�
 宿主接口在 [`lib/server.js`](lib/server.js)：`GET /dsh-reel/api/state`（含 `film` 运行时探测与 `cases` 列表）、`GET /dsh-reel/api/case?path=…`、`POST /dsh-reel/api/jobs`（`type:"film"` 走 V0.1 真机片，默认走 v1 模板任务）、`POST /dsh-reel/api/jobs/:id/cancel`、`GET /dsh-reel/api/out/*`（支持 Range）。分镜数据由 [`lib/plan.js`](lib/plan.js) 从案例 JSON 推导，agent 也可以用 `reel_storyboard` 工具拿到同一份分镜。面板自测：
 
 ```sh
-npm test                                        # 16 个用例：分镜推导 / 任务队列 / 进度解析 / 真机片任务 / Range / 路径越权 / 面板注册 / 渲染烟测
+npm test                                        # 17 个用例：分镜推导 / 任务队列 / 进度解析 / 真机片任务 / Range / 路径越权 / 面板注册 / 渲染烟测
 npm run check                                   # tsc + 所有运行时脚本的 node --check
 DSH_REEL_DEPS=/path/to/node_modules npm test    # 未安装依赖时，借用现成 React 跑渲染烟测
 ```

@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import {EventEmitter} from 'node:events';
-import {existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createStudio} from '../lib/server.js';
@@ -252,6 +252,32 @@ test('queued job can be cancelled, next one still runs', async () => {
     const queued = studio.cancel(first.id);
     assert.equal(queued.state, 'cancelled');
     assert.equal(children[0].killed, 'SIGTERM');
+  } finally {
+    studio.dispose();
+    rmSync(root, {recursive: true, force: true});
+  }
+});
+
+test('state always exposes film artifacts even when the recent-output limit is exceeded', () => {
+  const root = makeRoot();
+  const outDir = join(root, 'studio', 'out');
+  const poster = join(outDir, 'promo-film-demo-intro-poster.png');
+  const video = join(outDir, 'promo-film-demo-intro-1080.mp4');
+  writeFileSync(poster, Buffer.from('PNG'));
+  writeFileSync(video, Buffer.from('MP4'));
+  const old = new Date('2020-01-01T00:00:00Z');
+  utimesSync(poster, old, old);
+  utimesSync(video, old, old);
+  // More than the recent-output limit of newer, unrelated files.
+  for (let i = 0; i < 40; i += 1) {
+    writeFileSync(join(outDir, 'reel-fresh-' + String(i).padStart(2, '0') + '.png'), Buffer.from('X'));
+  }
+  const studio = createStudio({root});
+  try {
+    const names = studio.state().outputs.map((item) => item.name);
+    assert.ok(names.includes('promo-film-demo-intro-poster.png'));
+    assert.ok(names.includes('promo-film-demo-intro-1080.mp4'));
+    assert.ok(names.filter((name) => /^reel-fresh-/.test(name)).length <= 30);
   } finally {
     studio.dispose();
     rmSync(root, {recursive: true, force: true});
