@@ -7,7 +7,7 @@
  *
  *   1. make-v01-film.mjs  -> comp-<slug>.html + feat*.js + config-case.js + sound timeline
  *   2. make_sfx_v2.py     -> studio/out/<slug>-v01-mix.wav
- *   3. Onetake render.py  -> 840 frames / 28s / 1920x1080 / 30fps (about 10 minutes)
+ *   3. render-frames.mjs  -> 840 frames / 28s / 1920x1080 / 30fps (about 5-10 minutes)
  *   4. ffmpeg mux         -> studio/out/promo-<slug>-intro-1080.mp4
  *   5. ffmpeg poster      -> studio/out/promo-<slug>-intro-poster.png
  *
@@ -19,9 +19,9 @@
  *
  * Usage:
  *   node scripts/film.mjs --case cases/v01/dsh-whale-widget.json \
- *     [--workdir .research/onetake-promo] [--out studio/out] [--python <onetake python>]
+ *     [--workdir .research/onetake-promo] [--out studio/out] [--engine repo|onetake]
  */
-import {existsSync, mkdirSync, readFileSync} from 'node:fs';
+import {copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawn, spawnSync} from 'node:child_process';
@@ -50,10 +50,11 @@ if (args.includes('--help') || args.includes('-h')) {
       '',
       'Options:',
       '  --case <path>      V0.1 case JSON (required)',
-      '  --workdir <dir>    Onetake workdir (default: .research/onetake-promo)',
+      '  --workdir <dir>    comp workdir with the comp dependencies (default: .research/onetake-promo)',
       '  --out <dir>        output directory (default: studio/out)',
-      '  --python <path>    Onetake Python runtime (default: $ONETAKE_PY or the local venv)',
-      '  --workers <n>      Onetake render workers (default: 4)',
+      '  --engine <name>    frame renderer: repo (tools/v01-film/render-frames.mjs, default) or onetake',
+      '  --python <path>    Onetake Python runtime, only for --engine onetake (default: $ONETAKE_PY)',
+      '  --workers <n>      render workers (default: 4)',
       '  --prepare-only     build comp/assets/audio and stop (setup check, no render)',
       '  --help             show this help',
     ].join('\n'),
@@ -73,6 +74,7 @@ const slug = String(spec?.slug ?? '').trim();
 if (!slug) fail('案例缺少 slug 字段: ' + casePath);
 
 const workdir = resolve(get('--workdir', join(root, '.research', 'onetake-promo')));
+const engine = String(get('--engine', process.env.FILM_ENGINE || 'repo')).toLowerCase();
 const outDir = resolve(get('--out', join(root, 'studio', 'out')));
 const python = get(
   '--python',
@@ -88,8 +90,37 @@ const templatePath = join(root, 'tools', 'v01-film', 'comp-template.html');
 const makeFilm = join(root, 'tools', 'v01-film', 'make-v01-film.mjs');
 const sfxScript = join(root, 'studio', 'scripts', 'make_sfx_v2.py');
 const musicBed = join(root, 'studio', 'public', 'audio', 'v2', 'music-bed-30.wav');
-const renderScript = join(workdir, 'onetake', 'scripts', 'render.py');
-const workdirConfig = join(workdir, 'config.js');
+/**
+ * A fresh install (npm / another machine) has the comp template but not the 27 template
+ * assets the comp loads at boot (three.bundle.js, motion.js, the DSH screenshots …).
+ * Seed them from tools/v01-film/comp-assets/ so a clean install can render without a git clone.
+ */
+const seedDir = join(root, 'tools', 'v01-film', 'comp-assets');
+const seedWorkdir = () => {
+  if (!existsSync(seedDir)) return workdir;
+  const names = readdirSync(seedDir);
+  for (const dir of [workdir, join(outDir, '.comp-workdir')]) {
+    try {
+      mkdirSync(dir, {recursive: true});
+      for (const name of names) {
+        const target = join(dir, name);
+        if (!existsSync(target)) copyFileSync(join(seedDir, name), target);
+      }
+      return dir;
+    } catch {
+      // read-only install dir: try the next writable location
+    }
+  }
+  return workdir;
+};
+const activeWorkdir = seedWorkdir();
+const relativeWorkdir = activeWorkdir !== workdir;
+
+const repoRenderer = join(root, 'tools', 'v01-film', 'render-frames.mjs');
+const onetakeRenderer = join(activeWorkdir, 'onetake', 'scripts', 'render.py');
+const workdirConfig = join(activeWorkdir, 'config.js');
+const workdirComp = join(activeWorkdir, 'three.bundle.js');
+if (!['repo', 'onetake'].includes(engine)) fail(`未知渲染引擎: ${engine}（可选 repo / onetake）`);
 
 const problems = [];
 for (const [label, path] of [
@@ -97,13 +128,19 @@ for (const [label, path] of [
   ['make-v01-film.mjs', makeFilm],
   ['音效脚本', sfxScript],
   ['配乐 bed', musicBed],
-  ['Onetake workdir', workdir],
-  ['Onetake render.py', renderScript],
-  ['Onetake config.js', workdirConfig],
+  ['comp workdir', activeWorkdir],
+  ['comp config.js', workdirConfig],
+  ['comp three.bundle.js', workdirComp],
+  ['render-frames.mjs', repoRenderer],
 ]) {
   if (!existsSync(path)) problems.push(`${label} 不存在: ${path}`);
 }
-if (!existsSync(python)) problems.push(`Onetake Python 不存在: ${python}（可用 --python 或 ONETAKE_PY 指定）`);
+if (engine === 'onetake' && !existsSync(onetakeRenderer)) {
+  problems.push(`Onetake render.py 不存在: ${onetakeRenderer}`);
+}
+if (engine === 'onetake' && !existsSync(python)) {
+  problems.push(`Onetake Python 不存在: ${python}（可用 --python 或 ONETAKE_PY 指定）`);
+}
 if (problems.length) fail('V0.1 渲染环境未就绪:\n - ' + problems.join('\n - '));
 
 /** Probe candidates in order; use the first one that actually runs. */
@@ -132,7 +169,7 @@ if (!python3) fail('找不到可用的 python3（可用 PYTHON3_PATH 指定）')
 
 const timelinePath = join(root, 'studio', 'src', 'v2', 'data', `v01-${slug}-timeline.ts`);
 const mixWav = join(outDir, `${slug}-v01-mix.wav`);
-const rendered = join(workdir, `promo-${slug}-intro-1080.mp4`);
+const rendered = join(activeWorkdir, `promo-${slug}-intro-1080.mp4`);
 const finalOut = join(outDir, `promo-${slug}-intro-1080.mp4`);
 const posterOut = join(outDir, `promo-${slug}-intro-poster.png`);
 mkdirSync(outDir, {recursive: true});
@@ -220,7 +257,8 @@ try {
   // 1. comp + per-case assets + sound timeline
   emitProgress('prepare', {progress: 0});
   stage('准备 comp / 素材 / 音效时间轴: ' + slug);
-  await run(process.execPath, [makeFilm, casePath, '--workdir', workdir]);
+  if (relativeWorkdir) stage('comp 依赖不在 ' + show(workdir) + '，改用 ' + show(activeWorkdir));
+  await run(process.execPath, [makeFilm, casePath, '--workdir', activeWorkdir]);
   emitProgress('prepare', {progress: 1});
 
   // 2. 本地合成音效 + 混音
@@ -246,14 +284,19 @@ try {
     process.exit(0);
   }
 
-  // 3. Onetake render: 840 frames, about 10 minutes on this machine
+  // 3. frame render: 840 frames, 1920x1080 / 30fps / shutter 180°, about 5-10 minutes.
+  //    The default engine is this repo's own renderer (Chrome + ffmpeg, no Onetake runtime).
   emitProgress('render:video', {progress: 0, done: 0, total: 840});
-  stage('渲染 840 帧（约 10 分钟）: ' + compName);
+  stage(`渲染 840 帧（${engine === 'onetake' ? 'Onetake' : '仓库渲染器'}，约 5–10 分钟）: ` + compName);
+  const renderCommand = engine === 'onetake' ? python : process.execPath;
+  const renderArgv = engine === 'onetake'
+    ? [onetakeRenderer, compName, '--out', rendered, '--width', '1920', '--height', '1080', '--fps', '30', '--workers', workers, '--shutter', '180']
+    : [repoRenderer, compName, '--out', rendered, '--width', '1920', '--height', '1080', '--fps', '30', '--workers', workers, '--shutter', '180', '--ffmpeg', ffmpeg];
   await run(
-    python,
-    [renderScript, compName, '--out', rendered, '--width', '1920', '--height', '1080', '--fps', '30', '--workers', workers, '--shutter', '180'],
+    renderCommand,
+    renderArgv,
     {
-      cwd: workdir,
+      cwd: activeWorkdir,
       onLine: (line) => {
         const progressLine = /^\s*(\d+)\s*\/\s*(\d+)\s+\d+s\s*$/.exec(line);
         if (!progressLine) return false;

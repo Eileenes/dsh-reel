@@ -29,7 +29,7 @@
 dsh plugin --profile <profile> add dsh-reel-studio
 ```
 
-> npm 包带面板和 v1 Remotion 渲染；V0.1 真机片还依赖本机 Onetake 运行时与仓库内 `.research/onetake-promo`（不随包分发），干净环境下面板会提示「环境未就绪」，完整真机片流程请用 GitHub 仓库安装。详见下文「插件宣传台面板（Web UI）」。
+> npm 包带面板、v1 Remotion 渲染和 **V0.1 真机片渲染器**（`tools/v01-film/render-frames.mjs`）。V0.1 只需要本机有 **Chrome/Chromium + ffmpeg**：comp 模板依赖的 27 个素材随包分发，首次运行会自动铺到工作目录，不再需要 Onetake 运行时。详见下文「插件宣传台面板（Web UI）」。
 
 ## 能做什么
 
@@ -71,8 +71,9 @@ v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://g
 
 以后只给插件名/仓库，就按同一套流程出片（28s / 1080p / 30fps，结构和参考片一致）：
 
-- [标准流程 SOP](https://github.com/Eileenes/dsh-reel/blob/main/docs/v01-film-sop.md)：收数据 → 写案例 JSON → 一条命令生成 comp/素材/音效 → Onetake 渲染 → 混流 → QA
+- [标准流程 SOP](https://github.com/Eileenes/dsh-reel/blob/main/docs/v01-film-sop.md)：收数据 → 写案例 JSON → 一条命令生成 comp/素材/音效 → 渲染 840 帧 → 混流 → QA
 - 生成器：[tools/v01-film/make-v01-film.mjs](https://github.com/Eileenes/dsh-reel/blob/main/tools/v01-film/make-v01-film.mjs)（模板 [comp-template.html](https://github.com/Eileenes/dsh-reel/blob/main/tools/v01-film/comp-template.html)）
+- 渲染器：[tools/v01-film/render-frames.mjs](https://github.com/Eileenes/dsh-reel/blob/main/tools/v01-film/render-frames.mjs)：驱动本机 Chrome 逐帧截图，快门区间多采样、在线性光下积分（运动模糊），再做硬切保护，最后 x264 编码；`--sfx` 可一步混流。只依赖 node + Chrome + ffmpeg + `puppeteer-core`，**不需要 Onetake**
 - 案例：[cases/v01/dsh-guizang-design.json](https://github.com/Eileenes/dsh-reel/blob/main/cases/v01/dsh-guizang-design.json)；成片按 SOP 在本地生成（`studio/out/promo-<slug>-intro-1080.mp4`，不随仓库分发）
 
 ### 安装 / 使用海报
@@ -83,14 +84,16 @@ v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://g
 
 ![Better Sidebar 片尾](https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/better-sidebar-endcard.png)
 
-> 这条管线目前是**手动分镜 + 外部 Onetake 渲染**：素材、tab 坐标、音频事件需要按目标插件逐个调整；不是“给仓库地址就自动出片”。
+> 这条管线的**渲染**已经自包含（本机 Chrome 出帧，见上）；但**分镜与素材**仍需按目标插件逐个准备：四张真实界面截图、tab 文案、音效事件都来自案例 JSON，不是“给仓库地址就自动出片”。
 
-### Onetake 许可说明（重要）
+### Onetake 许可说明（可选路径）
+
+默认渲染路径是仓库自己的 `tools/v01-film/render-frames.mjs`，不含任何第三方渲染运行时。若本机恰好有 Onetake，仍可用 `--engine onetake` 走参考实现（输出对帧一致，差异只在字形抗锯齿）：
 
 - 本仓库里的 Onetake comp / 工作流，**仅用于开发和制作 DSH 插件相关的宣传素材**；
 - **Onetake 本身不是商用授权**：它是 PolyForm Noncommercial 许可，只能用于非商业用途；
 - 任何人如果要把 Onetake 或其渲染产物用于**商业用途**，需要自行向 Onetake 作者取得**另行商业授权**；
-- 本仓库不包含、也不分发 Onetake 运行时；商用前请同时确认 Onetake、截图、字体、音乐等全部素材的许可。
+- 本仓库不包含、也不分发 Onetake 运行时；商用前请同时确认截图、字体、音乐等全部素材的许可。
 
 ## 交流群
 

@@ -103,7 +103,27 @@ npm run v01:film -- cases/v01/<slug>.json --workdir .research/onetake-promo --ru
 
 > workdir 必须包含 Onetake comp 依赖（`three.bundle.js`、`motion.js`、`assets.js`、`config.js`、`dshwin.js`、`dshpage.js`、`dshicon.js`、`p550*.js` 等）。仓库里就是 `.research/onetake-promo`。
 
-## 4. 渲染（Onetake，约 9–12 分钟）
+## 4. 渲染（约 7–9 分钟）
+
+仓库自带渲染器 `tools/v01-film/render-frames.mjs`，**不需要 Onetake 运行时**：它驱动本机 Chrome，
+逐帧 `__seek(t)` 截图、在快门区间多采样并在线性光下积分（运动模糊）、再交给 x264；给了 `--sfx` 就直接 AAC 混流。
+
+```bash
+node tools/v01-film/render-frames.mjs .research/onetake-promo/comp-<slug>.html \
+  --out .research/onetake-promo/promo-<slug>-intro-1080.mp4 \
+  --sfx studio/out/<slug>-v01-mix.wav \
+  --width 1920 --height 1080 --fps 30 --workers 4 --shutter 180
+```
+
+依赖：`node ≥ 18`、Chrome、`ffmpeg`、`puppeteer-core`（`NODE_PATH=~/.dsh/profiles/desktop/node_modules`，
+或 `--puppeteer <目录>`，或用 `--chrome` 指定任意 Chromium 内核）。中途可加 `--from/--to` 只渲染一段帧来试片。
+
+结束时确认日志：`840 frames ... page errors: none`，并生成 `<out>.render.json`（帧数/采样/耗时）。
+
+<details>
+<summary>可选：用 Onetake 参考实现渲染（输出与本仓库渲染器对帧一致，差异只在字形抗锯齿）</summary>
+
+Onetake 是闭源、PolyForm Noncommercial 的运行时，不随仓库分发。本机有的话：
 
 ```bash
 cd .research/onetake-promo
@@ -112,8 +132,7 @@ ONETAKE_PY="${ONETAKE_PY:-$HOME/Downloads/travel-capsule/outputs/soren-xiaohongs
   --out promo-<slug>-intro-1080.mp4 \
   --width 1920 --height 1080 --fps 30 --workers 4 --shutter 180
 ```
-
-结束时确认日志：`840 frames ... page errors: none`。
+</details>
 
 ## 5. 混流 + 封面
 
@@ -163,7 +182,8 @@ done
 
 ## 8. 许可
 
-- Onetake 是 **PolyForm Noncommercial**：本管线/产物仅用于 DSH 插件宣传素材；商用需另行取得 Onetake 授权。
+- 默认渲染路径是仓库自带的 `tools/v01-film/render-frames.mjs`（自写，无第三方运行时许可问题）。
+- 可选路径里的 Onetake 是 **PolyForm Noncommercial**：只在本机用它出片，不分发、不进入仓库；商用需另行取得 Onetake 授权。
 - 目标插件许可按实际写（AGPL-3.0 / MIT / …），不要照抄别的案例。
 - 插件截图、字体、音乐版权按来源确认。
 
@@ -172,4 +192,5 @@ done
 - 搜索词长度变化：生成器会按 `(12.55-10.6)/query.length` 重算打字间隔，保证在结果卡出现前打完。
 - 片尾名称过长：生成器自动缩小字号；`cardDesc` / `tagline` / 字幕过长会告警，需手动缩短文案。
 - 宽幅功能图会上下留边：这是 comp 的 `fit` 行为，和参考片一致；要满屏就换 16:10 截图。
-- 渲染依赖本机 Onetake 运行时（不在仓库内分发），换机器先确认 `ONETAKE_PY`。
+- 渲染只需 node + Chrome + ffmpeg + `puppeteer-core`（换机器先确认这三样）。comp 依赖的 `three.bundle.js`、`motion.js`、`assets.js`、`dshwin/dshpage/dshicon.js`、`config.js`、`p550*.js` 也在 `.research/onetake-promo`（`.research/` 不入库），换机器要一起拷贝。
+- `render-frames.mjs` 在本机 Chrome 与 Onetake 的内核之间只差字形抗锯齿：帧数、采样次数、硬切判定、时间轴完全一致（SSIM ≈ 0.99）。要逐像素一致就用 `--chrome` 指向 Onetake 用的那个 Chromium。

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0 — 2026-11-11
+
+- 新增 **仓库自带的 V0.1 影片渲染器** `tools/v01-film/render-frames.mjs`：驱动本机 Chrome 逐帧 `__seek(t)` 截图，
+  快门区间内按 `window.__motion` 自适应采样（6px 间距、4–48 张）、在线性光下积分出运动模糊，并做硬切保护
+  （相邻采样某一步变化 ≥3 倍即只积分帧时间那侧）；输出 H.264 High / yuv420p / `+faststart`，`--sfx` 一步混流，
+  另写 `<out>.render.json`。PNG 编解码与积分都在文件内实现，除 `puppeteer-core` 外无额外依赖。
+  **不再需要 Onetake 运行时**（Onetake 闭源、PolyForm Noncommercial，仍不随仓库分发）。
+- 与参考实现 Onetake 对帧：同一条 `comp-<slug>.html` 帧数（840）、每帧采样次数（4162 vs 4168）、硬切判定一致，
+  整片 PSNR 40.2 dB / SSIM 0.9946，差异只在字形抗锯齿；耗时 294s vs 410s（4 workers）。见 `docs/case-dsh-openpencil-v0.1.md`。
+- `scripts/film.mjs`：渲染步骤默认走仓库渲染器（`--engine onetake` 可回退参考实现），环境检查改为
+  comp 依赖 + ffmpeg + Chrome；新增 `--engine`；ffmpeg 绝对路径透传（GUI 最小 PATH 下也能用）。
+- 新增 `tools/v01-film/comp-assets/`（comp 模板启动时加载的 27 个素材，约 10 MB）：
+  干净安装时由 `film.mjs` 自动铺到 `.research/onetake-promo`（安装目录只读时用 `studio/out/.comp-workdir`），
+  于是 npm 装上就能出片，只要求本机有 Chrome/Chromium + ffmpeg（+ python3 做音效）。
+- `puppeteer-core` 成为运行时依赖；`npm run check` 覆盖新脚本，新增 `npm run v01:render`。
+- 面板：运行环境一行从「Onetake runtime」改为「渲染器 · 无头 Chrome」，未就绪提示与交给 AI 的指令同步更新。
+- 新增 **dsh-openpencil** 的 V0.1案例：`cases/v01/dsh-openpencil.json`（多帧预览 / 画布总览 / 托管编辑器 / 图层属性），
+  四张截图来自插件随包文档截图与本机真实运行时（`op-host-web-server`、Web SDK），来源见 `studio/public/shots/openpencil/SOURCES.md`；
+  案例记录在 `docs/case-dsh-openpencil-v0.1.md`。
+- 文档：SOP §4 改为仓库渲染器为主路径（Onetake 收进可选折叠段），§8/§9 同步；README 的 V0.1 章节、PUBLISHING 的运行时说明更新。
+
 ## 0.4.1 — 2026-11-11
 
 - docs: move the historical Chinese README out of the package root (`docs/README.zh-CN.md`), so npm renders the current `README.md` as the package readme instead of the stale "历史中文说明" file.

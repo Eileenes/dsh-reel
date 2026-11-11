@@ -1,12 +1,12 @@
 # Publishing to npm & the DSH plugin market
 
-This repo is **GitHub-install friendly**; `dsh-reel-studio` has been on npm since 2026-11-04 (`0.2.x` line), and `0.4.0` (2026-11-10) ships the 「安利墙 + 生成台」 panel plus the V0.1 film tooling. Read this before publishing again.
+This repo is **GitHub-install friendly**; `dsh-reel-studio` has been on npm since 2026-11-04 (`0.2.x` line), and `0.5.0` (2026-11-11) ships a self-contained V0.1 film renderer. Read this before publishing again.
 
-## 1. Current state (0.4.0)
+## 1. Current state (0.5.0)
 
-- `package.json` has `"private": false`, `version` 0.4.0.
-- npm package now ships `lib`, `scripts` (incl. `film.mjs`), `tools/v01-film`, `studio/scripts`, `cases` (both v1 + `cases/v01`), the four film-case screenshot sets, the audio bed the film pipeline needs, `studio/src` and `docs/panel` screenshots.
-- **Still GitHub-only at runtime**: the V0.1 real-UI film pipeline needs the local Onetake runtime (`.research/onetake-promo`, usually `ONETAKE_PY`) — it is not redistributable and not in the tarball. On a clean npm install the panel shows 「环境未就绪」; `reel_render` (Remotion v1) still works if Chrome is available.
+- `package.json` has `"private": false`, `version` 0.5.0.
+- npm package now ships `lib`, `scripts` (incl. `film.mjs`), `tools/v01-film` (incl. the 27-file `comp-assets/`), `studio/scripts`, `cases` (both v1 + `cases/v01`), the four film-case screenshot sets, the audio bed the film pipeline needs, `studio/src` and `docs/panel` screenshots.
+- **V0.1 films render on a clean install since 0.5.0**: `tools/v01-film/render-frames.mjs` drives the local Chrome (no Onetake runtime, which is not redistributable and still not in the tarball), and the 27 comp assets the template boots with ship under `tools/v01-film/comp-assets/` — `scripts/film.mjs` seeds them into `.research/onetake-promo` (or `studio/out/.comp-workdir` when the install dir is read-only). Requirements on the user's machine: Chrome/Chromium + ffmpeg (+ python3 for the sound mix). `puppeteer-core` is a declared dependency.
 - The host package loads in a real DSH profile (panel + sidebar verified in the local desktop profile).
 
 ## 2. Make it npm-publishable
@@ -76,6 +76,7 @@ Checklist:
 ## 5. 中文速览
 
 - 0.4.0 已按精简 `files` 发布（不含 `studio/out`、`.research`、`node_modules`、旧活动素材；只保留模板需要的截图与音频）。
+- 0.5.0 起 V0.1 真机片在干净安装上也能出片：渲染器在本仓库（`tools/v01-film/render-frames.mjs`），comp 依赖的 27 个素材在 `tools/v01-film/comp-assets/`，首次运行自动铺到工作目录；只需要机器上有 Chrome/Chromium + ffmpeg（+ python3 做音效混音）。
 - 上市场：npm publish 后等第三方索引的每日探针（≤1 天）自动更新版本；描述过时用 awesome-dsh-plugin 的 PR 或 dsh.so 的提交表单改。
 - 发布前仍要：`npm pack --dry-run` 检查敏感内容 → scratch profile 验证 → `npm publish --access public`。
 - 可发现性：公开仓库 + `dsh-plugin` 等 topics + README 首段写清解决什么问题；moc-chen 生态图按 npm/GitHub 每小时抓取；awesome 列表可提 PR；DSH 内置市场按 npm `dsh.bundle` 索引，没有保证的公开提交入口。
