@@ -1,10 +1,10 @@
 # Publishing to npm & the DSH plugin market
 
-This repo is **GitHub-install friendly**; `dsh-reel-studio` has been on npm since 2026-11-04 (`0.2.x` line), and `0.5.0` (2026-11-11) ships a self-contained V0.1 film renderer. Read this before publishing again.
+This repo is **GitHub-install friendly**; `dsh-reel-studio` has been on npm since 2026-11-04 (`0.2.x` line), and `0.5.1` (2026-11-12) is the current release; 0.5.0 made the V0.1 film renderer self-contained, 0.5.1 fixed the npm description. Read this before publishing again.
 
-## 1. Current state (0.5.0)
+## 1. Current state (0.5.1)
 
-- `package.json` has `"private": false`, `version` 0.5.0.
+- `package.json` has `"private": false`, `version` 0.5.1.
 - npm package now ships `lib`, `scripts` (incl. `film.mjs`), `tools/v01-film` (incl. the 27-file `comp-assets/`), `studio/scripts`, `cases` (both v1 + `cases/v01`), the four film-case screenshot sets, the audio bed the film pipeline needs, `studio/src` and `docs/panel` screenshots.
 - **V0.1 films render on a clean install since 0.5.0**: `tools/v01-film/render-frames.mjs` drives the local Chrome (no Onetake runtime, which is not redistributable and still not in the tarball), and the 27 comp assets the template boots with ship under `tools/v01-film/comp-assets/` — `scripts/film.mjs` seeds them into `.research/onetake-promo` (or `studio/out/.comp-workdir` when the install dir is read-only). Requirements on the user's machine: Chrome/Chromium + ffmpeg (+ python3 for the sound mix). `puppeteer-core` is a declared dependency.
 - The host package loads in a real DSH profile (panel + sidebar verified in the local desktop profile).

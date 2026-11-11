@@ -25,10 +25,12 @@
 输入插件名称 → 匹配案例 → 生成 28 秒真机片。**安利墙 + 生成台**两视图：墙上每个案例一张卡（成片封面 + 功能页叠图 + 出片状态），生成台三栏展示目标插件、封面/功能页、6 格分镜与成片播放器；底部 dockbar 显示真实阶段（素材与音效 → 渲染 840 帧 → 混流 → 封面），任务可随时终止或重新生成。右上角 `?` 或输入框下的「怎么用？完整说明」有完整四步说明；没有现成案例时，把插件名交给 AI 按 SOP 收截图、写案例后再出片。
 
 ```sh
-# 在 DSH 里安装（<profile> 换成你的 profile，如 desktop）
-dsh plugin --profile <profile> add dsh-reel-studio
+# 在 DSH 里安装（<profile> 换成你的 profile，如 desktop；当前版本 0.5.1）
+dsh plugin --profile <profile> add dsh-reel-studio@latest
 ```
 
+> **装的时候请带 `@latest`。** 第三方插件目录（dshmarket / dsh.so）里的条目版本刷新滞后：目录里可能仍显示 `0.2.1`，直接按目录版本装会装到旧版（0.2.1 存在 `output.render` 返回裸字符串导致三个宿主工具全挂的问题，0.4.0 已修）。显式 `@latest` 或 `@0.5.1` 即可。
+>
 > npm 包带面板、v1 Remotion 渲染和 **V0.1 真机片渲染器**（`tools/v01-film/render-frames.mjs`）。V0.1 只需要本机有 **Chrome/Chromium + ffmpeg**：comp 模板依赖的 27 个素材随包分发，首次运行会自动铺到工作目录，不再需要 Onetake 运行时。详见下文「插件宣传台面板（Web UI）」。
 
 ## 能做什么
