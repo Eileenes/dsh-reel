@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1 — 2026-11-11
+
+- 元数据修正（无代码改动）：`description` 去掉「+ Onetake」与 Onetake 许可提示，改成「自带逐帧渲染器（本机 Chrome，运动模糊 + 硬切保护），npm 装完即可出片」——npm 页面、搜索与插件列表里展示的就是这一行；`keywords` 补 `chrome`、`puppeteer`、`promo-video`。
+- 同步更新仓库简介与 homepage（GitHub release 说明见 v0.5.0）。
+
 ## 0.5.0 — 2026-11-11
 
 - 新增 **仓库自带的 V0.1 影片渲染器** `tools/v01-film/render-frames.mjs`：驱动本机 Chrome 逐帧 `__seek(t)` 截图，
