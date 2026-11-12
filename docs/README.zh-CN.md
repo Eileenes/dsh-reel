@@ -32,7 +32,7 @@ npm 包名：`dsh-reel-studio` · 仓库：`Eileenes/dsh-reel`
 
 ## 交流群
 
-<img src="https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/wechat-group.png?v=20261112" width="260" alt="dsh-reel-studio 交流群二维码" />
+<img src="https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/wechat-group-2026-11.png" width="260" alt="dsh-reel-studio 交流群二维码" />
 
 群聊：`dsh-deel` · 二维码 7 天内有效（11 月 11 日前）
 

@@ -101,7 +101,7 @@ v1 案例模板的旧示例介绍的是 [omdsh-dev/DSH-better-sidebar](https://g
 
 对 dsh-reel-studio 感兴趣、想反馈问题或一起做插件宣传片，可以扫码进群：
 
-<img src="https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/wechat-group.png?v=20261112" width="280" alt="dsh-reel-studio 交流群二维码" />
+<img src="https://raw.githubusercontent.com/Eileenes/dsh-reel/main/docs/wechat-group-2026-11.png" width="280" alt="dsh-reel-studio 交流群二维码" />
 
 群聊：`dsh-deel` · 二维码 7 天内有效（11 月 11 日前）
 
