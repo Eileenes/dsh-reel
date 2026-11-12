@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.2 — 2026-11-12
+
+- 文档：交流群二维码换新（旧的入群邀请已过期）——`docs/wechat-group-2026-11.png`，README 与中文历史说明指向新路径；`design/install-poster.html` 同步并重出 `docs/install-poster.png`。
+- 顺手修正海报上两处过期文案：市场卡片版本 0.2.0 → 0.5.1（标注为 npm latest），脚注里「V0.1 真机管线需要 Onetake」改为「装完即可出片（本机 Chrome + ffmpeg）」。
+- 无代码改动，功能与 0.5.1 完全相同。
+
 ## 0.5.1 — 2026-11-11
 
 - 元数据修正（无代码改动）：`description` 去掉「+ Onetake」与 Onetake 许可提示，改成「自带逐帧渲染器（本机 Chrome，运动模糊 + 硬切保护），npm 装完即可出片」——npm 页面、搜索与插件列表里展示的就是这一行；`keywords` 补 `chrome`、`puppeteer`、`promo-video`。
