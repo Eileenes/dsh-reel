@@ -1,6 +1,6 @@
 {
   "name": "dsh-reel-studio",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": false,
   "type": "module",
   "description": "插件宣传台 for DSH：输入插件名，在本机出 28 秒真机界面宣传片与封面。自带逐帧渲染器（本机 Chrome，运动模糊 + 硬切保护），npm 装完即可出片，不需要 Onetake 运行时。",
@@ -89,14 +89,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@react-three/fiber": "8.17.10",
-    "@remotion/cli": "4.0.409",
-    "@remotion/three": "4.0.409",
-    "puppeteer-core": "^24.43.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "remotion": "4.0.409",
-    "three": "0.169.0"
+    "puppeteer-core": "^24.43.1"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": "*"
@@ -121,5 +114,14 @@
     "@deepseek-ai/dsh-tools": {
       "optional": true
     }
+  },
+  "devDependencies": {
+    "@react-three/fiber": "8.17.10",
+    "@remotion/cli": "4.0.409",
+    "@remotion/three": "4.0.409",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.409",
+    "three": "0.169.0"
   }
 }

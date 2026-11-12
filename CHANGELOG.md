@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.3 — 2026-11-12
+
+- **安装体积/耗时大幅下降**：`@remotion/cli`、`remotion`、`@remotion/three`、`react`、`react-dom`、`three`、`@react-three/fiber` 从 `dependencies` 移到 `devDependencies`，npm 安装只带 `puppeteer-core`。干净安装从 264 个包、8 分 27 秒降到个位数包（见下）；`V0.1 真机片`开箱即用，不受影响。
+- Remotion v1/v2 模板改为按需安装：`scripts/reel.mjs` 找不到 remotion 时给出可直接复制的安装命令，并说明 V0.1 管线不需要它。
+- 目的：第三方插件目录（awesome-dsh-plugin / dsh.so）的安装验证疑似因包体与安装耗时超时，自 0.4.0 起版本一直停在 0.2.1；瘦身后重新提交验证。
+
 ## 0.5.2 — 2026-11-12
 
 - 文档：交流群二维码换新（旧的入群邀请已过期）——`docs/wechat-group-2026-11.png`，README 与中文历史说明指向新路径；`design/install-poster.html` 同步并重出 `docs/install-poster.png`。

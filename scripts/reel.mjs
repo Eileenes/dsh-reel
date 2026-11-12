@@ -129,7 +129,13 @@ const remotion = remotionCandidates.find((candidate) => {
   }
 });
 if (!remotion) {
-  console.error('[reel] Remotion is not installed. Run: pnpm install (repo root) or cd studio && pnpm install');
+  console.error(
+    '[reel] Remotion is not installed. The V0.1 real-UI film pipeline does not need it — ' +
+      'only the Remotion v1/v2 templates do.\n' +
+      '  repo checkout: pnpm install (root) or cd studio && pnpm install\n' +
+      '  npm install:   npm i --no-save @remotion/cli@4.0.409 remotion@4.0.409 @remotion/three@4.0.409 ' +
+      'react@18.3.1 react-dom@18.3.1 three@0.169.0 @react-three/fiber@8.17.10',
+  );
   process.exit(1);
 }
 

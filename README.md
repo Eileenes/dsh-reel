@@ -31,7 +31,9 @@ dsh plugin --profile <profile> add dsh-reel-studio@latest
 
 > **装的时候请带 `@latest`。** 第三方插件目录（dshmarket / dsh.so）里的条目版本刷新滞后：目录里可能仍显示 `0.2.1`，直接按目录版本装会装到旧版（0.2.1 存在 `output.render` 返回裸字符串导致三个宿主工具全挂的问题，0.4.0 已修）。显式 `@latest` 或 `@0.5.1` 即可。
 >
-> npm 包带面板、v1 Remotion 渲染和 **V0.1 真机片渲染器**（`tools/v01-film/render-frames.mjs`）。V0.1 只需要本机有 **Chrome/Chromium + ffmpeg**：comp 模板依赖的 27 个素材随包分发，首次运行会自动铺到工作目录，不再需要 Onetake 运行时。详见下文「插件宣传台面板（Web UI）」。
+> npm 包带面板和 **V0.1 真机片渲染器**（`tools/v01-film/render-frames.mjs`）。V0.1 只需要本机有 **Chrome/Chromium + ffmpeg**：comp 模板依赖的 27 个素材随包分发，首次运行会自动铺到工作目录，不再需要 Onetake 运行时。详见下文「插件宣传台面板（Web UI）」。
+>
+> **Remotion v1/v2 模板按需安装**（0.5.3 起）：这两个模板只为仓库自用物料准备，`npm install` 不再带 `@remotion/cli`、`remotion`、`react`、`three` 等 7 个包。要用时再装：`npm i @remotion/cli@4.0.409 remotion@4.0.409 @remotion/three@4.0.409 react@18.3.1 react-dom@18.3.1 three@0.169.0 @react-three/fiber@8.17.10`，或直接 clone 仓库 `pnpm install`。
 
 ## 能做什么
 
